@@ -1,8 +1,9 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { add, minus, asyncAdd } from '../../actions/counter'
+import TabBar  from '../../components/TabBar/TabBar'
 import './index.scss'
 
 type PageStateProps = {
@@ -46,8 +47,10 @@ class Index extends Component {
     navigationBarTitleText: '首页'
   }
 
-  state = {
-
+  handleClick(value) {
+    this.setState({
+      current: value
+    })
   }
 
   componentWillReceiveProps () {}
@@ -60,12 +63,14 @@ class Index extends Component {
 
   render () {
     return (
+      
       <View className='index'>
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
+        {/* <Button className='add_btn' onClick={this.props.add}>+</Button>
         <Button className='dec_btn' onClick={this.props.dec}>-</Button>
         <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
         <View><Text>{this.props.counter.num}</Text></View>
-        <View><Text>Hello, World</Text></View>
+        <View><Text>Hello, World</Text></View> */}
+        <TabBar/>
       </View>
     )
   }
