@@ -28,7 +28,6 @@ export default class TabBar extends Component<props> {
     }
 
     handleClick = (e) => {
-        console.log(e,"e");
         this.setState({
             current: e
         })

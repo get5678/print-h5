@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, ScrollView, Image, Text } from '@tarojs/components'
+import { View, Image, Text } from '@tarojs/components'
 import TabBar from '../../components/TabBar/TabBar'
 
 import headPic from './pic/headPic.png'
@@ -53,7 +53,6 @@ class Mine extends Component {
     }
 
     handleClick = (id) => {
-        console.log(id,"id");
         switch(id) {
           case 0:
             Taro.redirectTo({
@@ -101,7 +100,7 @@ class Mine extends Component {
                             <Text className='headName'>{this.state.name}</Text>
                             <Text className='headPhone'>{this.state.phone}</Text>
                         </View>
-                        <View>
+                        <View className='mineLists'>
                             {InfoLists}
                         </View>
                     </View>

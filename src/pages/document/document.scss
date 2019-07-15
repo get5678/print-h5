@@ -1,11 +1,5 @@
-
-// .myDocument{
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-// }
 .myContent{
-    height: 90vh;
+    
     display: flex;
     padding-top: 90px;
     flex-direction: column;
@@ -31,6 +25,9 @@
     background: #fff;
     margin-top: 30px;
     box-shadow: 1px 1px 8px rgba($color: #999, $alpha: .1);
+}
+.bule{
+    background: #2fb9c3;
 }
 .docuImg{
     width: 80px;
@@ -66,6 +63,7 @@
 .buttonDoc{
     height: 124px;
     width: 100vw;
+    background: #fff;
     box-sizing: border-box;
     display: flex;
     padding: 0 80px;
