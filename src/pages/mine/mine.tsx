@@ -37,6 +37,10 @@ class Mine extends Component {
         navigationBarBackgroundColor: '#31c0cb'
     }
 
+    componentDidMount() {
+        // Taro.setNavigationBarColor: '#31c0cb'
+    }
+
     state = {
         name: '小邮',
         phone: 1576668888,
@@ -86,7 +90,7 @@ class Mine extends Component {
         )
         return (
             <View>
-                <ScrollView scrollY className='mine'>
+                <View className='mine'>
                     <View className='mineTop'></View>
                     {/* <View className='nav'>
                         我的
@@ -101,7 +105,7 @@ class Mine extends Component {
                             {InfoLists}
                         </View>
                     </View>
-                </ScrollView>
+                </View>
                 <TabBar current={2}/>
             </View>
         )
