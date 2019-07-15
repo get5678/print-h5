@@ -33,7 +33,8 @@ interface Mine {
 class Mine extends Component {
 
     config: Config = {
-        navigationBarTitleText: '我的'
+        navigationBarTitleText: '我的',
+        navigationBarBackgroundColor: '#31c0cb'
     }
 
     state = {
@@ -87,9 +88,9 @@ class Mine extends Component {
             <View>
                 <ScrollView scrollY className='mine'>
                     <View className='mineTop'></View>
-                    <View className='nav'>
+                    {/* <View className='nav'>
                         我的
-                    </View>
+                    </View> */}
                     <View className='mineContent'>
                         <View className='contentHeadpic'>                    
                             <Image src={headPic} className='headPic'/>
