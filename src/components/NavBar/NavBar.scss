@@ -1,0 +1,20 @@
+.navBar{
+    height: 90px;
+    width: 100vw;
+    box-sizing: border-box;
+    background: #fff;
+    padding-left: 30px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+}
+.navImage{
+    line-height: normal;
+    width: 16px;
+    height: 28px;
+}
+.navText{
+    text-align: center;
+    margin-left: 34%;
+    font-size: 36px;
+}

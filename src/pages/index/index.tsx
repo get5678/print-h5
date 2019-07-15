@@ -70,7 +70,8 @@ class Index extends Component {
         <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
         <View><Text>{this.props.counter.num}</Text></View>
         <View><Text>Hello, World</Text></View> */}
-        <TabBar/>
+        <View>this is index</View>
+        <TabBar current={0}/>
       </View>
     )
   }
