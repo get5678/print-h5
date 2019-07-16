@@ -4,7 +4,7 @@ import { View, Button, Input, Image } from '@tarojs/components'
 import { BlankPage } from '../../components/blankPage/blankPage'
 // import { connect } from '@tarojs/redux'
 // import { add, minus, asyncAdd } from '../../actions/counter'
-import TabBar  from '../../components/TabBar/TabBar'
+import TabBar from '../../components/TabBar/TabBar'
 import './index.scss'
 
 type PageStateProps = {
@@ -25,31 +25,14 @@ interface Index {
   props: IProps;
 }
 
-// @connect(({ counter }) => ({
-//   counter
-// }), (dispatch) => ({
-//   add () {
-//     dispatch(add())
-//   },
-//   dec () {
-//     dispatch(minus())
-//   },
-//   asyncAdd () {
-//     dispatch(asyncAdd())
-//   }
-// }))
 class Index extends Component<{}, PageState> {
-
-    config: Config = {
-    navigationBarTitleText: '首页'
-  }
 
   /**
    * @description 方便测试用的跳转功能
    * @param {number} type
    * @memberof Index
    */
-  navTo (type: number) {
+  navTo(type: number) {
     if (type === 1) {
       Taro.navigateTo({
         url: '../bindPhone/bindPhone'
@@ -66,7 +49,7 @@ class Index extends Component<{}, PageState> {
    * @param {*} e
    * @memberof Index
    */
-  handleInputSearch (e:{detail: {value: string}}) {
+  handleInputSearch(e: { detail: { value: string } }) {
     console.log(e.detail.value)
     this.setState({
       searchText: e.detail.value
@@ -77,21 +60,21 @@ class Index extends Component<{}, PageState> {
    * @description 处理扫二维码
    * @memberof Index
    */
-  handleScanQRCode () {
+  handleScanQRCode() {
     console.log('暂未开放');
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
   }
 
-  componentWillUnmount () { }
+  componentWillUnmount() { }
 
-  componentDidShow () { }
+  componentDidShow() { }
 
-  componentDidHide () { }
+  componentDidHide() { }
 
-  render () {
+  render() {
     const { searchText } = this.state;
 
     return (
@@ -109,11 +92,10 @@ class Index extends Component<{}, PageState> {
           title='暂无打印店相关信息'
           picture={require('../../assets/images/index/blank-house.png')}
         /> */}
-        <TabBar current={0}/>
+        <TabBar current={0} />
       </View>
     )
   }
 }
-
 
 export default Index as ComponentClass<PageOwnProps, PageState>
