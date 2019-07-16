@@ -34,6 +34,9 @@
       background: #38d8e4;
       border-color: #38d8e4;
     }
+    &:focus {
+      outline: none;
+    }
     outline: none;
     cursor: pointer;
     padding: 0;
