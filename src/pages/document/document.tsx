@@ -105,7 +105,6 @@ class Document extends Component<IProps, PageState> {
             ['单面', '双面'],
             ['彩色', '黑白']
         ],
-        selectedPrintList: 
     }
 
     handleBack = () => {
