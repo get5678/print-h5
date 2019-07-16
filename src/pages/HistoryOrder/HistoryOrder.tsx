@@ -4,9 +4,9 @@ import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
 import return2Png from '../../assets/return2.png';
 import { add, minus, asyncAdd } from '../../actions/counter';
-import orderSrore from '../../assets/orderSrore.png';
+import orderStore from '../../assets/orderStore.png';
 import ppt from '../../assets/ppt.png';
-import './a.scss';
+import './historyorder.scss';
 
 type PageStateProps = {
   counter: {
@@ -29,7 +29,7 @@ interface State {
   inputValue: string
 }
 
-interface Historyorder {
+interface historyorder {
   props: IProps;
 }
 
@@ -46,7 +46,7 @@ interface Historyorder {
     dispatch(asyncAdd())
   }
 }))
-class Historyorder extends Taro.Component<{}, State> {
+class historyorder extends Taro.Component<{}, State> {
   constructor(props){
     super(props);
     this.state={
@@ -99,7 +99,7 @@ ToMore(){
         <View className='order-store-box'>
           <View className='order-store-top'>
             <View className='order-store-name'>
-              <Image className='orderStore' src={orderSrore}/>
+              <Image className='orderStore' src={orderStore}/>
               <View>阳光图文打印店</View>
             </View>
             <Text className='status'>已完成</Text>
@@ -116,4 +116,4 @@ ToMore(){
   }
 }
 
-export default Historyorder
+export default historyorder

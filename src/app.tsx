@@ -29,11 +29,12 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/Historyorder/Historyorder',
-      'pages/Noworder/Noworder',
+      'pages/generateorders/generateorders',
+      'pages/index/index',
+      'pages/historyorder/historyorder',
+      'pages/noworder/noworder',
       'pages/StoreInformation/StoreInformation',
       'pages/feedback/feedback',
-      'pages/index/index',
       'pages/bindPhone/bindPhone',
       'pages/mine/mine',
       // 'pages/document/document'

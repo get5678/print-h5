@@ -4,8 +4,8 @@ import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
 import { add, minus, asyncAdd } from '../../actions/counter'
 
-import './Noworder.scss'
-import orderSrore from '../../assets/orderSrore.png';
+import './noworder.scss'
+import orderStore from '../../assets/orderStore.png';
 import ppt from '../../assets/ppt.png';
 
 type PageStateProps = {
@@ -29,7 +29,7 @@ interface State {
   inputValue: string
 }
 
-interface Noworder {
+interface noworder {
   props: IProps;
 }
 
@@ -46,7 +46,7 @@ interface Noworder {
     dispatch(asyncAdd())
   }
 }))
-class Noworder extends Taro.Component<{}, State> {
+class noworder extends Taro.Component<{}, State> {
   constructor(props){
     super(props);
     this.state={
@@ -106,7 +106,7 @@ ToMore(){
         <View className='order-store-box'>
           <View className='order-store-top'>
             <View className='order-store-name'>
-              <Image className='orderStore' src={orderSrore}/>
+              <Image className='orderStore' src={orderStore}/>
               <View>阳光图文打印店</View>
             </View>
             <Text className='status'>已完成</Text>
@@ -123,4 +123,4 @@ ToMore(){
   }
 }
 
-export default Noworder
+export default noworder
