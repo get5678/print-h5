@@ -11,9 +11,8 @@ import ppt from './pic/ppt.png'
 import question from './pic/question.png'
 import unkown from './pic/unknown.png'
 import list from './pic/list.png'
-// import close from './pic/close.png'
 import arrow from '../../assets/arrow.png'
-
+import backArrow from '../../assets/backArrow.png'
 
 type list = {
     id: number;
@@ -151,9 +150,12 @@ class Document extends Component<IProps, PageState> {
             formData: {
                 'user': 'test'
             },
-            success: function (res) {
+            success: (res) => {
                 var data = res.data
                 console.log(data,"data")
+            },
+            fail:  () => {
+                console.log('fail')
             }
         })
     }
@@ -255,7 +257,7 @@ class Document extends Component<IProps, PageState> {
         
         return (
             <View className='myDocument'>
-                <NavBar title='我的文档' handleBack={this.handleBack} />
+                <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
                 <ScrollView>
                     {documentLists}
                 </ScrollView>
