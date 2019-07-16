@@ -65,6 +65,13 @@ class Index extends Component {
     navigationBarTitleText: '首页'
   }
 
+
+  navToLogin () {
+    Taro.navigateTo({
+      url: '../bindPhone/bindPhone'
+    })
+  }
+
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps)
   }
@@ -83,6 +90,7 @@ class Index extends Component {
         <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
         <View><Text>{this.props.counter.num}</Text></View>
         <View><Text>Hello, World</Text></View>
+        <Button className='nav' onClick={this.navToLogin.bind(this)}>nav to login</Button>
       </View>
     )
   }
