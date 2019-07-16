@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Image, Input } from '@tarojs/components'
+import { View, Button, Image, Input, Text } from '@tarojs/components'
 import { Toast } from '../../components/toast/toast'
 // import { connect } from '@tarojs/redux'
 
@@ -15,6 +15,14 @@ type PageDispatchProps = {
 type PageOwnProps = {}
 
 type PageState = {
+  phone: string;
+  code: string;
+  picture: string;
+  showToast: boolean;
+  buttonDisabled: boolean;
+  codeButtonText: string;
+  showWarn: boolean;
+  warnText: string;
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -23,16 +31,7 @@ interface BindPhone {
   props: IProps;
 }
 
-interface IState {
-  phone: string;
-  code: string;
-  picture: string;
-  showToast: boolean;
-  buttonDisabled: boolean;
-  codeButtonText: string;
-}
-
-class BindPhone extends Component<{}, IState> {
+class BindPhone extends Component<{}, PageState> {
 
   /**
  * 指定config的类型声明为: Taro.Config
@@ -53,25 +52,56 @@ class BindPhone extends Component<{}, IState> {
       picture: '',
       showToast: false,
       buttonDisabled: false,
-      codeButtonText: '发送验证码'
+      codeButtonText: '发送验证码',
+      showWarn: false,
+      warnText: ''
     }
   }
 
 
   /**
    * @description 处理电话号码输入和验证码输入
-   * @param {object} e 获得事件
    * @param {number} type 事件类型：1是电话号码，2是验证码
+   * @param {object} e 获得事件
    * @memberof BindPhone
    */
   handlePhoneInput(type: number, e: { detail: { value: string } }) {
     if (type === 1) {
       this.setState({
         phone: e.detail.value
+      }, () => {
+        if (!isPhoneNumber(this.state.phone)) {
+          this.setState({
+            showWarn: true,
+            warnText: '请输入正确的电话号码'
+          })
+        } else {
+          this.setState({
+            showWarn: false
+          })
+        }
       })
     } else if (type === 2) {
       this.setState({
         code: e.detail.value
+      }, () => {
+        // console.log(this.state.code)
+        if (!isPhoneNumber(this.state.phone)) {
+          this.setState({
+            showWarn: true,
+            warnText: '请输入正确的电话号码'
+          })
+        } else if (this.state.code.length !== 4) {
+          this.setState({
+            showWarn: true,
+            warnText: '请输入4位验证码'
+          })
+        } else {
+          this.setState({
+            showWarn: false,
+            warnText: ''
+          })
+        }
       })
     }
   }
@@ -82,9 +112,7 @@ class BindPhone extends Component<{}, IState> {
    */
   sendVerificationCode() {
     const phone = this.state.phone;
-    if (!isPhoneNumber(phone)) {
-      console.log('none')
-    } else {
+    if (isPhoneNumber(phone)) {
       console.log('su')
       this.countDown(60)
     }
@@ -97,12 +125,10 @@ class BindPhone extends Component<{}, IState> {
   submitBindPhone() {
     const phone = this.state.phone;
     const code = this.state.code;
-    if (!isPhoneNumber(phone)) {
-      console.log('绑定失败，不是合法的手机号')
-    } else if (!(code.length === 4)) {
-      console.log('绑定失败，验证码错误')
-    } else {
-      console.log('绑定成功')
+    if (isPhoneNumber(phone) && code.length === 4) {
+      this.setState({
+        showToast: true
+      })
     }
   }
 
@@ -155,7 +181,7 @@ class BindPhone extends Component<{}, IState> {
   componentDidHide() { }
 
   render() {
-    const { codeButtonText, buttonDisabled, showToast } = this.state;
+    const { codeButtonText, buttonDisabled, showToast, warnText, showWarn } = this.state;
 
     return (
       <View className='bind'>
@@ -171,18 +197,20 @@ class BindPhone extends Component<{}, IState> {
               <Input name='code' className='bind-input' placeholder='请输入验证码' placeholderClass='bind-inputPL' type='number' maxLength={4} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
               <Button className={buttonDisabled ? 'bind-code bind-codeDisabled' : 'bind-code'} disabled={buttonDisabled ? true : false} onClick={this.sendVerificationCode.bind(this)}>{codeButtonText}</Button>
             </View>
+            {showWarn ? <View className='bind-warn'>
+              <Text>{warnText}</Text>
+            </View> :
+            ''}
           </View>
           <Button className='bind-button' onClick={this.submitBindPhone.bind(this)}>提交</Button>
         </View>
         {(!showToast) ? '' :
-          <View className='bind-mask'>
             <Toast
               picture={require('../../assets/images/bindPhone/bind-success.png')}
               title='绑定成功'
-              button='我知道了'
-              onShow={this.closeToast.bind(this)}
-            />
-          </View>}
+              confirm='我知道了'
+              onConfirm={this.closeToast.bind(this)}
+            />}
       </View>
     )
   }

@@ -31,7 +31,8 @@ class App extends Component {
       'pages/index/index',
       'pages/bindPhone/bindPhone',
       'pages/mine/mine',
-      'pages/document/document'
+      'pages/document/document',
+      'pages/bindWX/bindWX'
     ],
     window: {
       backgroundTextStyle: 'light',

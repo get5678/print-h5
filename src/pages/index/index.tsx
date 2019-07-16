@@ -1,26 +1,23 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
-import { add, minus, asyncAdd } from '../../actions/counter'
+import { View, Button, Input, Image } from '@tarojs/components'
+import { BlankPage } from '../../components/blankPage/blankPage'
+// import { connect } from '@tarojs/redux'
+// import { add, minus, asyncAdd } from '../../actions/counter'
 import TabBar  from '../../components/TabBar/TabBar'
 import './index.scss'
 
 type PageStateProps = {
-  counter: {
-    num: number
-  }
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
 }
 
 type PageOwnProps = {}
 
-type PageState = {}
+type PageState = {
+  searchText: string;
+}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
@@ -28,30 +25,60 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ counter }) => ({
-  counter
-}), (dispatch) => ({
-  add () {
-    dispatch(add())
-  },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
-  }
-}))
-class Index extends Component {
+// @connect(({ counter }) => ({
+//   counter
+// }), (dispatch) => ({
+//   add () {
+//     dispatch(add())
+//   },
+//   dec () {
+//     dispatch(minus())
+//   },
+//   asyncAdd () {
+//     dispatch(asyncAdd())
+//   }
+// }))
+class Index extends Component<{}, PageState> {
 
     config: Config = {
     navigationBarTitleText: '首页'
   }
 
+  /**
+   * @description 方便测试用的跳转功能
+   * @param {number} type
+   * @memberof Index
+   */
+  navTo (type: number) {
+    if (type === 1) {
+      Taro.navigateTo({
+        url: '../bindPhone/bindPhone'
+      })
+    } else if (type === 2) {
+      Taro.navigateTo({
+        url: '../bindWX/bindWX'
+      })
+    }
+  }
 
-  navToLogin () {
-    Taro.navigateTo({
-      url: '../bindPhone/bindPhone'
+  /**
+   * @description 处理输入搜索关键词
+   * @param {*} e
+   * @memberof Index
+   */
+  handleInputSearch (e:{detail: {value: string}}) {
+    console.log(e.detail.value)
+    this.setState({
+      searchText: e.detail.value
     })
+  }
+
+  /**
+   * @description 处理扫二维码
+   * @memberof Index
+   */
+  handleScanQRCode () {
+    console.log('暂未开放');
   }
 
   componentWillReceiveProps (nextProps) {
@@ -65,11 +92,23 @@ class Index extends Component {
   componentDidHide () { }
 
   render () {
+    const { searchText } = this.state;
+
     return (
-      
       <View className='index'>
-        <Button className='nav' onClick={this.navToLogin.bind(this)}>nav to login</Button>
-        <View>this is index</View>
+        <View className='index-top'>
+          <View className='index-top-row'>
+            <Image className='index-icon' src={require('../../assets/images/index/magnifyingGlass.png')}></Image>
+            <Input className='index-input' placeholder='请输入打印店名字' placeholderClass='index-inputPL' maxLength={40} onInput={this.handleInputSearch.bind(this)} value={searchText}></Input>
+          </View>
+          <Image className='index-icon' src={require('../../assets/images/index/scanQRCode.png')} onClick={this.handleScanQRCode.bind(this)}></Image>
+        </View>
+        <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button>
+        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button>
+        {/* <BlankPage
+          title='暂无打印店相关信息'
+          picture={require('../../assets/images/index/blank-house.png')}
+        /> */}
         <TabBar current={0}/>
       </View>
     )
