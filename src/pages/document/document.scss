@@ -1,7 +1,6 @@
 .myContent{
-    
     display: flex;
-    padding-top: 90px;
+    padding:90px 0 150px 0;
     flex-direction: column;
     align-items: center;
     background: #fbfbfb;
@@ -78,6 +77,8 @@
     height: 80px;
     font-size: 30px;
     border-radius: 120px;
+    margin: 0;
+    padding: 0;
     border: none;
 }
 .buttDoc:focus{
@@ -94,54 +95,77 @@
     background: #2fb9c3;
     color: #fff;
 }
-.printWindowAll{
-    position: absolute;
-    top: 90px;
-}
-.cover{
-    background: rgba(#000, .5);
-    width: 100vw;
-    height: 92vh;
-}
-.printWindow{
-    width: 750px;
-    height: 684px;
-    border-radius: 40px;
+
+
+
+.weui-picker{
+    border-radius: 30px;
     background: #fff;
-    z-index: 2;
-    position: fixed;
-    bottom: 0;
-    padding: 0 60px;
+    bottom: 220px;
+    padding: 0 50px;
     box-sizing: border-box;
 }
-.printShop{
+
+.weui-picker__indicator:before, .weui-picker__indicator:after{
+    border-top: #2fb9c3 1px solid;
+}
+
+// .weui-picker__hd{
+//     // display: none;
+//     // visibility: hidden;
+// }
+
+.buttons{
+    box-sizing: border-box;
+    padding-top: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    width: 750px;
+    height: 246px;
+    background: #fff;
+    position: fixed;
+    z-index: 5000;
+    bottom: 0;
+}
+.shopTitle{
     font-size: 30px;
-    color: #333;
+    height: 34px;
+    line-height: 34px;
+    width: 100%;
     text-align: center;
-    height: 100px;
-    line-height: 100px;
-}
-.printClose{
-    width: 24px;
-    height: 24px;
+    color: #333333;
     position: relative;
-    left: 120px;
-    line-height: normal;
-    overflow: visible;
+    bottom: 530px;
 }
-.multAll{
-    height: 354px;
-    display: flex;
-}
-.mul{
-    display: flex;
-    width: 90px;
-    height: 350px;
-    flex-direction: column;
-    overflow: hidden;
-    color: #b3999999;
+.totallprice{
     font-size: 30px;
+    align-items: center;
+    width: 100%;
+    text-align: right;
+    height: 48px;
+    margin-top: -30px;
+    position: relative;
+    letter-spacing: 1px;
 }
-.mulis{
-    height: 80px;
+.price{
+    width: 150px;
+    height: 50px;
+    display: inline-block;
+    line-height: 50px;
+    font-size: 36px;
+    text-align: left;
+    color: #2fb9c3;
+    
+}
+.surebutton{
+    margin-top: 50px;
+}
+.printbut{
+    width: 630px;
+    height: 90px;
+    background: #2fb9c3;
+    color: #fff;
+    font-size: 30px;
+    border: none;
+    border-radius: 40px;
 }
