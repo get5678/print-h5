@@ -29,7 +29,7 @@ interface State {
   inputValue: string
 }
 
-interface HistoryOrder {
+interface Historyorder {
   props: IProps;
 }
 
@@ -46,7 +46,7 @@ interface HistoryOrder {
     dispatch(asyncAdd())
   }
 }))
-class HistoryOrder extends Taro.Component<{}, State> {
+class Historyorder extends Taro.Component<{}, State> {
   constructor(props){
     super(props);
     this.state={
@@ -116,4 +116,4 @@ ToMore(){
   }
 }
 
-export default HistoryOrder
+export default Historyorder

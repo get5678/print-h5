@@ -2,11 +2,9 @@ import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
-
-
 import { add, minus, asyncAdd } from '../../actions/counter'
 
-import './nowOrder.scss'
+import './Noworder.scss'
 import orderSrore from '../../assets/orderSrore.png';
 import ppt from '../../assets/ppt.png';
 
@@ -31,7 +29,7 @@ interface State {
   inputValue: string
 }
 
-interface NowOrder {
+interface Noworder {
   props: IProps;
 }
 
@@ -48,7 +46,7 @@ interface NowOrder {
     dispatch(asyncAdd())
   }
 }))
-class NowOrder extends Taro.Component<{}, State> {
+class Noworder extends Taro.Component<{}, State> {
   constructor(props){
     super(props);
     this.state={
@@ -125,4 +123,4 @@ ToMore(){
   }
 }
 
-export default NowOrder
+export default Noworder
