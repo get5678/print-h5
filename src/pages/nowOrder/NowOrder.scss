@@ -1,0 +1,91 @@
+.body-box{
+    width: 750px;
+    margin: 0 auto;
+}
+.nowOrder-top-box{
+    width: 690px;
+    margin: 0 auto;
+    height: 152px;
+    display: flex;
+    align-items: center;
+    .nowOrder-return{
+        width: 10px;
+        height: auto;
+        margin-right: -20px;
+    }
+    .nowOrder-top-tittle{
+        text-align: center;
+        color: #000;
+        flex-grow:1;
+        height: 70px;
+        line-height: 70px;
+        font-size: 36px;
+    }
+}
+.all-order{
+    width: 78px;
+    height: 56px;
+    margin-left: 60px;
+    display: flex;
+    flex-direction: column;
+    font-size: 28px; 
+    justify-content: space-between;
+    align-items: center;
+    color:#999;
+}
+.all-line{
+    width: 70px;
+    height: 6px;
+    background: #2fb9c3;
+}
+.order-store-box{
+    width: 640px;
+    margin: 0 auto;
+    height: 324px;
+    padding: 0 28px;
+    box-shadow:  0 0 30px 1px rgba(204, 202, 202, 0.411);
+    border-radius: 30px;
+    margin-top: 15px;
+}
+.order-store-top{
+    height: 95px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 26px;
+    font-weight: 600px;
+    .order-store-name{
+        width: 224px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .status{
+        color: #2fb9c3;
+    }
+}
+.file-type-box{
+    height: 122px;
+    display: flex;
+    align-items: center;
+    .order-time-box{
+        height: 85px;
+        display:flex;
+        flex-direction: column;
+        justify-content: space-around;
+        font-size: 28px;
+    }
+    .order-time{
+        font-size: 24px;
+        color: #999999;
+    }
+    .file-type{
+        height: 121px;
+        width: 121px;
+        margin-right: 28px;
+    }
+}
+.orderStore{
+    width: 24px;
+    height: 28px;
+}
