@@ -20,7 +20,20 @@
     color: #fff;
     width: 161px;
     height: 60px;
-    background-color: rgb(75, 189, 197);
+    background: #2fb9c3;
+    border-color: #2fb9c3;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 0 rgba(0,0,0,.045);
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    touch-action: manipulation;
+    &:active {
+      background: #29a6af;
+      border-color: #29a6af;
+    }
+    &:hover {
+      background: #38d8e4;
+      border-color: #38d8e4;
+    }
     outline: none;
     cursor: pointer;
     padding: 0;

@@ -112,8 +112,12 @@ class BindPhone extends Component<{}, PageState> {
    */
   sendVerificationCode() {
     const phone = this.state.phone;
-    if (isPhoneNumber(phone)) {
-      console.log('su')
+    if (!isPhoneNumber(phone)) {
+      this.setState({
+        showWarn: true,
+        warnText: '请输入正确的电话号码'
+      })
+    } else {
       this.countDown(60)
     }
   }
@@ -125,7 +129,17 @@ class BindPhone extends Component<{}, PageState> {
   submitBindPhone() {
     const phone = this.state.phone;
     const code = this.state.code;
-    if (isPhoneNumber(phone) && code.length === 4) {
+    if (!isPhoneNumber(phone)) {
+      this.setState({
+        showWarn: true,
+        warnText: '请输入正确的电话号码'
+      })
+    } else if (code.length !== 4) {
+      this.setState({
+        showWarn: true,
+        warnText: '请输入4位验证码'
+      })
+    } else {
       this.setState({
         showToast: true
       })
