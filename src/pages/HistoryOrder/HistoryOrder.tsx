@@ -6,7 +6,7 @@ import return2Png from '../../assets/return2.png';
 import { add, minus, asyncAdd } from '../../actions/counter';
 import orderSrore from '../../assets/orderSrore.png';
 import ppt from '../../assets/ppt.png';
-import './a.scss';
+import './HistoryOrder.scss';
 
 type PageStateProps = {
   counter: {
