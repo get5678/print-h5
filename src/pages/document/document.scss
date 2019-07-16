@@ -1,0 +1,147 @@
+.myContent{
+    
+    display: flex;
+    padding-top: 90px;
+    flex-direction: column;
+    align-items: center;
+    background: #fbfbfb;
+}
+
+.docuBefore{
+    width: 16px;
+    height: 16px;
+    display: block;
+    background: #eaeaea;
+    border-radius: 50%;
+    margin-right: 20px;
+    margin-left: 34px;
+}
+
+.docuList{
+    height: 160px;
+    width: 690px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    margin-top: 30px;
+    box-shadow: 1px 1px 8px rgba($color: #999, $alpha: .1);
+}
+.bule{
+    background: #2fb9c3;
+}
+.docuImg{
+    width: 80px;
+    height: 80px;
+    line-height: normal;
+    margin-right: 24px;
+}
+.arrowright{
+    width: 14px;
+    height: 26px;
+    line-height: normal;
+}
+.docuContent{
+    height: 80px;
+    width: 440px;
+    line-height: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.docuTitle{
+    font-size: 30px;
+}
+.docuText{
+    font-size: 26px;
+    color: #999;
+    line-height: normal;
+}
+.docuSize{
+    margin-right: 30px;
+}
+
+.buttonDoc{
+    height: 124px;
+    width: 100vw;
+    background: #fff;
+    box-sizing: border-box;
+    display: flex;
+    padding: 0 80px;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 0;
+}
+
+.buttDoc{
+    width: 260px;
+    height: 80px;
+    font-size: 30px;
+    border-radius: 120px;
+    border: none;
+}
+.buttDoc:focus{
+    outline: none;
+}
+.uploadDoc{
+    border: 2px #2fb9c3 solid;
+    color: #2fb9c3;
+    padding: 0;
+    margin: 0;
+    background: #fff;
+}
+.printDoc{
+    background: #2fb9c3;
+    color: #fff;
+}
+.printWindowAll{
+    position: absolute;
+    top: 90px;
+}
+.cover{
+    background: rgba(#000, .5);
+    width: 100vw;
+    height: 92vh;
+}
+.printWindow{
+    width: 750px;
+    height: 684px;
+    border-radius: 40px;
+    background: #fff;
+    z-index: 2;
+    position: fixed;
+    bottom: 0;
+    padding: 0 60px;
+    box-sizing: border-box;
+}
+.printShop{
+    font-size: 30px;
+    color: #333;
+    text-align: center;
+    height: 100px;
+    line-height: 100px;
+}
+.printClose{
+    width: 24px;
+    height: 24px;
+    position: relative;
+    left: 120px;
+    line-height: normal;
+    overflow: visible;
+}
+.multAll{
+    height: 354px;
+    display: flex;
+}
+.mul{
+    display: flex;
+    width: 90px;
+    height: 350px;
+    flex-direction: column;
+    overflow: hidden;
+    color: #b3999999;
+    font-size: 30px;
+}
+.mulis{
+    height: 80px;
+}
