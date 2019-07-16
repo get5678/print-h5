@@ -6,7 +6,7 @@ import TabBar from '../../components/TabBar/TabBar';
 
 import { add, minus, asyncAdd } from '../../actions/counter'
 
-import './NowOrder.scss'
+import './nowOrder.scss'
 import orderSrore from '../../assets/orderSrore.png';
 import ppt from '../../assets/ppt.png';
 
