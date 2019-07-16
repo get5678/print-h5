@@ -29,8 +29,8 @@ class App extends Component {
    */
   config: Config = {
     pages: [
-      'pages/generateorders/generateorders',
       'pages/index/index',
+      'pages/generateorders/generateorders',
       'pages/historyorder/historyorder',
       'pages/noworder/noworder',
       'pages/StoreInformation/StoreInformation',
