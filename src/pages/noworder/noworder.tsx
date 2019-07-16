@@ -62,14 +62,9 @@ GotoFeedback(inputValue,justIcon){
     // })
 }
 
-Return(){
-    Taro.navigateTo({
-        url:'../'
-    })
-}
 ToMore(){
   Taro.navigateTo({
-    url:'../'
+    url:'../generateorders/generateorders'
   })
 }
   componentWillReceiveProps (nextProps) {
