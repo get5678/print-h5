@@ -76,7 +76,7 @@ GotoFeedback(inputValue,justIcon){
 
 Return(){
     Taro.navigateTo({
-        url:'../'
+        url:'../mine/mine'
     })
 }
 onInput = e => {
