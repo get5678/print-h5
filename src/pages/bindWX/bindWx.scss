@@ -1,0 +1,30 @@
+.bindWX {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'PingFang SC Regular';
+  @at-root #{&}-image {
+    width: 367px;
+    height: 189px;
+  }
+  @at-root #{&}-title {
+    margin-top: 30px;
+    font-size: 30px;
+    color: #000;
+  }
+  @at-root #{&}-button {
+    margin-top: 50px;
+    font-size: 28px;
+    color: #fff;
+    width: 161px;
+    height: 60px;
+    background-color: rgb(75, 189, 197);
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 26px;
+    line-height: 60px;
+  }
+}
