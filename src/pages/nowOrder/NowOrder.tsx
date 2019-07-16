@@ -2,7 +2,6 @@ import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
-// import return2Png from '../../assets/return2.png';
 
 
 import { add, minus, asyncAdd } from '../../actions/counter'

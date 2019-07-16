@@ -4,10 +4,7 @@ import { Provider } from '@tarojs/redux'
 
 // import Index from './pages/index'
 import Mine from './pages/mine/mine'
-<<<<<<< HEAD
 // import Document from './pages/document/document'
-=======
->>>>>>> bb19c9e088fd56a705b3bd26d3ad5c4710c074bb
 
 import configStore from './store'
 
