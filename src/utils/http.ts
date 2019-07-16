@@ -1,5 +1,4 @@
 import Taro from '@tarojs/taro';
-import errorImg from '../assets/error.png';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -46,9 +45,7 @@ export default class Http {
 
   async commonHttp(method: HttpMethod, url: string, data: object, contentType?) {
     return new Promise(async (resolve, reject) => {
-      // 请求动画
       const token = Taro.getStorageSync('token') || '';
-      Taro.showNavigationBarLoading();
       try {
         const res = await Taro.request({
           url,
@@ -70,13 +67,6 @@ export default class Http {
             reject(res.data);
         }
       } catch (error) {
-        Taro.hideNavigationBarLoading();
-        Taro.showToast({
-          title: '❌出现错误❌',
-          image: errorImg,
-          duration: 1200,
-          mask: true
-        });
         throw Error('出现错误: ' + error);
       }
     })

@@ -1,0 +1,23 @@
+.blank {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  @at-root #{&}-picture {
+    width: 367px;
+    height: 236px;
+  }
+  @at-root #{&}-title {
+    font-size: 28px;
+    color: #999;
+    margin-top: -60px;
+  }
+}
