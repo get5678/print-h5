@@ -105,7 +105,6 @@ class Document extends Component<IProps, PageState> {
             ['单面', '双面'],
             ['彩色', '黑白']
         ],
-        selectedPrintList: 
     }
 
     handleBack = () => {
@@ -215,11 +214,11 @@ class Document extends Component<IProps, PageState> {
 
                     // </Picker>
                     : {}} */}
-                <Picker
+                {/* <Picker
                     mode='multiSelector'
                     range={printList}
                     rangeKey={selectedPrintList}
-                />
+                /> */}
 
             </View>
         )
