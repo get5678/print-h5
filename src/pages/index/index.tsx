@@ -1,10 +1,9 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-
 import { add, minus, asyncAdd } from '../../actions/counter'
-
+import TabBar  from '../../components/TabBar/TabBar'
 import './index.scss'
 
 type PageStateProps = {
@@ -43,13 +42,21 @@ interface Index {
   }
 }))
 class Index extends Component {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0434cf14dab5a9a71b3bbee4117ece28e51bb41d
     config: Config = {
     navigationBarTitleText: '首页'
   }
 
-  componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+  handleClick(value) {
+    this.setState({
+      current: value
+    })
   }
+
+  componentWillReceiveProps () {}
 
   componentWillUnmount () { }
 
@@ -59,15 +66,22 @@ class Index extends Component {
 
   render () {
     return (
+      
       <View className='index'>
-        <Button className='add_btn' onClick={this.props.add}>+</Button>
+        {/* <Button className='add_btn' onClick={this.props.add}>+</Button>
         <Button className='dec_btn' onClick={this.props.dec}>-</Button>
         <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
         <View><Text>{this.props.counter.num}</Text></View>
-        <View><Text>Hello, World</Text></View>
+        <View><Text>Hello, World</Text></View> */}
+        <View>this is index</View>
+        <TabBar current={0}/>
       </View>
     )
   }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0434cf14dab5a9a71b3bbee4117ece28e51bb41d
 export default Index as ComponentClass<PageOwnProps, PageState>

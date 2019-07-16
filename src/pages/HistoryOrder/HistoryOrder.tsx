@@ -1,13 +1,13 @@
 import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
+import '../NowOrder/NowOrder.scss'
 import TabBar from '../../components/TabBar/TabBar';
-// import return2Png from '../../assets/return2.png';
+import return2Png from '../../assets/return2.png';
 
 
 import { add, minus, asyncAdd } from '../../actions/counter'
 
-import './NowOrder.scss'
 import orderSrore from '../../assets/orderSrore.png';
 import ppt from '../../assets/ppt.png';
 
@@ -32,7 +32,7 @@ interface State {
   inputValue: string
 }
 
-interface NowOrder {
+interface HistoryOrder {
   props: IProps;
 }
 
@@ -49,7 +49,7 @@ interface NowOrder {
     dispatch(asyncAdd())
   }
 }))
-class NowOrder extends Taro.Component<{}, State> {
+class HistoryOrder extends Taro.Component<{}, State> {
   constructor(props){
     super(props);
     this.state={
@@ -57,13 +57,6 @@ class NowOrder extends Taro.Component<{}, State> {
       inputValue: ''
     }
   }
-
-GotoFeedback(inputValue,justIcon){
-  console.log("这里是提交内容"+inputValue,justIcon)
-    // Taro.navigateTo({
-    //     url:'../'
-    // })
-}
 
 Return(){
     Taro.navigateTo({
@@ -73,7 +66,7 @@ Return(){
 ToMore(){
   Taro.navigateTo({
     url:'../'
-  })
+})
 }
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps)
@@ -99,8 +92,8 @@ ToMore(){
     return (
       <View className='body-box'>
         <View className='nowOrder-top-box'>
-          {/* <Image onClick={this.Return} className='nowOrder-return' src={return2Png}></Image> */}
-          <View className='nowOrder-top-tittle'>当前订单</View>
+          <Image onClick={this.Return} className='nowOrder-return' src={return2Png}></Image>
+          <View className='nowOrder-top-tittle'>历史订单</View>
         </View>
         <View className='all-order'>
           <Text>全部</Text>
@@ -126,4 +119,4 @@ ToMore(){
   }
 }
 
-export default NowOrder
+export default HistoryOrder

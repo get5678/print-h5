@@ -85,6 +85,29 @@
         margin-right: 28px;
     }
 }
+.file-type-bottom{
+    height: 104px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .file-price{
+        font-size: 24px;
+        color: #727272;
+        .price-yuan{
+            color: #000;
+        }
+    }
+}
+.ToMore{
+    width: 150px;
+    height: 48px;
+    border-radius: 48px;
+    border: 1px solid #3dbec7;
+    color: #3dbec7;
+    font-size: 26px;
+    text-align: center;
+    line-height: 48px;
+}
 .orderStore{
     width: 24px;
     height: 28px;
