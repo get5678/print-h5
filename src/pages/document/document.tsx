@@ -11,9 +11,8 @@ import ppt from './pic/ppt.png'
 import question from './pic/question.png'
 import unkown from './pic/unknown.png'
 import list from './pic/list.png'
-import close from './pic/close.png'
 import arrow from '../../assets/arrow.png'
-
+import backArrow from '../../assets/backArrow.png'
 
 type list = {
     id: number;
@@ -42,9 +41,7 @@ type PageState = {
         img: string;
         checked?: boolean;
     }[];
-    current: number;
     selected: boolean;
-    shop: string;
     multiSelect: {
         size: string[];
         pagenum: number[];
@@ -52,7 +49,12 @@ type PageState = {
         colors: string[];
     }[];
     show: boolean;
-    printList: (string[] | number[] | any[])[];
+    printList: (string[] | number[])[];
+    selectedprintList: (string | number)[];
+    price: number;
+    preprint: number[];
+    shopTitle: string;
+    tempFilePaths: string[];
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -66,7 +68,8 @@ interface Document {
 class Document extends Component<IProps, PageState> {
 
     config: Config = {
-        navigationBarTitleText: '我的文档'
+        navigationBarTitleText: '我的文档',
+        navigationBarBackgroundColor: '#2fb9c3'
     }
 
 
@@ -88,9 +91,8 @@ class Document extends Component<IProps, PageState> {
             { id: 7, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
             { id: 8, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
         ],
-        current: -1,
+       
         selected: false,
-        shop: '阳光图文打印店',
         multiSelect: [
             {
                 size: ['A1', 'A2', 'A3', 'A4'],
@@ -105,6 +107,12 @@ class Document extends Component<IProps, PageState> {
             ['单面', '双面'],
             ['彩色', '黑白']
         ],
+        selectedprintList: ['A1', 4, '单面', '黑白'],
+        price: 0,
+        preprint: [0, 3, 0, 1],
+        shopTitle: '阳光图文打印店',
+        tempFilePaths:[]
+
     }
 
     handleBack = () => {
@@ -133,6 +141,52 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
+    handleUpload = () => {
+        const { tempFilePaths } = this.state;
+        Taro.uploadFile({
+            url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
+            filePath: tempFilePaths[0],
+            name: 'file',
+            formData: {
+                'user': 'test'
+            },
+            success: (res) => {
+                var data = res.data
+                console.log(data,"data")
+            },
+            fail:  () => {
+                console.log('fail')
+            }
+        })
+    }
+
+    handleChange = e => {
+        const { printList } = this.state;
+        let arr: any = [];
+        for (let i in printList ){   
+            arr.push(printList[i][e.detail.value[i]])
+        }
+        this.setState({
+            selectedprintList: arr,
+            show: !this.state.show
+        })
+    }
+
+    handleShowPrice = (e) => {
+        const { printList } = this.state;
+        const { detail } = e;
+
+        console.log(printList[detail.column][detail.value])
+
+    }
+
+    handleShowPicker = () => {
+        this.setState({
+            show: !this.state.show
+        })
+
+    }
+
     componentWillMount() {
         let { Lists } = this.state;
         let ListsAnother: list = [];
@@ -146,10 +200,10 @@ class Document extends Component<IProps, PageState> {
 
     render() {
 
-        const { Lists, shop, multiSelect, show, printList, selectedPrintList } = this.state;
+        const { Lists, show, printList, preprint, price } = this.state;
         
         const documentLists = (
-            <View>
+            <View className='myContent'>
                 {Lists.map((list, index) => (
                     <View key={list.id} className='docuList' onClick={this.handleChoose.bind(this, index)}>
                         <View className='docuBefore' style={{ background: `${list.checked ? '#2fb9c3' : ''}` }}></View>
@@ -166,60 +220,48 @@ class Document extends Component<IProps, PageState> {
             </View>
         )
 
-        const bottomButton = (
-            <View className='buttonDoc'>
-                <Button className='uploadDoc buttDoc'>上传文件</Button>
-                <Button className='printDoc buttDoc' onClick={this.handlePrint}>打印</Button>
+        const Buttons = (
+            <View className='buttons'>
+                {/* <View className='shopTitle'>
+                    <Text>打印店铺：{this.state.shopTitle}</Text>
+                    <Image className='shoppic' src={close} onClick={this.handleShowPicker}/>
+                </View> */}
+                <View className='totallprice'>
+                    合计：<Text className='price'>￥{price}</Text>
+                </View>
+                {/* <View className='surebutton'>
+                    <Button className='printbut' onClick={this.handleChange.bind(this)}>确认打印</Button>
+                </View> */}
             </View>
+
         )
 
-        const printWindow = (
-            <View className='printWindowAll cover' >
-                <View className='printWindow'>
-                    <View className='printShop'>打印店铺：{shop}
-                        <Image src={close} className='printClose' onClick={this.handlePrint} />
-                    </View>
-                    <View className='multAll'>
-                        {
-                            multiSelect.map((mult) =>
-                                <View className='multAll'>
-                                    <View className='multSize mul'>{mult.size.map((size) => <View className='mulis'>{size}</View>)}</View>
-                                    <View className='multNum mul'>{mult.pagenum.map((size) => <View className='mulis'>{size}</View>)}</View>
-                                    <View className='multDirection mul'>{mult.direction.map((size) => <View className='mulis'>{size}</View>)}</View>
-                                    <View className='multColor mul'>{mult.colors.map((size) => <View className='mulis'>{size}</View>)}</View>
-                                </View>
-                            )
-                        }
+        const showprint = (
+            <View>
+                <View className='buttonDoc'>
+                    <Button className='uploadDoc buttDoc' onClick={this.handleUpload}>上传文件</Button>
+                    <View>
+                        <Picker mode='multiSelector' range={printList} onChange={this.handleChange} value={preprint}
+                            onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
+                        >
+                            <View onClick={this.handleShowPicker} >
+                                <Button className='printDoc buttDoc' onClick={this.handlePrint}>打印</Button>
+                            </View>
+                        </Picker>
                     </View>
                 </View>
+                {show ? Buttons : ''}
             </View>
         )
+
         
-        // const pickerPrint = (
-
-        // )
-
         return (
             <View className='myDocument'>
-                <NavBar title='我的文档' handleBack={this.handleBack} />
-                <ScrollView className='myContent'>
+                <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
+                <ScrollView>
                     {documentLists}
                 </ScrollView>
-                {bottomButton}
-                {/* {show ? {}
-                    // <Picker
-                    //     mode="multiSelector"
-                        
-                    // >
-
-                    // </Picker>
-                    : {}} */}
-                {/* <Picker
-                    mode='multiSelector'
-                    range={printList}
-                    rangeKey={selectedPrintList}
-                /> */}
-
+                {showprint}
             </View>
         )
     }

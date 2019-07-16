@@ -57,12 +57,12 @@ class historyorder extends Taro.Component<{}, State> {
 
 Return(){
     Taro.navigateTo({
-        url:'../pages/mine/mine'
+        url:'../mine/mine'
     })
 }
 ToMore(){
   Taro.navigateTo({
-    url:'../'
+    url:'../generateorders/generateorders'
 })
 }
   componentWillReceiveProps (nextProps) {

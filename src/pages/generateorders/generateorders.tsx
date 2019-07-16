@@ -45,7 +45,7 @@ class generateorders extends Taro.Component<{}, State>  {
 
   Return(){
       Taro.navigateTo({
-          url:'../'
+          url:'../historyorder/historyorder'
       })
   }
   componentWillReceiveProps (nextProps) {

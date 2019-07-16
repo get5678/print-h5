@@ -61,7 +61,12 @@ class Mine extends Component {
             break;
           case 1:
             Taro.redirectTo({
-                url: '/'
+                url: '/pages/historyorder/historyorder'
+            })
+            break;
+           case 2:
+            Taro.redirectTo({
+                url:'/pages/feedback/feedback'
             })
             break;
           case 3:

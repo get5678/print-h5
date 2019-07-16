@@ -39,7 +39,7 @@ export default class TabBar extends Component<props> {
             break;
           case 1:
             Taro.redirectTo({
-                url: '/pages/Noworder/Noworder'
+                url: '/pages/noworder/noworder'
             })
             break;
           case 2:
