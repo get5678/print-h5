@@ -55,6 +55,7 @@ type PageState = {
     preprint: number[];
     shopTitle: string;
     tempFilePaths: string[];
+    value: string;
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -91,7 +92,7 @@ class Document extends Component<IProps, PageState> {
             { id: 7, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
             { id: 8, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
         ],
-       
+        value: '上传文件',
         selected: false,
         multiSelect: [
             {
@@ -141,23 +142,24 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    handleUpload = () => {
+    handleUpload = (e) => {
         const { tempFilePaths } = this.state;
-        Taro.uploadFile({
-            url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
-            filePath: tempFilePaths[0],
-            name: 'file',
-            formData: {
-                'user': 'test'
-            },
-            success: (res) => {
-                var data = res.data
-                console.log(data,"data")
-            },
-            fail:  () => {
-                console.log('fail')
-            }
-        })
+        console.log(e,"eeeeeeeeee")
+        // Taro.uploadFile({
+        //     url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
+        //     filePath: tempFilePaths[0],
+        //     name: 'file',
+        //     formData: {
+        //         'user': 'test'
+        //     },
+        //     success: (res) => {
+        //         var data = res.data
+        //         console.log(data,"data")
+        //     },
+        //     fail:  () => {
+        //         console.log('fail')
+        //     }
+        // })
     }
 
     handleChange = e => {
@@ -200,7 +202,7 @@ class Document extends Component<IProps, PageState> {
 
     render() {
 
-        const { Lists, show, printList, preprint, price } = this.state;
+        const { Lists, show, printList, preprint, price, value } = this.state;
         
         const documentLists = (
             <View className='myContent'>
@@ -221,7 +223,7 @@ class Document extends Component<IProps, PageState> {
         )
 
         const Buttons = (
-            <View className='buttons'>
+            <View className={show ? 'buttons' : 'buttons test'}>
                 {/* <View className='shopTitle'>
                     <Text>打印店铺：{this.state.shopTitle}</Text>
                     <Image className='shoppic' src={close} onClick={this.handleShowPicker}/>
@@ -239,7 +241,11 @@ class Document extends Component<IProps, PageState> {
         const showprint = (
             <View>
                 <View className='buttonDoc'>
-                    <Button className='uploadDoc buttDoc' onClick={this.handleUpload}>上传文件</Button>
+                    <Button className='uploadDoc buttDoc' onClick={this.handleUpload}>
+                        上传文件 
+                        <input className='uopluadinput' type="file" onClick={this.handleUpload.bind(this)} /> 
+                          
+                    </Button>
                     <View>
                         <Picker mode='multiSelector' range={printList} onChange={this.handleChange} value={preprint}
                             onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}

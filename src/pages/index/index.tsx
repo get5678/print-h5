@@ -1,5 +1,5 @@
 import { ComponentClass } from 'react'
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Button, Input, Image } from '@tarojs/components'
 // import { BlankPage } from '../../components/blankPage/blankPage'
 // import { connect } from '@tarojs/redux'
