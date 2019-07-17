@@ -22,7 +22,7 @@
             <Text className='navText'>{this.props.title}</Text>
         </View>
         return (
-            <View>
+            <View className='navBars'>
                 {test}
             </View>
         )

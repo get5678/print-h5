@@ -42,20 +42,14 @@ type PageState = {
         checked?: boolean;
     }[];
     selected: boolean;
-    multiSelect: {
-        size: string[];
-        pagenum: number[];
-        direction: string[];
-        colors: string[];
-    }[];
     show: boolean;
     printList: (string[] | number[])[];
-    selectedprintList: (string | number)[];
+    selectedprintList: (any)[];
     price: number;
     preprint: number[];
     shopTitle: string;
     tempFilePaths: string[];
-    value: string;
+    
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -82,7 +76,7 @@ class Document extends Component<IProps, PageState> {
 
     state = {
         Lists:  [
-            { id: 0, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
+            { id: 0, title: '期末资料fdfdfdfdfdfdfdfdfdfdfdf.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
             { id: 1, title: '毕业论文.pdf', time: '1分钟前', size: '5.27MB', img: pdf },
             { id: 2, title: '动画.docx', time: '1分钟前', size: '188.66KB', img: word },
             { id: 3, title: '其他', time: '1天前', size: '122.43KB', img: list },
@@ -92,25 +86,18 @@ class Document extends Component<IProps, PageState> {
             { id: 7, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
             { id: 8, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
         ],
-        value: '上传文件',
+     
         selected: false,
-        multiSelect: [
-            {
-                size: ['A1', 'A2', 'A3', 'A4'],
-                pagenum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                direction: ['单面', '双面'],
-                colors: ['彩色', '黑白']
-            }],
         show: false,
         printList: [
-            ['A1', 'A2', 'A3', 'A4'],
+            ['A3', 'A4', 'B4', 'B5'],
             [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             ['单面', '双面'],
-            ['彩色', '黑白']
+            ['黑白', '彩色']
         ],
-        selectedprintList: ['A1', 4, '单面', '黑白'],
-        price: 0,
-        preprint: [0, 3, 0, 1],
+        selectedprintList: ['A4', 1, '单面', '黑白'],
+        price: 0.00,
+        preprint: [1, 0, 0, 0],
         shopTitle: '阳光图文打印店',
         tempFilePaths:[]
 
@@ -142,9 +129,15 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    handleUpload = (e) => {
-        const { tempFilePaths } = this.state;
-        console.log(e,"eeeeeeeeee")
+    handleUpload = () => {
+        // const { tempFilePaths } = this.state;
+        let File = new FileReader();
+        
+        // let fileType = this.files[0].type;
+        File.onload = () => {
+
+        }
+        console.log(this.refs.test.value,"eeeeeeeeee")
         // Taro.uploadFile({
         //     url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
         //     filePath: tempFilePaths[0],
@@ -162,23 +155,41 @@ class Document extends Component<IProps, PageState> {
         // })
     }
 
-    handleChange = e => {
-        const { printList } = this.state;
-        let arr: any = [];
-        for (let i in printList ){   
-            arr.push(printList[i][e.detail.value[i]])
-        }
-        this.setState({
-            selectedprintList: arr,
+    handleChange = () => {
+        
+        this.setState({ 
             show: !this.state.show
         })
     }
 
     handleShowPrice = (e) => {
-        const { printList } = this.state;
+        const { printList, selectedprintList, preprint } = this.state;
         const { detail } = e;
+        let nowprice: number | any = 0;
+        let newselectedprintList = selectedprintList.slice();
+        let newpreprint = preprint.slice();
 
-        console.log(printList[detail.column][detail.value])
+        newpreprint[detail.column] = detail.value;
+        newselectedprintList[detail.column] = printList[detail.column][detail.value];
+        
+        selectedprintList.map((item) => {
+            if(item === 'A4') {
+                nowprice += 0.8;
+            }
+            else if(typeof(item) === 'number') {
+                nowprice *= item;
+            }
+            else if(item === '黑白' || item === '彩色') {
+                nowprice += 0.8;
+            }
+        })
+        nowprice = nowprice.toFixed(2); 
+
+        this.setState({
+            price: nowprice,
+            selectedprintList: newselectedprintList,
+            preprint: newpreprint
+        })
 
     }
 
@@ -202,10 +213,10 @@ class Document extends Component<IProps, PageState> {
 
     render() {
 
-        const { Lists, show, printList, preprint, price, value } = this.state;
+        const { Lists, show, printList, preprint, price } = this.state;
         
         const documentLists = (
-            <View className='myContent'>
+            <ScrollView scrollY className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
                 {Lists.map((list, index) => (
                     <View key={list.id} className='docuList' onClick={this.handleChoose.bind(this, index)}>
                         <View className='docuBefore' style={{ background: `${list.checked ? '#2fb9c3' : ''}` }}></View>
@@ -219,11 +230,11 @@ class Document extends Component<IProps, PageState> {
                         </View>
                         <Image src={arrow} className='arrowright' />
                     </View>))}
-            </View>
+            </ScrollView>
         )
 
         const Buttons = (
-            <View className={show ? 'buttons' : 'buttons test'}>
+            <View className='buttons'>
                 {/* <View className='shopTitle'>
                     <Text>打印店铺：{this.state.shopTitle}</Text>
                     <Image className='shoppic' src={close} onClick={this.handleShowPicker}/>
@@ -239,11 +250,11 @@ class Document extends Component<IProps, PageState> {
         )
 
         const showprint = (
-            <View>
-                <View className='buttonDoc'>
-                    <Button className='uploadDoc buttDoc' onClick={this.handleUpload}>
+            <View className='docBottom'>
+                <View className='docButton'>
+                    <Button className='docupload docButt'>
                         上传文件 
-                        <input className='uopluadinput' type="file" onClick={this.handleUpload.bind(this)} /> 
+                        <input ref="test" className='upluadinput' type="file" onClick={this.handleUpload.bind(this)} multiple/> 
                           
                     </Button>
                     <View>
@@ -251,7 +262,7 @@ class Document extends Component<IProps, PageState> {
                             onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
                         >
                             <View onClick={this.handleShowPicker} >
-                                <Button className='printDoc buttDoc' onClick={this.handlePrint}>打印</Button>
+                                <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
                             </View>
                         </Picker>
                     </View>
@@ -264,9 +275,9 @@ class Document extends Component<IProps, PageState> {
         return (
             <View className='myDocument'>
                 <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
-                <ScrollView>
+                
                     {documentLists}
-                </ScrollView>
+                
                 {showprint}
             </View>
         )
