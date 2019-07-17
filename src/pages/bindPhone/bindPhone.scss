@@ -20,7 +20,6 @@
     width: 120px;
     height: 120px;
     margin-top: -60px;
-    z-index: 10;
   }
   @at-root #{&}-box {
     display: flex;
@@ -63,7 +62,6 @@
   }
 
   @at-root #{&}-code {
-    border: rgb(47, 185, 195) 2px solid;
     height: 42px;
     line-height: 42px;
     border-radius: 20px;
@@ -71,7 +69,23 @@
     font-size: 24px;
     max-width: 156px;
     padding: 0 9px;
-    color: rgb(47, 185, 195);
+    color: #2fb9c3;
+    border: #2fb9c3 2px solid;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 0 rgba(0,0,0,.045);
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    touch-action: manipulation;
+    &:active {
+      border-color: #29a6af;
+      color: #29a6af;
+    }
+    &:hover {
+      border-color: #38d8e4;
+      color: #38d8e4;
+    }
+    &:focus {
+      outline: none;
+    }
     outline: none;
   }
 
@@ -91,7 +105,23 @@
     width: 630px;
     height: 94px;
     border-radius: 47px;
-    background-color: #2fb9c3;
+    background: #2fb9c3;
+    border-color: #2fb9c3;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.12);
+    box-shadow: 0 2px 0 rgba(0,0,0,.045);
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    touch-action: manipulation;
+    &:active {
+      background: #29a6af;
+      border-color: #29a6af;
+    }
+    &:hover {
+      background: #38d8e4;
+      border-color: #38d8e4;
+    }
+    &:focus {
+      outline: none;
+    }
     color: #fff;
     font-size: 36px;
     border: none;
