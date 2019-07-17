@@ -216,7 +216,7 @@ class Document extends Component<IProps, PageState> {
         const { Lists, show, printList, preprint, price } = this.state;
         
         const documentLists = (
-            <ScrollView scrollY className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
+            <ScrollView scrollY={!show} className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
                 {Lists.map((list, index) => (
                     <View key={list.id} className='docuList' onClick={this.handleChoose.bind(this, index)}>
                         <View className='docuBefore' style={{ background: `${list.checked ? '#2fb9c3' : ''}` }}></View>
