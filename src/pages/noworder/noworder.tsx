@@ -91,7 +91,6 @@ ToMore(){
     return (
       <View className='body-box'>
         <View className='nowOrder-top-box'>
-          {/* <Image onClick={this.Return} className='nowOrder-return' src={return2Png}></Image> */}
           <View className='nowOrder-top-tittle'>当前订单</View>
         </View>
         <View className='all-order'>

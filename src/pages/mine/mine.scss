@@ -5,7 +5,8 @@
 }
 
 .mine {
-    @include clumnCenter;
+    //height: 1620px;
+    //line-height: normal;
 }
 .nav{
     height: 90px;
@@ -60,13 +61,13 @@
 .mineList{
     width: 690px;
     height: 460px;
-    background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin-top: 60px;
 }
 .mineLists{
-    margin-top: 60px;
+    background: #fff;
 }
 .infoList{
     width: 690px;
@@ -75,6 +76,7 @@
     padding-bottom: 29px;
     display: flex;
     align-items: flex-end;
+    background: #fff;
     font-size: 28px;
     line-height: 90px;
     box-shadow: 1px 1px 8px rgba($color: #999, $alpha: 0.1);
