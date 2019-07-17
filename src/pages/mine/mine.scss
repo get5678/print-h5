@@ -5,7 +5,9 @@
 }
 
 .mine {
-    @include clumnCenter;
+    //@include clumnCenter;
+    position: fixed;
+    padding: 0 30px;
 }
 .nav{
     height: 90px;
@@ -24,6 +26,7 @@
     width: 750px;
     position: fixed;
     top: 0px;
+    left: 0;
     z-index: -1;
     background: #31c0cb;
 }
