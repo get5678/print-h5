@@ -138,6 +138,9 @@ class Document extends Component<IProps, PageState> {
 
         }
         console.log(this.refs.test.value,"eeeeeeeeee")
+        // Taro.redirectTo({
+        //     url: '../../pages/uploadFile/uploadFile'
+        // })
         // Taro.uploadFile({
         //     url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
         //     filePath: tempFilePaths[0],
