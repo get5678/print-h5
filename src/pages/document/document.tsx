@@ -13,6 +13,7 @@ import unkown from './pic/unknown.png'
 import list from './pic/list.png'
 import arrow from '../../assets/arrow.png'
 import backArrow from '../../assets/backArrow.png'
+import close from './pic/close.png'
 
 type list = {
     id: number;
@@ -90,8 +91,8 @@ class Document extends Component<IProps, PageState> {
         selected: false,
         show: false,
         printList: [
-            ['A3', 'A4', 'B4', 'B5'],
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            ['A4', 'B5'],
+            [1, 2, 3, 4, 5],
             ['单面', '双面'],
             ['黑白', '彩色']
         ],
@@ -132,15 +133,17 @@ class Document extends Component<IProps, PageState> {
     handleUpload = () => {
         // const { tempFilePaths } = this.state;
         let File = new FileReader();
-        
+        let test = document.getElementById('test');
+        // ReactDom.findDOMNode(test);
+        // console.log(ReactDom.findDOMNode(test))
         // let fileType = this.files[0].type;
         File.onload = () => {
 
         }
         console.log(this.refs.test.value,"eeeeeeeeee")
-        // Taro.redirectTo({
-        //     url: '../../pages/uploadFile/uploadFile'
-        // })
+        Taro.redirectTo({
+            url: '../../pages/uploadFile/uploadFile'
+        })
         // Taro.uploadFile({
         //     url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
         //     filePath: tempFilePaths[0],
@@ -180,14 +183,15 @@ class Document extends Component<IProps, PageState> {
                 nowprice += 0.8;
             }
             else if(typeof(item) === 'number') {
-                nowprice *= item;
+                //console.log(item,"number")
+                nowprice *= (item+1);
             }
             else if(item === '黑白' || item === '彩色') {
                 nowprice += 0.8;
             }
         })
         nowprice = nowprice.toFixed(2); 
-
+        console.log(newselectedprintList)
         this.setState({
             price: nowprice,
             selectedprintList: newselectedprintList,
@@ -238,16 +242,17 @@ class Document extends Component<IProps, PageState> {
 
         const Buttons = (
             <View className='buttons'>
-                {/* <View className='shopTitle'>
+                <View className='buttonscover'></View>
+                <View className='shopTitle'>
                     <Text>打印店铺：{this.state.shopTitle}</Text>
-                    <Image className='shoppic' src={close} onClick={this.handleShowPicker}/>
-                </View> */}
+                    <Image className='shoppic' src={close}/>
+                </View>
                 <View className='totallprice'>
                     合计：<Text className='price'>￥{price}</Text>
                 </View>
-                {/* <View className='surebutton'>
+                <View className='surebutton'>
                     <Button className='printbut' onClick={this.handleChange.bind(this)}>确认打印</Button>
-                </View> */}
+                </View>
             </View>
 
         )
@@ -257,7 +262,10 @@ class Document extends Component<IProps, PageState> {
                 <View className='docButton'>
                     <Button className='docupload docButt'>
                         上传文件 
-                        <input ref="test" className='upluadinput' type="file" onClick={this.handleUpload.bind(this)} multiple/> 
+                        <form>
+                            <input ref="test" className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} multiple /> 
+                        </form>
+                        
                           
                     </Button>
                     <View>

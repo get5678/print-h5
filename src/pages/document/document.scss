@@ -116,19 +116,79 @@
 }
 
 .weui-picker{
-    border-radius: 30px;
-    background: #fff;
+    
+    background: transparent;
     bottom: 220px;
     padding: 0 50px;
     box-sizing: border-box;
     animation: slidesUp ease .3s forwards;
-    border-radius: 0.64rem;
-    background: #fff;
-    bottom: 4.69333rem;
-    padding: 0 1.06667rem;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    @at-root #{&}__hd{
+        height: 34px;
+        position: relative;
+        top: 50px;
+        z-index: inherit;
+        background: transparent;
+        &:after{
+            border: none;
+        }
+    }
+    @at-root #{&}__action{
+        flex: initial;
+        //取消
+        &:first-child{
+            width: 24px;
+            height: 24px;
+            font-size: 10px;
+            overflow: hidden;
+            position: absolute;
+            right: 0;
+            top: 18px;
+            display: inline-block;
+            opacity: 0;
+           
+        }
+
+        // 确定
+        &:last-child{
+            width: 630px;
+            height: 80px;
+            top: 650px;
+            left: 60px;
+            position: fixed;
+            opacity: 0;
+        }
+    }
+    @at-root #{&}__bd{
+       
+        background: transparent;
+    }
+    @at-root #{&}__mask{
+        margin-top: 60px;
+        background: transparent;
+        overflow: hidden;
+        box-sizing: border-box;
+        //border: #2fb9c3 1px solid;
+        // padding-top: -20px;
+        // padding-bottom: -20px;
+    }
+    @at-root #{&}__indicator{
+        //background: #2fb9c3
+        //color: #2fb9c3;
+    }
+    @at-root #{&}__group{
+        background: transparent;
+    }
+    @at-root #{&}__content {
+       //background: red;
+    }
+    @at-root #{&}__item {
+        //background: green;
+        background: transparent;
+        color: #999;
+    }
+
 }
+
 
 .weui-picker__indicator:before, .weui-picker__indicator:after{
     border-top: #2fb9c3 1px solid;
@@ -168,30 +228,50 @@ element.style {
     padding-right: 50px;
     width: 750px;
     height: 246px;
-    background: #fff;
     position: fixed;
-    z-index: 5000;
     bottom: 0;
+    z-index: 1000;
     animation: slidesUp linear .3s forwards;
+    @at-root #{&}cover{
+        position: fixed;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+        width: 100vw;
+        height: 760px;
+    }
 }
-.shopTitle{
-    font-size: 30px;
-    height: 34px;
-    line-height: 34px;
-    width: 100%;
-    text-align: center;
-    color: #333333;
-    position: relative;
-    bottom: 530px;
+.shop
+{
+    @at-root #{&}Title{
+        font-size: 30px;
+        height: 34px;
+        line-height: 34px;
+        width: 100%;
+        text-align: center;
+        color: #333333;
+        position: relative;
+        bottom: 500px;
+    }
+    @at-root #{&}pic{
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        right: 0;
+        top: 4px;
+    }
 }
 .totallprice{
     font-size: 30px;
     width: 100%;
     text-align: right;
     height: 48px;
+    bottom: 20px;
+    //margin-bottom:-20px; 
     position: relative;
     letter-spacing: 1px;
-    
 }
 .price{
     width: 150px;
@@ -201,10 +281,9 @@ element.style {
     font-size: 36px;
     text-align: left;
     color: #2fb9c3;
-    
 }
 .surebutton{
-    margin-top: 50px;
+   
 }
 .printbut{
     width: 630px;
