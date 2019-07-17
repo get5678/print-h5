@@ -1,7 +1,8 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Input, Image } from '@tarojs/components'
-// import { BlankPage } from '../../components/blankPage/blankPage'
+import { View, Button, Input, Image, Text, ScrollView } from '@tarojs/components'
+import shopData from './index_data'
+import { BlankPage } from '../../components/blankPage/blankPage'
 // import { connect } from '@tarojs/redux'
 // import { add, minus, asyncAdd } from '../../actions/counter'
 import TabBar from '../../components/TabBar/TabBar'
@@ -27,6 +28,9 @@ interface Index {
 
 class Index extends Component<{}, PageState> {
 
+  config: Config = {
+    navigationBarTitleText: '主页'
+  }
   /**
    * @description 方便测试用的跳转功能
    * @param {number} type
@@ -77,8 +81,29 @@ class Index extends Component<{}, PageState> {
   render() {
     const { searchText } = this.state;
 
+    const items = shopData.map(item => {
+      return (
+        <View className='index-item'>
+          <Image className='index-item-image' src={item.picture}></Image>
+          <View className='index-item-column'>
+            <Text className='index-item-title'>{item.title}</Text>
+            <Text className='index-item-address'>
+              <Image className='index-item-address-icon' src={require('../../assets/images/index/address.png')}></Image>
+              {item.address}
+            </Text>
+          </View>
+          <View className='index-item-column'>
+            <Text className='index-item-price'>{item.price}/张</Text>
+            <Button className='index-item-button'>打印</Button>
+          </View>
+        </View>
+      )
+    })
+
     return (
       <View className='index'>
+        <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button>
+        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button>
         <View className='index-top'>
           <View className='index-top-row'>
             <Image className='index-icon' src={require('../../assets/images/index/magnifyingGlass.png')}></Image>
@@ -86,12 +111,20 @@ class Index extends Component<{}, PageState> {
           </View>
           <Image className='index-icon' src={require('../../assets/images/index/scanQRCode.png')} onClick={this.handleScanQRCode.bind(this)}></Image>
         </View>
-        <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button>
-        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button>
-        {/* <BlankPage
-          title='暂无打印店相关信息'
-          picture={require('../../assets/images/index/blank-house.png')}
-        /> */}
+        {
+          shopData.length > 0 ?
+            <View className='index-content'>
+              <Text className='index-title'>附近打印店</Text>
+              <ScrollView className='index-list'>
+                {items}
+              </ScrollView>
+            </View>
+            :
+            <BlankPage
+              title='暂无打印店相关信息'
+              picture={require('../../assets/images/index/blank-house.png')}
+            />
+        }
         <TabBar current={0} />
       </View>
     )
