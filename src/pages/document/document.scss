@@ -1,9 +1,13 @@
 
-.myContent{
-    padding: 0 30px 60px 30px;
-    box-sizing: border-box;
+.myDocument {
     background: #fbfbfb;
-    height: 84vh;
+    height: 100vh;
+}
+.myContent{
+    padding: 0 30px 30px 30px;
+    box-sizing: border-box;
+   // background: #fbfbfb;
+    height: 74vh;
 }
 .docu {
     @at-root #{&}Before{
