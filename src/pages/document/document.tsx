@@ -84,7 +84,7 @@ class Document extends Component<IProps, PageState> {
             { id: 5, title: '问题', time: '40分钟前', size: '2.3GB', img: question },
             { id: 6, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
             { id: 7, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
-            { id: 8, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
+            { id: 8, title: '最后资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
         ],
      
         selected: false,
@@ -216,7 +216,7 @@ class Document extends Component<IProps, PageState> {
         const { Lists, show, printList, preprint, price } = this.state;
         
         const documentLists = (
-            <ScrollView scrollY={!show} className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
+            <ScrollView scrollY className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
                 {Lists.map((list, index) => (
                     <View key={list.id} className='docuList' onClick={this.handleChoose.bind(this, index)}>
                         <View className='docuBefore' style={{ background: `${list.checked ? '#2fb9c3' : ''}` }}></View>
