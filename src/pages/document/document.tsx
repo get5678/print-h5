@@ -25,10 +25,11 @@ type list = {
 }[];
 
 type PageStateProps = {
+
 }
 
 type PageDispatchProps = {
-
+    selectedprintList: (any)[];
 }
 
 type PageOwnProps = {}
@@ -98,7 +99,7 @@ class Document extends Component<IProps, PageState> {
         ],
         selectedprintList: ['A4', 1, '单面', '黑白'],
         price: 0.00,
-        preprint: [1, 0, 0, 0],
+        preprint: [0, 0, 0, 0],
         shopTitle: '阳光图文打印店',
         tempFilePaths:[]
 
@@ -130,35 +131,16 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    handleUpload = () => {
-        // const { tempFilePaths } = this.state;
-        let File = new FileReader();
-        let test = document.getElementById('test');
-        // ReactDom.findDOMNode(test);
-        // console.log(ReactDom.findDOMNode(test))
-        // let fileType = this.files[0].type;
-        File.onload = () => {
+    handleUpload = (e) => {
+        e.preventDefault();
 
+        let file = e.target.files[0];
+        const formdata = new FormData();
+        formdata.append('file', file);
+        for (var value of formdata.values()) {
+            console.log(value,"value ");
         }
-        console.log(this.refs.test.value,"eeeeeeeeee")
-        Taro.redirectTo({
-            url: '../../pages/uploadFile/uploadFile'
-        })
-        // Taro.uploadFile({
-        //     url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
-        //     filePath: tempFilePaths[0],
-        //     name: 'file',
-        //     formData: {
-        //         'user': 'test'
-        //     },
-        //     success: (res) => {
-        //         var data = res.data
-        //         console.log(data,"data")
-        //     },
-        //     fail:  () => {
-        //         console.log('fail')
-        //     }
-        // })
+        //console.log(file,"file")
     }
 
     handleChange = () => {
@@ -168,36 +150,46 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    handleShowPrice = (e) => {
+    handleShowPrice = (e):any => {
         const { printList, selectedprintList, preprint } = this.state;
         const { detail } = e;
-        let nowprice: number | any = 0;
         let newselectedprintList = selectedprintList.slice();
         let newpreprint = preprint.slice();
+        let nowprice: number | any = 0;
 
         newpreprint[detail.column] = detail.value;
-        newselectedprintList[detail.column] = printList[detail.column][detail.value];
+        while (detail.column < 3 && detail.column >= 0) {     
+            newpreprint[detail.column+1] = 0;
+            detail.column++;
+        }
+        newpreprint.map((value,index) => {
+            newselectedprintList[index] = printList[index][value]
+        })
+        newselectedprintList.map((item) => {
+            if (item === 'A4' || item === 'B5') {
+                nowprice += 0.8;
+            }
+            else if (typeof (item) === 'number') {
+                nowprice *= (item);
+            }
+            else if (item === '黑白' || item === '彩色') {
+                nowprice += 0.8;
+            }
+            else if (item === '双面' || item === '单面') {
+                nowprice += 0.8;
+            }
+            else {
+                nowprice = 0;
+            }
+        })
+        nowprice = nowprice.toFixed(2);
         
-        selectedprintList.map((item) => {
-            if(item === 'A4') {
-                nowprice += 0.8;
-            }
-            else if(typeof(item) === 'number') {
-                //console.log(item,"number")
-                nowprice *= (item+1);
-            }
-            else if(item === '黑白' || item === '彩色') {
-                nowprice += 0.8;
-            }
-        })
-        nowprice = nowprice.toFixed(2); 
-        console.log(newselectedprintList)
         this.setState({
-            price: nowprice,
             selectedprintList: newselectedprintList,
-            preprint: newpreprint
-        })
-
+            preprint: newpreprint,
+            price: nowprice
+        });
+        
     }
 
     handleShowPicker = () => {
@@ -216,6 +208,13 @@ class Document extends Component<IProps, PageState> {
         this.setState({
             Lists: ListsAnother
         })
+    }
+
+    componentDidMount() {
+        
+    }
+
+    componentDidUpdate() {
     }
 
     render() {
@@ -257,26 +256,28 @@ class Document extends Component<IProps, PageState> {
 
         )
 
+        const picker = (
+             <View>
+                <Picker mode='multiSelector' range={printList} onChange={this.handleChange} value={preprint}
+                    onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
+                >
+                    <View onClick={this.handleShowPicker} >
+                        <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
+                    </View>
+                </Picker>
+            </View> 
+        )
+
         const showprint = (
             <View className='docBottom'>
                 <View className='docButton'>
                     <Button className='docupload docButt'>
                         上传文件 
-                        <form>
+                        <form action='http://upload' method="post">
                             <input ref="test" className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} multiple /> 
                         </form>
-                        
-                          
                     </Button>
-                    <View>
-                        <Picker mode='multiSelector' range={printList} onChange={this.handleChange} value={preprint}
-                            onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
-                        >
-                            <View onClick={this.handleShowPicker} >
-                                <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
-                            </View>
-                        </Picker>
-                    </View>
+                    { picker }
                 </View>
                 {show ? Buttons : ''}
             </View>
@@ -286,9 +287,7 @@ class Document extends Component<IProps, PageState> {
         return (
             <View className='myDocument'>
                 <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
-                
-                    {documentLists}
-                
+                {documentLists}
                 {showprint}
             </View>
         )
