@@ -3,7 +3,10 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, ScrollView, Image, Text, Button, Picker } from '@tarojs/components'
 
 import NavBar from '../../components/NavBar/NavBar'
+import { BlankPage } from '../../components/blankPage/blankPage'
+import { Toast } from '../../components/toast/toast'
 
+import document from '../../assets/blank-compents/blank-box-empty.png'
 import './document.scss'
 import word from './pic/word.png'
 import pdf from './pic/pdf.png'
@@ -50,8 +53,7 @@ type PageState = {
     price: number;
     preprint: number[];
     shopTitle: string;
-    tempFilePaths: string[];
-    
+    showToast: boolean;
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -101,8 +103,8 @@ class Document extends Component<IProps, PageState> {
         price: 0.00,
         preprint: [0, 0, 0, 0],
         shopTitle: '阳光图文打印店',
-        tempFilePaths:[]
-
+        showToast: false,
+        uploadsuccess: false,
     }
 
     handleBack = () => {
@@ -125,6 +127,13 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
+    handlePreview = (id: number) => {
+        console.log(id)
+        Taro.redirectTo({
+            url: '../../pages/uploadFile/uploadFile'
+        })
+    }
+
     handlePrint = (): void => {
         this.setState({
             show: !this.state.show
@@ -140,13 +149,8 @@ class Document extends Component<IProps, PageState> {
         for (var value of formdata.values()) {
             console.log(value,"value ");
         }
-        //console.log(file,"file")
-    }
-
-    handleChange = () => {
-        
-        this.setState({ 
-            show: !this.state.show
+        this.setState({
+            showToast: !this.state.showToast
         })
     }
 
@@ -199,6 +203,17 @@ class Document extends Component<IProps, PageState> {
 
     }
 
+    closeToast = () => {
+        this.setState({
+            showToast: !this.state.showToast
+        })
+    }
+    handlePreshow = () => {
+        this.setState({
+            showToast: !this.state.showToast
+        })
+    }
+
     componentWillMount() {
         let { Lists } = this.state;
         let ListsAnother: list = [];
@@ -210,31 +225,30 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    componentDidMount() {
-        
-    }
-
-    componentDidUpdate() {
-    }
-
     render() {
 
-        const { Lists, show, printList, preprint, price } = this.state;
+        const { Lists, show, printList, preprint, price, showToast, uploadsuccess } = this.state;
         
         const documentLists = (
             <ScrollView scrollY className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
                 {Lists.map((list, index) => (
-                    <View key={list.id} className='docuList' onClick={this.handleChoose.bind(this, index)}>
-                        <View className='docuBefore' style={{ background: `${list.checked ? '#2fb9c3' : ''}` }}></View>
-                        <Image src={list.img} className='docuImg' />
-                        <View className='docuContent'>
+                    <View key={list.id} className='docuList'>
+                        <View className='docuBefore' 
+                            style={{ background: `${list.checked ? '#2fb9c3' : ''}` }}
+                            onClick={this.handleChoose.bind(this, index)}
+                            ></View>
+                        <Image src={list.img} className='docuImg' 
+                            onClick={this.handleChoose.bind(this, index)}
+                            />
+                        <View className='docuContent'
+                            onClick={this.handleChoose.bind(this, index)}>
                             <Text className='docuTitle'>{list.title}</Text>
                             <View className='docuText'>
                                 <Text className='docuSize'>{list.size}</Text>
                                 <Text>{list.time}</Text>
                             </View>
                         </View>
-                        <Image src={arrow} className='arrowright' />
+                        <Image src={arrow} className='arrowright' onClick={this.handlePreview.bind(this,index)}/>
                     </View>))}
             </ScrollView>
         )
@@ -250,22 +264,9 @@ class Document extends Component<IProps, PageState> {
                     合计：<Text className='price'>￥{price}</Text>
                 </View>
                 <View className='surebutton'>
-                    <Button className='printbut' onClick={this.handleChange.bind(this)}>确认打印</Button>
+                    <Button className='printbut' onClick={this.handlePrint.bind(this)}>确认打印</Button>
                 </View>
             </View>
-
-        )
-
-        const picker = (
-             <View>
-                <Picker mode='multiSelector' range={printList} onChange={this.handleChange} value={preprint}
-                    onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
-                >
-                    <View onClick={this.handleShowPicker} >
-                        <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
-                    </View>
-                </Picker>
-            </View> 
         )
 
         const showprint = (
@@ -273,22 +274,66 @@ class Document extends Component<IProps, PageState> {
                 <View className='docButton'>
                     <Button className='docupload docButt'>
                         上传文件 
-                        <form action='http://upload' method="post">
-                            <input ref="test" className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} multiple /> 
+                        <form action='https://pin.varbee.com/cloudprint/api/document/upload' method="post">
+                            <input className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} multiple /> 
                         </form>
                     </Button>
-                    { picker }
+                    <Picker mode='multiSelector' range={printList} onChange={this.handlePrint} value={preprint}
+                        onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
+                    >
+                        <View onClick={this.handleShowPicker} >
+                            <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
+                        </View>
+                    </Picker>
                 </View>
                 {show ? Buttons : ''}
             </View>
         )
 
+        const blankPage = (
+            <BlankPage
+                title='暂无文档赶快上传吧~'
+                picture={document}
+            />
+        )
+
+
+        const toast = ( uploadsuccess ?  
+                <Toast 
+                picture = { require('./pic/uploadsuccess.png') }
+                title = '上传成功'
+                confirm = '我知道了'
+                subTitle = '上传成功可以去打印啦'
+                cancel = '去预览'
+                model
+                onConfirm = {this.closeToast.bind(this)}
+                onCancel = { this.handlePreshow.bind(this) }
+                />      
+                : 
+                <Toast
+                picture={require('./pic/uploadfail.png')}
+                title='上传失败'
+                subTitle='差点就成功了再试试吧~'
+                confirm='我知道了'
+                onConfirm={this.closeToast.bind(this)}
+                />
+            )
+        
+
+        const myDocument = (
+            <View className='alldocument'>
+                {documentLists}
+                {showprint}
+            </View>
+        )
         
         return (
             <View className='myDocument'>
                 <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
-                {documentLists}
-                {showprint}
+                
+                {Lists.length === 0 ? blankPage : myDocument}
+                {showToast ? toast : '' }
+                
             </View>
         )
     }
