@@ -6,8 +6,9 @@ import NavBar from '../../components/NavBar/NavBar'
 import { BlankPage } from '../../components/blankPage/blankPage'
 import { Toast } from '../../components/toast/toast'
 
-import document from '../../assets/blank-compents/blank-box-empty.png'
 import './document.scss'
+
+import document from '../../assets/blank-compents/blank-box-empty.png'
 import word from './pic/word.png'
 import pdf from './pic/pdf.png'
 import ppt from './pic/ppt.png'
@@ -17,6 +18,7 @@ import list from './pic/list.png'
 import arrow from '../../assets/arrow.png'
 import backArrow from '../../assets/backArrow.png'
 import close from './pic/close.png'
+
 
 type list = {
     id: number;
@@ -54,6 +56,9 @@ type PageState = {
     preprint: number[];
     shopTitle: string;
     showToast: boolean;
+    src?: any;
+    title: string;
+    uploadsuccess: boolean;
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -105,6 +110,8 @@ class Document extends Component<IProps, PageState> {
         shopTitle: '阳光图文打印店',
         showToast: false,
         uploadsuccess: false,
+        src: '',
+        title: '上传失败'
     }
 
     handleBack = () => {
@@ -139,16 +146,28 @@ class Document extends Component<IProps, PageState> {
             show: !this.state.show
         })
     }
-
+    
     handleUpload = (e) => {
         e.preventDefault();
-
         let file = e.target.files[0];
-        const formdata = new FormData();
-        formdata.append('file', file);
-        for (var value of formdata.values()) {
-            console.log(value,"value ");
-        }
+        let data = new FormData();
+        data.append('file',file);
+        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
+            method: 'POST',
+            body: data
+        }).then(res => {
+            if(res.ok) {
+                this.setState({
+                    uploadsuccess: true
+                })
+            }
+            else{
+                this.setState({
+                    uploadsuccess: false
+                })
+            }
+        })
+       
         this.setState({
             showToast: !this.state.showToast
         })
@@ -274,7 +293,7 @@ class Document extends Component<IProps, PageState> {
                 <View className='docButton'>
                     <Button className='docupload docButt'>
                         上传文件 
-                        <form action='https://pin.varbee.com/cloudprint/api/document/upload' method="post">
+                        <form>
                             <input className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} multiple /> 
                         </form>
                     </Button>
@@ -297,10 +316,9 @@ class Document extends Component<IProps, PageState> {
             />
         )
 
-
         const toast = ( uploadsuccess ?  
                 <Toast 
-                picture = { require('./pic/uploadsuccess.png') }
+                picture={require('./pic/uploadsuccess.png') }
                 title = '上传成功'
                 confirm = '我知道了'
                 subTitle = '上传成功可以去打印啦'
@@ -308,11 +326,10 @@ class Document extends Component<IProps, PageState> {
                 model
                 onConfirm = {this.closeToast.bind(this)}
                 onCancel = { this.handlePreshow.bind(this) }
-                />      
-                : 
+                />   : 
                 <Toast
-                picture={require('./pic/uploadfail.png')}
-                title='上传失败'
+                picture={require('./pic/uploadfail.png') }
+                title={this.state.title}
                 subTitle='差点就成功了再试试吧~'
                 confirm='我知道了'
                 onConfirm={this.closeToast.bind(this)}
@@ -330,10 +347,8 @@ class Document extends Component<IProps, PageState> {
         return (
             <View className='myDocument'>
                 <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
-                
                 {Lists.length === 0 ? blankPage : myDocument}
                 {showToast ? toast : '' }
-                
             </View>
         )
     }
