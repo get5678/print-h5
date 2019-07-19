@@ -56,7 +56,7 @@ export default class Http {
             'token': token
           }
         });
-        Taro.hideNavigationBarLoading();
+        // Taro.hideNavigationBarLoading();
         console.log(
           `以下为调试信息:\n 请求地址:${url}\n 请求方式: ${method}\n token: ${token} \n 请求格式: ${contentType} \n 请求参数: ${JSON.stringify(
             data)}\n 返回结果:  `, res),"ghghghghghgghg";

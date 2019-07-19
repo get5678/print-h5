@@ -16,11 +16,11 @@ import question from './pic/question.png'
 import unkown from './pic/unknown.png'
 import list from './pic/list.png'
 import arrow from '../../assets/arrow.png'
-import backArrow from '../../assets/backArrow.png'
 import close from './pic/close.png'
 
 import { connect } from '@tarojs/redux'
-import { asyncGetDocumentList, getDocumentList } from '../../actions/document'
+import { asyncGetDocumentList } from '../../actions/document'
+import { request } from 'http';
 
 type list = {
     id: number;
@@ -33,15 +33,25 @@ type list = {
 
 type PageStateProps = {
     document:{
-        documentList: any
-    }
+        documentList: {
+            id: number;
+            title: string;
+            time: string;
+            size: string;
+            img: string;
+            checked?: boolean;
+        }[];
+    },
+    shopTitle: string;
 }
 
 type PageDispatchProps = {
     get: (payload) => void;
 }
 
-type PageOwnProps = {}
+type PageOwnProps = {
+
+}
 
 type PageState = {
     Lists: {
@@ -52,6 +62,7 @@ type PageState = {
         img: string;
         checked?: boolean;
     }[];
+    page: number | any,
     selected: boolean;
     show: boolean;
     printList: (string[] | number[])[];
@@ -61,7 +72,7 @@ type PageState = {
     shopTitle: string;
     showToast: boolean;
     src?: any;
-    title?: string;
+    taostText?: string;
     uploadsuccess: boolean;
 }
 
@@ -69,7 +80,7 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 interface Document {
     props: IProps;
-    title: string,
+    taostText: string,
 }
 
 @connect(
@@ -105,7 +116,7 @@ class Document extends Component<IProps, PageState> {
             { id: 7, title: '期末资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
             { id: 8, title: '最后资料.ppt', time: '2分钟前', size: '1.20MB', img: ppt },
         ],
-     
+        page: 1,
         selected: false,
         show: false,
         printList: [
@@ -117,11 +128,11 @@ class Document extends Component<IProps, PageState> {
         selectedprintList: ['A4', 1, '单面', '黑白'],
         price: 0.00,
         preprint: [0, 0, 0, 0],
-        shopTitle: '阳光图文打印店',
+        shopTitle: '',
         showToast: false,
         uploadsuccess: false,
         src: '',
-        title: '上传失败'
+        taostText: '上传失败'
     }
 
     handleBack = () => {
@@ -151,6 +162,12 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
+    handleToShop = () => {
+        Taro.navigateTo({
+            url: '../../pages/chooseShop/chooseShop'
+        })
+    }
+
     handlePrint = (): void => {
         this.setState({
             show: !this.state.show
@@ -161,9 +178,9 @@ class Document extends Component<IProps, PageState> {
         e.preventDefault();
         const file = e.target.files[0];
         const data = new FormData();
-        const reader = new FileReader();
+        // const reader = new FileReader();
         data.append('file',file);
-        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
+        fetch('https://min.our16.top/cloudprint/api/document/upload',{
             method: 'POST',
             body: data
         }).then(res => {
@@ -173,18 +190,14 @@ class Document extends Component<IProps, PageState> {
                 })
             }
             else{
+                
                 this.setState({
-                    uploadsuccess: false
+                    selected: true,
+                    //uploadsuccess: false
                 })
             }
         })
 
-        reader.onloadstart = () => {
-            this.setState({
-                selected: true
-            })
-
-        }
        
         this.setState({
             showToast: !this.state.showToast
@@ -251,14 +264,40 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    componentWillMount() {
-        let { Lists } = this.state;
-       
-        this.props.get({
-            'page': 1,
-            'count': 10,
+    
+
+    /**
+     *@description 下拉刷新
+     *
+     * @memberof Document
+     */
+    handleToLower = () => {
+        
+        this.setState({
+            page: this.state.page++,
+        }, () => {
+            this.props.get({
+                'page':this.state.page
+            })
+            
         })
-        console.log(this.props.get, "props get")
+    }
+
+    componentWillMount() {
+        let { Lists, page } = this.state;
+        // const { shopTitle } = this.props;
+        const { id, title } = this.$router.params;
+        // this.props.get({
+        //     'page': page,
+        //     'count': 10,
+        // })
+        // console.log(this.props.get, "props get")
+       
+
+
+        this.setState({
+            shopTitle: decodeURI(title)
+        })
         let ListsAnother: list = [];
         Lists.map((item) => {
             ListsAnother.push(Object.assign({}, item, { checked: false }))
@@ -270,11 +309,15 @@ class Document extends Component<IProps, PageState> {
 
     render() {
 
-        const {  Lists, show, printList, preprint, price, showToast, uploadsuccess } = this.state;
-        const { documentList } = this.props.document;
-
+        const {  Lists, show, printList, preprint, price, showToast, uploadsuccess, shopTitle } = this.state;
+        
         const documentLists = (
-            <ScrollView scrollY className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
+            <ScrollView 
+                scrollY 
+                className='myContent' 
+                style={{overflow: `${show ? 'hidden': ''}`}}
+                // onScrollToLower={this.handleToLower.bind(this)}
+                >
                 {Lists.map((list, index) => (
                     <View key={list.id} className='docuList'>
                         <View className='docuBefore' 
@@ -301,7 +344,7 @@ class Document extends Component<IProps, PageState> {
             <View className='buttons'>
                 <View className='buttonscover'></View>
                 <View className='shopTitle'>
-                    <Text>打印店铺：{this.state.shopTitle}</Text>
+                    <Text className='shopText'>打印店铺：{shopTitle}</Text>
                     <Image className='shoppic' src={close}/>
                 </View>
                 <View className='totallprice'>
@@ -313,6 +356,20 @@ class Document extends Component<IProps, PageState> {
             </View>
         )
 
+        const chooseShop = (
+            <Button className='docprint docButt' onClick={this.handleToShop}>打印</Button>
+        )
+
+        const choosePrint = (
+            <Picker mode='multiSelector' range={printList} onChange={this.handlePrint} value={preprint}
+                onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
+            >
+                <View onClick={this.handleShowPicker} >
+                    <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
+                </View>
+            </Picker>
+        )
+
         const showprint = (
             <View className='docBottom'>
                 <View className='docButton'>
@@ -322,13 +379,7 @@ class Document extends Component<IProps, PageState> {
                             <input className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} /> 
                         </form>
                     </Button>
-                    <Picker mode='multiSelector' range={printList} onChange={this.handlePrint} value={preprint}
-                        onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
-                    >
-                        <View onClick={this.handleShowPicker} >
-                            <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
-                        </View>
-                    </Picker>
+                    { shopTitle === 'undefined' ? chooseShop : choosePrint}
                 </View>
                 {show ? Buttons : ''}
             </View>
@@ -354,7 +405,7 @@ class Document extends Component<IProps, PageState> {
                 />   : 
                 <Toast
                 picture={require('./pic/uploadfail.png') }
-                title={this.state.title}
+                title={this.state.taostText}
                 subTitle='差点就成功了再试试吧~'
                 confirm='我知道了'
                 onConfirm={this.closeToast.bind(this)}
@@ -378,10 +429,18 @@ class Document extends Component<IProps, PageState> {
                 {showprint}
             </View>
         )
+
+        const shopTitleTop = (
+            <View className='shopTitleTop' onClick={this.handleToShop.bind(this)}>
+                <Image src={require('../../assets/images/index/address.png')} className='shopTitleTop-img'/>
+                <Text className='shopTitleTop-text'>{shopTitle}</Text>
+            </View>
+        )
         
         return (
             <View className='myDocument'>
-                <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
+                <NavBar title='我的文档' handleBack={this.handleBack} />
+                {shopTitle === 'undefined' ? '' : shopTitleTop}
                 {Lists.length === 0 ? blankPage : myDocument}
                 {showToast ? toast : '' }
                 {/* {this.state.selected ? loading : ''} */}

@@ -37,7 +37,8 @@ class App extends Component {
       'pages/mine/mine',
       'pages/document/document',
       'pages/bindWX/bindWX',
-      'pages/uploadFile/uploadFile'
+      'pages/uploadFile/uploadFile',
+      'pages/chooseShop/chooseShop'
     ],
     window: {
       backgroundTextStyle: 'light',

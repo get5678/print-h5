@@ -7,9 +7,9 @@
         width: 100vw;
         box-sizing: border-box;
         background: #fff;
-        padding-left: 30px;
         display: flex;
         align-items: center;
+        justify-content: center;
         position: fixed;
         z-index: 2;
     }
@@ -17,10 +17,10 @@
         line-height: normal;
         width: 16px;
         height: 28px;
+        position: absolute;
+        left: 30px;
     }
     @at-root #{&}Text{
-        text-align: center;
-        margin-left: 34%;
         font-size: 36px;
         }
 }

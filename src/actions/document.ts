@@ -7,7 +7,7 @@ export const getDocumentList = data => {
     }
 }
 
-export async function asyncGetDocumentList(payload) {
+export function asyncGetDocumentList(payload) {
     return async dispatch => {
         const res = await documentList(payload);
         dispatch(getDocumentList(res));
