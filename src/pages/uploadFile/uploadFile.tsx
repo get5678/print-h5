@@ -70,7 +70,6 @@ class UploadFile extends Component<IProps, PageState> {
 
     handleChange = (index,e) => {
         const { selectedprintList, printList } = this.state;
-
         let newselectedprintList = selectedprintList.slice();
         newselectedprintList[index] = printList[index][e.detail.current];
         console.log(newselectedprintList)
@@ -78,7 +77,7 @@ class UploadFile extends Component<IProps, PageState> {
     
 
     render() {
-        const { printList, preprint, valueGroups, optionGroups  } = this.state;
+        const { printList, preprint } = this.state;
 
         const OwnPicker = (
             <View className='ownpicker'>

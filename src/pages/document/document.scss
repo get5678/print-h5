@@ -169,22 +169,13 @@
         background: transparent;
         overflow: hidden;
         box-sizing: border-box;
-        //border: #2fb9c3 1px solid;
-        // padding-top: -20px;
-        // padding-bottom: -20px;
     }
-    @at-root #{&}__indicator{
-        //background: #2fb9c3
-        //color: #2fb9c3;
-    }
+   
     @at-root #{&}__group{
         background: transparent;
     }
-    @at-root #{&}__content {
-       //background: red;
-    }
+    
     @at-root #{&}__item {
-        //background: green;
         background: transparent;
         color: #999;
     }

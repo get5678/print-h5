@@ -19,6 +19,8 @@ import arrow from '../../assets/arrow.png'
 import backArrow from '../../assets/backArrow.png'
 import close from './pic/close.png'
 
+import { connect } from '@tarojs/redux'
+import { asyncGetDocumentList, getDocumentList } from '../../actions/document'
 
 type list = {
     id: number;
@@ -30,11 +32,13 @@ type list = {
 }[];
 
 type PageStateProps = {
-
+    document:{
+        documentList: any
+    }
 }
 
 type PageDispatchProps = {
-    selectedprintList: (any)[];
+    get: (payload) => void;
 }
 
 type PageOwnProps = {}
@@ -57,7 +61,7 @@ type PageState = {
     shopTitle: string;
     showToast: boolean;
     src?: any;
-    title: string;
+    title?: string;
     uploadsuccess: boolean;
 }
 
@@ -66,21 +70,27 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 interface Document {
     props: IProps;
     title: string,
-
 }
 
+@connect(
+    ({document}) => ({
+        document
+    }), (dispatch) => ({
+        get(params) {
+            dispatch(asyncGetDocumentList(params));
+        }
+        
+    })
+)
 class Document extends Component<IProps, PageState> {
 
     config: Config = {
         navigationBarTitleText: '我的文档',
-        navigationBarBackgroundColor: '#2fb9c3'
     }
-
 
     constructor(IProps) {
         super(IProps);
         this.handleBack = this.handleBack.bind(this);
-
     }
 
     state = {
@@ -149,8 +159,9 @@ class Document extends Component<IProps, PageState> {
     
     handleUpload = (e) => {
         e.preventDefault();
-        let file = e.target.files[0];
-        let data = new FormData();
+        const file = e.target.files[0];
+        const data = new FormData();
+        const reader = new FileReader();
         data.append('file',file);
         fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
             method: 'POST',
@@ -167,6 +178,13 @@ class Document extends Component<IProps, PageState> {
                 })
             }
         })
+
+        reader.onloadstart = () => {
+            this.setState({
+                selected: true
+            })
+
+        }
        
         this.setState({
             showToast: !this.state.showToast
@@ -235,6 +253,12 @@ class Document extends Component<IProps, PageState> {
 
     componentWillMount() {
         let { Lists } = this.state;
+       
+        this.props.get({
+            'page': 1,
+            'count': 10,
+        })
+        console.log(this.props.get, "props get")
         let ListsAnother: list = [];
         Lists.map((item) => {
             ListsAnother.push(Object.assign({}, item, { checked: false }))
@@ -246,8 +270,9 @@ class Document extends Component<IProps, PageState> {
 
     render() {
 
-        const { Lists, show, printList, preprint, price, showToast, uploadsuccess } = this.state;
-        
+        const {  Lists, show, printList, preprint, price, showToast, uploadsuccess } = this.state;
+        const { documentList } = this.props.document;
+
         const documentLists = (
             <ScrollView scrollY className='myContent' style={{overflow: `${show ? 'hidden': ''}`}}>
                 {Lists.map((list, index) => (
@@ -294,7 +319,7 @@ class Document extends Component<IProps, PageState> {
                     <Button className='docupload docButt'>
                         上传文件 
                         <form>
-                            <input className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} multiple /> 
+                            <input className='upluadinput' type="file" id='test' onChange={this.handleUpload.bind(this)} /> 
                         </form>
                     </Button>
                     <Picker mode='multiSelector' range={printList} onChange={this.handlePrint} value={preprint}
@@ -335,6 +360,16 @@ class Document extends Component<IProps, PageState> {
                 onConfirm={this.closeToast.bind(this)}
                 />
             )
+
+        // const loading = (
+        //     <Toast
+
+        //         picture={require('../../assets/loading.png')}
+        //         title='正在上传'
+        //         conform = '取消上传'
+        //         onConfirm={this.closeToast.bind(this)}
+        //     />
+        // )
         
 
         const myDocument = (
@@ -349,6 +384,7 @@ class Document extends Component<IProps, PageState> {
                 <NavBar backArrow={backArrow} title='我的文档' handleBack={this.handleBack} />
                 {Lists.length === 0 ? blankPage : myDocument}
                 {showToast ? toast : '' }
+                {/* {this.state.selected ? loading : ''} */}
             </View>
         )
     }
