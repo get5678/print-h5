@@ -132,3 +132,4 @@ class Index extends Component<{}, PageState> {
 }
 
 export default Index as ComponentClass<PageOwnProps, PageState>
+
