@@ -27,7 +27,8 @@ type PageOwnProps = {}
 
 type PageState = {
   justIcon: number,
-  inputValue: string
+  inputValue: string,
+  flag: boolean 
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -49,7 +50,8 @@ class Feedback extends Taro.Component<{}, PageState> {
     super(props);
     this.state={
       justIcon:2,
-      inputValue: ''
+      inputValue: '',
+      flag:false;
     }
   }
     config: Config = {
@@ -57,10 +59,12 @@ class Feedback extends Taro.Component<{}, PageState> {
   }
 
 GotoFeedback(inputValue,justIcon){
-  console.log("这里是提交内容"+inputValue,justIcon);
   this.props.feedback({
     content: inputValue,
     score: justIcon
+  });
+  this.setState({
+    flag:true
   })
 }
 
@@ -70,18 +74,15 @@ Return(){
     })
 }
 onInput = e => {
-  console.log(e.detail.value)
   this.setState({
     inputValue: e.detail.value
   })
 }
 Icon(this,Icon,e){
-  console.log(this,Icon,e);
   this.setState({
     justIcon:Icon
   })
 }
-
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps)
   }
@@ -94,6 +95,13 @@ Icon(this,Icon,e){
 
   render () {
     const {justIcon,inputValue} = this.state;
+   
+    const box = this.state.flag?(<Toast
+        picture={require('../../assets/images/bindPhone/bind-success.png')}
+        title='反馈成功'
+        confirm='我知道了'
+        onConfirm={this.Return.bind(this)}
+/>):null
     return (
       <View>
         <View className='top-box'>
@@ -114,12 +122,7 @@ Icon(this,Icon,e){
         <View className='button-box'>
           <View className='button' onClick={this.GotoFeedback.bind(this,inputValue,justIcon)}>提交</View>
         </View>
-        {/* <Toast
-              picture={require('../../assets/images/bindPhone/bind-success.png')}
-              title='反馈成功'
-              confirm='返回首页'
-              // onConfirm={this.closeToast.bind(this)}
-            /> */}
+        {box}
       </View>
     )
   }
