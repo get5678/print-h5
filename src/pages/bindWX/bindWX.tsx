@@ -32,6 +32,11 @@ class BindWX extends Component<{}, PageState> {
     }
   }
 
+  onLoginByWeapp = (e) => {
+    e.stopPropagation();
+    
+  }
+
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps)
   }
@@ -47,7 +52,7 @@ class BindWX extends Component<{}, PageState> {
       <View className='bindWX'>
         <Image className='bindWX-image' src={require('../../assets/images/bindWX/bindWX.png')}></Image>
         <Text className='bindWX-title'>绑定后才可“查看”和“访问”哦</Text>
-        <Button className='bindWX-button'>绑定微信</Button>
+        <Button className='bindWX-button' onClick={this.onLoginByWeapp.bind(this)}>绑定微信</Button>
       </View>
     )
   }

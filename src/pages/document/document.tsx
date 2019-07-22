@@ -8,7 +8,6 @@ import { Toast } from '../../components/toast/toast'
 
 import './document.scss'
 
-import document from '../../assets/blank-compents/blank-box-empty.png'
 import word from './pic/word.png'
 import pdf from './pic/pdf.png'
 import ppt from './pic/ppt.png'
@@ -20,7 +19,7 @@ import close from './pic/close.png'
 
 import { connect } from '@tarojs/redux'
 import { asyncGetDocumentList } from '../../actions/document'
-import { request } from 'http';
+
 
 type list = {
     id: number;
@@ -64,6 +63,7 @@ type PageState = {
     }[];
     page: number | any,
     selected: boolean;
+    selectedDocument: boolean;
     show: boolean;
     printList: (string[] | number[])[];
     selectedprintList: (any)[];
@@ -118,6 +118,7 @@ class Document extends Component<IProps, PageState> {
         ],
         page: 1,
         selected: false,
+        selectedDocument: false,
         show: false,
         printList: [
             ['A4', 'B5'],
@@ -137,42 +138,69 @@ class Document extends Component<IProps, PageState> {
 
     handleBack = () => {
         Taro.redirectTo({
-            url: '../../pages/mine/mine'
+            url: '../mine/mine'
         })
+        Taro.removeStorageSync('documentId');
     }
 
     handleChoose = (id: number) => {
         const { Lists } = this.state;
+        let flag = false;
         let ListsAnother: list = Object.assign({},Lists);
         let ListArray :any = [];
         for (let i in ListsAnother) {
             ListArray.push(ListsAnother[i])
         }
-        
         ListArray[id].checked = !ListArray[id].checked;
+        ListArray.map((item) => {
+            if (item.checked) {
+                flag = true;
+            }
+        })
         this.setState({
-            Lists: ListArray
+            Lists: ListArray,
+            selectedDocument: flag
         })
     }
 
     handlePreview = (id: number) => {
         console.log(id)
         Taro.redirectTo({
-            url: '../../pages/uploadFile/uploadFile'
+            url: '../uploadFile/uploadFile'
         })
     }
 
     handleToShop = () => {
-        Taro.navigateTo({
-            url: '../../pages/chooseShop/chooseShop'
+        console.log("2222222222222")
+        if(this.state.selectedDocument) {
+            Taro.navigateTo({
+                url: '../chooseShop/chooseShop'
+            })
+        }
+        else {
+            console.log("请选择打印文档")
+        }
+    }
+
+    /**
+     *@description 确认打印，传打印参数
+     *
+     * @memberof Document
+     */
+    handlePrint = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        console.log("111111111111111111")
+        this.setState({
+            show: false
         })
     }
 
-    handlePrint = (): void => {
-        this.setState({
-            show: !this.state.show
-        })
+    handleTest = (e) => {
+        e.stopPropagation();
+        console.log("test test test test");
     }
+        
     
     handleUpload = (e) => {
         e.preventDefault();
@@ -246,11 +274,13 @@ class Document extends Component<IProps, PageState> {
         
     }
 
-    handleShowPicker = () => {
-        this.setState({
-            show: !this.state.show
-        })
-
+    handleShowPicker = (e) => {
+        // e.stopPropagation();
+        if (this.state.selectedDocument) {
+            this.setState({
+                show: !this.state.show
+            })
+        } 
     }
 
     closeToast = () => {
@@ -285,31 +315,52 @@ class Document extends Component<IProps, PageState> {
 
     componentWillMount() {
         let { Lists, page } = this.state;
+        let flag = false;
         // const { shopTitle } = this.props;
         const { id, title } = this.$router.params;
+        let ListStore = Taro.getStorageSync('documentId')
+        let ListsAnother: list = [];
+        console.log(ListStore,"list")
+
         // this.props.get({
         //     'page': page,
         //     'count': 10,
         // })
         // console.log(this.props.get, "props get")
        
-
-
-        this.setState({
-            shopTitle: decodeURI(title)
-        })
-        let ListsAnother: list = [];
         Lists.map((item) => {
             ListsAnother.push(Object.assign({}, item, { checked: false }))
         });
+
+        if (ListStore.length !== 0) {
+            ListStore.map(( item) => {
+                ListsAnother[item].checked = true,
+                flag = true;
+            })
+        }
+       
         this.setState({
-            Lists: ListsAnother
+            shopTitle: decodeURI(title),
+            Lists: ListsAnother,
+            selectedDocument: flag
         })
+    }
+
+    componentDidUpdate() {
+
+        const { Lists } = this.state;
+        let selectArray:any = [];
+        Lists.map((item) => {
+            if(item.checked) {
+                selectArray.push(item.id)
+            }
+        })
+        Taro.setStorageSync('documentId', selectArray);
     }
 
     render() {
 
-        const {  Lists, show, printList, preprint, price, showToast, uploadsuccess, shopTitle } = this.state;
+        const { Lists, show, printList, preprint, price, showToast, uploadsuccess, shopTitle, selectedDocument } = this.state;
         
         const documentLists = (
             <ScrollView 
@@ -341,7 +392,7 @@ class Document extends Component<IProps, PageState> {
         )
 
         const Buttons = (
-            <View className='buttons'>
+            <View className='buttons' onClick={this.handleTest.bind(this)}>
                 <View className='buttonscover'></View>
                 <View className='shopTitle'>
                     <Text className='shopText'>打印店铺：{shopTitle}</Text>
@@ -357,15 +408,24 @@ class Document extends Component<IProps, PageState> {
         )
 
         const chooseShop = (
-            <Button className='docprint docButt' onClick={this.handleToShop}>打印</Button>
+            <Button className='docprint docButt' 
+                style={{ background: `${selectedDocument ? '#2fb9c3' : '#D7D7D7'}` }}
+                onClick={this.handleToShop.bind(this)}>打印</Button>
         )
 
         const choosePrint = (
-            <Picker mode='multiSelector' range={printList} onChange={this.handlePrint} value={preprint}
-                onColumnChange={this.handleShowPrice} onCancel={this.handleShowPicker}
+            <Picker mode='multiSelector' 
+                range={printList} 
+                onChange={this.handlePrint} 
+                value={preprint}
+                onColumnChange={this.handleShowPrice} 
+                onCancel={this.handleShowPicker} 
+                disabled={!selectedDocument}
             >
                 <View onClick={this.handleShowPicker} >
-                    <Button className='docprint docButt' onClick={this.handlePrint}>打印</Button>
+                    <Button className='docprint docButt' 
+                        style={{ background: `${selectedDocument ? '' : '#D7D7D7'}` }}
+                        >打印</Button>
                 </View>
             </Picker>
         )
@@ -388,7 +448,7 @@ class Document extends Component<IProps, PageState> {
         const blankPage = (
             <BlankPage
                 title='暂无文档赶快上传吧~'
-                picture={document}
+                picture={require('../../assets/blank-compents/blank-box-empty.png')}
             />
         )
 
@@ -399,9 +459,7 @@ class Document extends Component<IProps, PageState> {
                 confirm = '我知道了'
                 subTitle = '上传成功可以去打印啦'
                 cancel = '去预览'
-                model
                 onConfirm = {this.closeToast.bind(this)}
-                onCancel = { this.handlePreshow.bind(this) }
                 />   : 
                 <Toast
                 picture={require('./pic/uploadfail.png') }
@@ -412,15 +470,14 @@ class Document extends Component<IProps, PageState> {
                 />
             )
 
-        // const loading = (
-        //     <Toast
-
-        //         picture={require('../../assets/loading.png')}
-        //         title='正在上传'
-        //         conform = '取消上传'
-        //         onConfirm={this.closeToast.bind(this)}
-        //     />
-        // )
+        const loading = (
+            <Toast
+                picture={require('./pic/uploading.png')}
+                title='正在上传'
+                confirm='取消上传'
+                onConfirm={this.closeToast.bind(this)}
+            />
+        )
         
 
         const myDocument = (
@@ -443,7 +500,7 @@ class Document extends Component<IProps, PageState> {
                 {shopTitle === 'undefined' ? '' : shopTitleTop}
                 {Lists.length === 0 ? blankPage : myDocument}
                 {showToast ? toast : '' }
-                {/* {this.state.selected ? loading : ''} */}
+                {/* {loading} */}
             </View>
         )
     }
