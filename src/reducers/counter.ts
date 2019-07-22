@@ -19,4 +19,5 @@ export default function counter (state = INITIAL_STATE, action) {
      default:
        return state
   }
+  
 }

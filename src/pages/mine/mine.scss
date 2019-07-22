@@ -5,8 +5,9 @@
 }
 
 .mine {
-    //height: 1620px;
-    //line-height: normal;
+    //@include clumnCenter;
+    position: fixed;
+    padding: 0 30px;
 }
 .nav{
     height: 90px;
@@ -21,10 +22,11 @@
 }
 
 .mineTop {
-    height: 362px;
+    height: 262px;
     width: 750px;
     position: fixed;
     top: 0px;
+    left: 0;
     z-index: -1;
     background: #31c0cb;
 }
@@ -35,7 +37,7 @@
 .contentHeadpic{
     width: 690px;
     height: 236px;
-    margin-top: 260px;
+    margin-top: 160px;
     background: #fff;
     border-radius: 16px;
     @include clumnCenter;

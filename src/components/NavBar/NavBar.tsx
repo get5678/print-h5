@@ -6,23 +6,24 @@
  import { View, Image, Text } from '@tarojs/components'
 
  import './NavBar.scss'
-
+ import back from '../../assets/backArrow.png'
  type props = {
      title: string,
      handleBack: any,
-     backArrow: string,
+     backArrow?: string,
  }
  export default class NavBar extends Component<props> {
 
 
     render () {
+        const { backArrow  } = this.props;
         const test = 
         <View className='navBar'>
-            <Image className='navImage' src={this.props.backArrow} onClick={this.props.handleBack}/>
+                <Image className='navImage' src={backArrow ? backArrow : back} onClick={this.props.handleBack}/>
             <Text className='navText'>{this.props.title}</Text>
         </View>
         return (
-            <View>
+            <View className='navBars'>
                 {test}
             </View>
         )

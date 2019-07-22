@@ -54,6 +54,7 @@
   @at-root #{&}-mask {
     background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
+    top: 0;
     z-index: 0;
     width: 100vw;
     height: 100vh;
@@ -63,6 +64,7 @@
     flex-grow: 1;
     display: flex;
     align-items: center;
+    
   }
 
   @at-root #{&}-confirm {
@@ -74,6 +76,7 @@
     font-size: 32px;
     color: #2fb9c3;
     border: #2fb9c3 2px solid;
+    border-radius: 40px;
     background: transparent;  
   }
 
@@ -87,5 +90,7 @@
     font-size: 32px;
     color: #fff;
     background: #2fb9c3;
+    border-radius: 40px;
+    border: none;
   }
 }

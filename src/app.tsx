@@ -2,9 +2,7 @@ import '@tarojs/async-await'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 
-// import Index from './pages/index'
 import Mine from './pages/mine/mine'
-// import Document from './pages/document/document'
 
 import configStore from './store'
 
@@ -29,16 +27,18 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+      'pages/index/index',
+      'pages/StoreInformation/StoreInformation',
       'pages/historyorder/historyorder',
       'pages/generateorders/generateorders',
       'pages/noworder/noworder',
       'pages/feedback/feedback',
-      'pages/StoreInformation/StoreInformation',
-      'pages/index/index',
       'pages/bindPhone/bindPhone',
       'pages/mine/mine',
       'pages/document/document',
-      'pages/bindWX/bindWX'
+      'pages/bindWX/bindWX',
+      'pages/uploadFile/uploadFile',
+      'pages/chooseShop/chooseShop'
     ],
     window: {
       backgroundTextStyle: 'light',
