@@ -1,31 +1,50 @@
 import Taro from '@tarojs/taro';
 import { View, Image} from '@tarojs/components';
-// import { connect } from '@tarojs/redux'
-
-// import { task } from '../../actions/task'
+import { connect } from '@tarojs/redux'
 
 import './generateorders.scss';
 import backArrow from '../../../.temp/assets/backArrow.png';
 import orderlogo from '../../assets/orderlogo.png';
+import { asyncorderDetail } from '../../actions/orderDetail';
 
-// @connect(({ counter }) => ({
-//     counter
-//   }), (dispatch) => ({
-//     add () {
-//       dispatch(task())
-//     }
-//   }))
-
-interface State {
-  name: string,
-  phone: number,
-  address: string
+type PageStateProps = {
+  orderDetail: {
+    data: any
+  }
 }
 
-class generateorders extends Taro.Component<{}, State>  {
+type PageDispatchProps = {
+  asyncorderDetail: () => any,
+  getOrderDetail: (payload)=> any
+}
+
+type PageOwnProps = {}
+
+type PageState = {
+  name: string,
+  phone: number,
+  address: string,
+  router: string,
+}
+
+type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+
+interface generateorders {
+  props: IProps;
+}
+
+@connect(({ orderDetail }) => ({
+  orderDetail
+}), (dispatch) => ({
+  getOrderDetail(payload={}){
+    dispatch(asyncorderDetail(payload))
+  },
+}))
+
+class generateorders extends Taro.Component<{}, PageState>  {
 
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '订单详情'
   }
 
   constructor (props) {
@@ -33,7 +52,8 @@ class generateorders extends Taro.Component<{}, State>  {
     this.state = { 
         name: '阳光图文打印店',
         phone: 1345454545445,
-        address: '重庆邮电大学15栋'
+        address: '重庆邮电大学15栋',
+        router: 'noworder/noworder'
      }
   }
 
@@ -43,9 +63,9 @@ class generateorders extends Taro.Component<{}, State>  {
       })
   }
 
-  Return(){
+  Return(router){
       Taro.navigateTo({
-          url:'../historyorder/historyorder'
+          url:'../'+router
       })
   }
   componentWillReceiveProps (nextProps) {
@@ -54,24 +74,32 @@ class generateorders extends Taro.Component<{}, State>  {
 
   componentWillUnmount () { }
 
-  componentDidShow () { }
+  componentDidShow () {
+    this.setState({
+      router: this.$router.params.return
+    })
+    this.props.getOrderDetail({
+      orderId: this.$router.params.orderId
+    })
+   }
 
   componentDidHide () { }
 
   render () {
+    const res = this.props.orderDetail.data;
     return (
       <View>
         <View className='top-box'>
-          <Image onClick={this.Return} className='return' src={backArrow}></Image>
+          <Image onClick={this.Return.bind(this,this.state.router)} className='return' src={backArrow}></Image>
           <View className='top-tittle'>生成订单</View>
         </View>
         <View className='order-top-box'>
           <View className='order-logo-box'>
             <Image className='order-logo' src={orderlogo}/>
-            <View>已经付款给阳光打印店</View>
+            <View>已经付款给{res.shopName||'阳光打印店'}</View>
           </View>
-          <View className='order-logo-price'>24.2</View>
-          <View className='order-loge-code'>收货码：12532674525467</View>
+          <View className='order-logo-price'>{res.payment||24.2}</View>
+          <View className='order-loge-code'>收货码：{res.receivingCode||12532674525467}</View>
         </View>
         <View className='order-detail-table'>
           <View className='order-detail-left'>
@@ -90,16 +118,16 @@ class generateorders extends Taro.Component<{}, State>  {
           </View>
           <View className='order-detail-right'>
             <View className='order-detail-top'>
-              <View>阳光图文打印店</View>
-              <View>13617698456</View>
-              <View>A4</View>
-              <View>4</View>
-              <View>单面</View>
-              <View>黑白</View>
+              <View>{res.shopName||'阳光图文打印店'}</View>
+              <View>{res.phoneNum||'13617698456'}</View>
+              <View>{res.printSize||'A4'}</View>
+              <View>{res.printNum||1}</View>
+              <View>{res.printDirection||'单面'}</View>
+              <View>{res.printType||'黑白'}</View>
             </View>
             <View className='order-detail-bottom'>
-              <View>2019-23-23</View>
-              <View>在线下单</View>
+              <View>{res.gmtCreate||2019-23-23}</View>
+              <View>{res.payMethod?'在线下单':'线下支付'}</View>
             </View>
           </View>
         </View>
