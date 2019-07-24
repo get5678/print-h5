@@ -2,30 +2,55 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, ScrollView, Image, Text, Icon, Button } from '@tarojs/components'
 import NavaBar from '../../components/NavBar/NavBar'
-import shopData from '../../pages/index/index_data'
+
+import { connect } from '@tarojs/redux'
+import { asyncGetShopList } from '../../actions/shop'
 
 import './chooseShop.scss'
 
 type PageStateProps = {
-
+    shop: {
+        shopList: any
+    }
 }
 
-type PageDispatchProps = {}
+type PageDispatchProps = {
+    getShopList: (payload?) => any;
+}
 
 type PageOwnProps = {}
 
-type PageState = {}
+type PageState = {
+    shopId: number;
+    selected: boolean;
+}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
 interface  ChooseShop {
     props: IProps;
 }
-
+@connect(
+    ({ shop } ) => ({
+        shop
+    }), (dispatch) => ({
+        getShopList(params) {
+            dispatch(asyncGetShopList(params));
+        }
+    })
+)
 class ChooseShop extends Component<IProps, PageState> {
 
     config: Config = {
         navigationBarTitleText: '选择打印店',
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            shopId: 0,
+            selected: false
+        }
     }
 
     handleBack = () => {
@@ -35,46 +60,58 @@ class ChooseShop extends Component<IProps, PageState> {
     }
 
     handleChooseShop = (index) => {
+        const { shopList } = this.props.shop;
         this.setState({
-            shopId: index,
+            shopId: shopList[index].shopId,
+            selected: true,
         })
     }
 
     handleNext = () => {
-        const {shopId} = this.state;
-        let title = '';
-        shopData.map((item,index) => {
-            if (shopId === index) {
-                title = item.title
-            }
-        })
-        Taro.navigateTo({
-            url: `../../pages/document/document?id=${shopId}&title=${encodeURI(title)}`
-        })
+        if(this.state.selected) {
+            const { shopId } = this.state;
+            const { shopList } = this.props.shop;
+            let title = '';
+            
+            shopList.map((item) => {
+                if (shopId === item.shopId) {
+                    title = item.shopName
+                }
+            })
+            Taro.navigateTo({
+                url: `../document/document?id=${shopId}&title=${encodeURI(title)}`
+            })
+        }
+        
     }
 
-    state = {
-        shopId: 0,
+    componentDidMount() {
+        this.props.getShopList();
+    }
+
+    componentDidUpdate() {
     }
 
     render () {
-        
+        const{ shopList } = this.props.shop;
+        const shopData = shopList ? shopList : [] ;
+
         const items = shopData.map((item, index) => {
             return (
                 <View className='index-item' onClick={this.handleChooseShop.bind(this,index)}>
-                    <Image className='index-item-image' src={item.picture}></Image>
+                    <Image className='index-item-image' src={item.shopAvatar}></Image>
                     <View className='index-item-column'>
                         <View className='index-item-title'>
-                            <Text className='index-item-shopname'> {item.title}</Text>
-                            <Text className='index-item-price'>{item.price}/张</Text>
+                            <Text className='index-item-shopname'> {item.shopName}</Text>
+                            <Text className='index-item-price'>{item.shopPrice}/张</Text>
                         </View>
                         <Text className='index-item-address'>
                             <Image className='index-item-address-icon' src={require('../../assets/images/index/address.png')}></Image>
-                            {item.address}
+                            {item.shopAddress}
                         </Text>
                     </View>
                     <View className='index-item-column'>
-                        <Icon className={`${this.state.shopId === index  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
+                        <Icon className={`${this.state.shopId === item.shopId  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
                     </View>
                 </View>
             )
@@ -85,9 +122,10 @@ class ChooseShop extends Component<IProps, PageState> {
                 <Button className='bottomButtons-back bottomButtons-item' onClick={this.handleBack.bind(this)}>
                     返回
                 </Button>
-                <Button className='bottomButtons-next bottomButtons-item' onClick={this.handleNext.bind(this)}>
+
+                <Button className='bottomButtons-next bottomButtons-item' onClick={this.handleNext.bind(this)} style={{ background: `${this.state.selected ? '' : '#D7D7D7'}` }}>
                     下一步
-                </Button>
+                </Button> 
             </View>
         )
 

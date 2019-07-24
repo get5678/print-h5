@@ -85,7 +85,6 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         code: e.detail.value
       }, () => {
-        // console.log(this.state.code)
         if (!isPhoneNumber(this.state.phone)) {
           this.setState({
             showWarn: true,

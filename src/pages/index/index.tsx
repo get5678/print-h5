@@ -54,7 +54,6 @@ class Index extends Component<{}, PageState> {
    * @memberof Index
    */
   handleInputSearch(e: { detail: { value: string } }) {
-    console.log(e.detail.value)
     this.setState({
       searchText: e.detail.value
     })
