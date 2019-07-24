@@ -95,7 +95,7 @@ Icon(this,Icon,e){
 
   render () {
     const {justIcon,inputValue} = this.state;
-   
+    
     const box = this.state.flag?(<Toast
         picture={require('../../assets/images/bindPhone/bind-success.png')}
         title='反馈成功'

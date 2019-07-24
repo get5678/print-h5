@@ -23,3 +23,19 @@ export async function feedBack(data, contentType?) {
 export async function myOrderList(data, contentType?) {
   return await http.post(`${baseUrl}order/myOrderList`, data, contentType);
 }
+// 我的文档页面接口
+export async function documentList(data, contentType?) {
+  return await http.post(`${baseUrl}document/getAllDocument`,data, contentType);
+}
+// 上传文件
+export async function uploadFile(data, contentType?) {
+  return await http.post(`${baseUrl}document/upload`, data, contentType);
+}
+// 获取价格组合
+export async function groupPrice(data) {
+  return await http.get(`${baseUrl}merchant/combination`,data)
+}
+// 获取店铺列表
+export async function shopList(data) {
+  return await http.post(`${baseUrl}merchant/getAllShopInfo`,data)
+}

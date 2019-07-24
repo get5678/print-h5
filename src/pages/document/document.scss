@@ -48,12 +48,15 @@
         @include toShow;
     }
     @at-root #{&}Text{
+        width: 400px;
         font-size: 26px;
         color: #999;
         line-height: normal;
+        display: flex;
+        justify-content: flex-start;
     }
     @at-root #{&}Size{
-        margin-right: 30px;
+       width: 160px;
     }
 
     @at-root #{&}Img{
@@ -146,15 +149,18 @@
             top: -50px;
             display: inline-block;  
         }
-
         // 确定
         &:last-child{
-            width: 620px;
-            height: 70px;
-            top: 610px;
-            left: 64px;
+            width: 600px;
+            height: 66px;
+            top: 602px;
+            left: 72px;
             position: fixed;
+            border-radius: 40px;
+            box-sizing: border-box;
+            
         }
+        
     }
     @at-root #{&}__bd{
         height: 446px;
@@ -281,11 +287,13 @@ element.style {
 .printbut{
     width: 630px;
     height: 90px;
+    outline: none;
     background: #2fb9c3;
     color: #fff;
     font-size: 30px;
     border: none;
     border-radius: 40px;
+    box-sizing: border-box;
 }
 .upluadinput{
     position: relative;
@@ -316,12 +324,177 @@ element.style {
     }
     @at-root #{&}-text{
         font-size: 26px;
-        height: 24px;
+        height: 26px;
         color: #666;
         line-height: 24px;
         width: 200px;
         text-align: center;
         @include toShow;
         position: relative;
+    }
+}
+
+.loading{
+    @at-root #{&}_cover{
+        background: rgba(#000,0.5);
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        z-index: 2;
+    } 
+    @at-root #{&}_toast{
+        width: 558px;
+        height: 366px;
+        background: #fff;
+        position: absolute;
+        z-index: 3;
+        border-radius: 40px;
+        left: 0; 
+        top: 0; 
+        right: 0; 
+        bottom: 0;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    @at-root #{&}_paper{
+        width: 100px;
+        height: 160px;
+        border-top-left-radius: 10px;
+        background: linear-gradient(to top, #d7f2f3  30%, #e1f3f4 50%,#dddbdc 51%);
+        background-size: 100% 200%;
+        background-position: 0 100%;
+        top: -102px;
+        position: absolute;
+        animation: loadingUpPrint linear 6s;
+        &::after{
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-right: 24px solid #7f7f7f;
+			border-bottom: 24px solid transparent;
+
+        }
+    }
+    @at-root #{&}_printer{
+        width: 160px;
+        height: 86px;
+        border-radius: 24px;
+        background: linear-gradient(to top, #7fcbd0  4%, #cbf4f7 40% 49.4%, #dddcdc 50%,#cccccc 60%);
+        background-size: 100% 200%;
+        background-position: 0 100%;
+        position: relative;
+        top: 74px;
+        right: 30px;
+        animation: loadingUpPrint linear 3s;
+    }
+
+    @keyframes loadingUpPrint {
+        0%{
+            background-position: 0 0%;
+        }
+        50%{
+            background-position: 0 50%;
+        }
+        100%{
+            background-position: 0 100%;
+        }
+    }
+    @keyframes loadingUpPaper {
+        0%{
+            background-position: 0 0%;
+        }
+        
+        50%{
+            background-position: 0 50%;
+        }
+        100%{
+            background-position: 0 100%;
+        }
+    }
+
+    @at-root #{&}_img{
+        width: 160px;
+        height: 160px;
+        position: absolute;
+        top: -102px;
+    }
+    @at-root #{&}_text{
+        letter-spacing: 2px;
+        color: #999;
+        font-size: 24px;
+    }
+    @at-root #{&}_button{
+        letter-spacing: 1px;
+        width: 160px;
+        height: 40px;
+        top: 86px;
+        line-height: 40px;
+        padding: 0;
+        margin: 0;
+        font-size: 32px;
+        font-weight: 500;
+        border: none;
+        outline: none;
+        color: #2fb9c3;
+        background: transparent;
+    }
+}
+
+.upload{
+    @at-root #{&}Page{
+        width: 100vw;
+        height: 100vh;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+    }
+    @at-root #{&}_img{
+        width: 358px;
+        height: 250px;
+        margin-top: -100px;
+    }
+     @at-root #{&}_title{
+        width: 270px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    @at-root #{&}_text{
+        font-size: 26px;
+        color: #adadad;
+    }
+    @at-root #{&}_span{
+        display: flex;
+    }
+     @at-root #{&}_item{
+        width: 6px;
+        height: 6px;
+        background: #adadad;
+        margin-left: 10px;
+        animation: slidesDown 1.4s ease infinite;
+        &:nth-child(1) {
+            animation-delay: 0.1s; 
+        }
+        &:nth-child(2) {
+            animation-delay: 0.4s; 
+        }
+        &:nth-child(3) {
+            animation-delay: 0.7s; 
+        }
+        &:nth-child(4) {
+            animation-delay: 1s; 
+        }
     }
 }

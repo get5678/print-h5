@@ -1,13 +1,17 @@
-const INITIAL_STATE = {};
+const INITIAL_STATE = { };
 
-export default function document(state = INITIAL_STATE, action) {
+export default function documentList(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case 'LIST':
+        case 'DOCUMENT':
             return {
                 ...state,
                 documentList: action.data
             };
-            
+        case 'GROUP':
+            return {
+                ...state,
+                groupPrice : action.data
+            }
         default:
             return state;
     }

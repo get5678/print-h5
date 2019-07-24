@@ -1,6 +1,6 @@
 .index {
 
-    height: 80vh;
+    height: 74vh;
     box-sizing: border-box;
     padding-top: 5%;
 
@@ -87,11 +87,13 @@
 .bottomButtons{
     padding: 0 80px;
     box-sizing: border-box;
+    background: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100vw;
-    height: 146px;
+    height: 246px;
+    padding-top: 100px;
     position: fixed;
     bottom: 0;
     z-index: 1;
