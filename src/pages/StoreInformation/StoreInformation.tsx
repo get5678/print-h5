@@ -78,11 +78,16 @@ class StoreInformation extends Component<{}, PageState> {
     console.log(this.props, nextProps)
   }
 
-  componentWillUnmount () { }
+  componentWillMount () {
+    if (this.$router.params.storeId) {
+      this.props.shopGet({ id:this.$router.params.storeId })
+    }
+  }
 
-  componentDidShow () {
-    this.props.shopGet({id:1})
-   }
+  componentWillUnmount () {
+  }
+
+  componentDidShow () { }
 
   componentDidHide () { }
 
