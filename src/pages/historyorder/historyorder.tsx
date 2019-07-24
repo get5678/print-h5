@@ -5,6 +5,7 @@ import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
 import return2Png from '../../assets/return2.png';
 import orderStore from '../../assets/orderStore.png';
+import { BlankPage } from '../../components/blankPage/blankPage'
 import ppt from '../../assets/ppt.png';
 import './historyorder.scss';
 import { asyncHistoryOrder } from '../../actions/historyOrderList';
@@ -71,7 +72,7 @@ ToMore(orderId,thisPage,e){
   render () {
     
     let res = this.props.historyOrderList.data;
-    res = isArray(res)?res:[1];
+    res = isArray(res)?res:[];
     
     const OrderStoreBox = res.map((res)=>{
       return (
@@ -102,11 +103,17 @@ ToMore(orderId,thisPage,e){
           <Image onClick={this.Return} className='nowOrder-return' src={return2Png}></Image>
           <View className='nowOrder-top-tittle'>历史订单</View>
         </View>
-        <View className='all-order'>
-          <Text>全部</Text>
-          <View className='all-line'></View>
-        </View>
-        {OrderStoreBox}
+        {this.props.historyOrderList.data.length > 0?
+        <View>
+          <View className='all-order'>
+            <Text>全部</Text>
+            <View className='all-line'></View>
+          </View>
+          {OrderStoreBox}
+        </View>:<BlankPage
+                    title='您当前还没有订单'
+                    picture={require('../../assets/blank-compents/blank-box-empty.png')}
+                />}
         <TabBar current={1}/>
       </View>
     )

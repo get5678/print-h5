@@ -5,6 +5,7 @@ import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
 import './noworder.scss'
 import orderStore from '../../assets/orderStore.png';
+import { BlankPage } from '../../components/blankPage/blankPage'
 import ppt from '../../assets/ppt.png';
 import { asyncNoworder } from '../../actions/nowOrderList';
 import { isArray } from 'util';
@@ -64,7 +65,7 @@ ToMore(orderId,thisPage,e){
 
   render () {
     let res = this.props.nowOrderList.data;
-    res = isArray(res)?res:[1];
+    res = isArray(res)?res:[];
     
     const OrderStoreBox = res.map((res)=>{
       return (
@@ -72,19 +73,19 @@ ToMore(orderId,thisPage,e){
         <View className='order-store-top'>
           <View className='order-store-name'>
             <Image className='orderStore' src={orderStore}/>
-            <View>{res.shopName||'阳光图文打印店'}</View>
+            <View>{res.shopName}</View>
           </View>
           <Text className='status'>{res.orderStatus==2?'已完成':'正在打印'}</Text>
         </View>
         <View className='file-type-box'>
           <Image className='file-type' src={res.documentTypeUrl||ppt}/>
           <View className='order-time-box'>
-            <View>{res.receivingCode||14435454534243423}</View>
-            <View className='order-time'>{res.gmtCreate||'2019/06/02'}</View>
+            <View>{res.receivingCode}</View>
+            <View className='order-time'>{res.gmtCreate}</View>
           </View>
         </View>
         <View className='file-type-bottom'>
-          <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment||1.6}</Text></View>
+          <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment}</Text></View>
           <View onClick={this.ToMore.bind(this,res.orderId||1,'noworder/noworder')} className='ToMore'>查看详情</View>
         </View>
       </View>)}
@@ -95,11 +96,17 @@ ToMore(orderId,thisPage,e){
         <View className='nowOrder-top-box'>
           <View className='nowOrder-top-tittle'>当前订单</View>
         </View>
-        <View className='all-order'>
-          <Text>全部</Text>
-          <View className='all-line'></View>
-        </View>
-        {OrderStoreBox}
+        {this.props.nowOrderList.data.length > 0?
+        <View>
+          <View className='all-order'>
+            <Text>全部</Text>
+            <View className='all-line'></View>
+          </View>
+          {OrderStoreBox}
+        </View>:<BlankPage
+                    title='您当前还没有订单'
+                    picture={require('../../assets/blank-compents/blank-box-empty.png')}
+                />}
         <TabBar current={1}/>
       </View>
     )
