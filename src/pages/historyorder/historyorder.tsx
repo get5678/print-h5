@@ -54,7 +54,7 @@ ToMore(orderId,thisPage,e){
 }
 
   componentWillReceiveProps (nextProps) {
-    console.log(this.props, nextProps)
+    console.log(this.props, nextProps,"props")
   }
 
   componentWillUnmount () { }
