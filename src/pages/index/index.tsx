@@ -103,7 +103,7 @@ class Index extends Component<{}, PageState> {
     return (
       <View className='index'>
         {/* <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button> */}
-        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button>
+        {/* <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button> */}
         <View className='index-top'>
           <View className='index-top-row'>
             <Image className='index-icon' src={require('../../assets/images/index/magnifyingGlass.png')}></Image>
