@@ -8,10 +8,10 @@
     height: 172px;
     display: flex;
     align-items: center;
-    .return{
-        width: 16px;
+    .store-return{
+        width: 26px;
         height: auto;
-        margin-right: -16px;
+        margin-right: -26px;
     }
     .top-tittle{
         text-align: center;
@@ -64,8 +64,8 @@
     }
 }
 .button-box{
-    position: fixed;
-    bottom: 70px;
+    margin-top: 100px;
+    margin-bottom: 70px;
     width: 100vw;
 }
 .button{
