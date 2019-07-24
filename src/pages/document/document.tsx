@@ -24,11 +24,13 @@ type list = {
     docSize: string;
     docAvatar: string;
     checked?: boolean;
+    docPageTotal: number;
 }[];
 
 type PageStateProps = {
     document:{
-        documentList: any
+        documentList: any,
+        groupPrice: any,
     },
 }
 
@@ -37,9 +39,7 @@ type PageDispatchProps = {
     getGroupPrice: (payload) => any;
 }
 
-type PageOwnProps = {
-
-}
+type PageOwnProps = {}
 
 type PageState = {
     Lists: {
@@ -49,8 +49,10 @@ type PageState = {
         docSize: string;
         docAvatar: string;
         checked?: boolean;
+        docPageTotal: number;
     }[];
-    count: number | any,
+    count: number | any;
+    page: number;
     selected: boolean;
     selectedDocument: boolean;
     show: boolean;
@@ -97,10 +99,10 @@ class Document extends Component<IProps, PageState> {
     constructor(IProps) {
         super(IProps);
         this.handleBack = this.handleBack.bind(this);
-
         this.state = {
             Lists: [],
-            count: 10,
+            page: 1,
+            count: 5,
             selected: false,
             selectedDocument: false,
             show: false,
@@ -122,11 +124,8 @@ class Document extends Component<IProps, PageState> {
             loadingProcess: 0,
             uploadshow: false,
             ListStore: [],
-        }
-
-       
+        }       
     }
-
 
     handleBack = () => {
         Taro.redirectTo({
@@ -204,27 +203,60 @@ class Document extends Component<IProps, PageState> {
                 token: '2f8dfdf4-c324-4201-a186-2e618500fa09',
             }
         })
-        .then(res => console.log(res.json(),"res"))
+        .then(res => {
+            // console.log(res, "res")
+            if(res.ok) {
+                this.props.getList({
+                    page: 1,
+                    count:this.state.count+5,
+                })
+                this.setState({
+                    uploadshow: false,
+                    uploadsuccess: true,
+                    showToast: true
+                })
+            } else {
+                this.setState({
+                    uploadshow: false,
+                    uploadsuccess: false,
+                    showToast: true
+                })
+            }
+        })
         .catch(err => console.error('Error:', err))
-        .then(res => console.log('Success:', res));
 
-        // uploadFile(data)
-
-       
         this.setState({
             uploadshow: true,
-           // showToast: !this.state.showToast
         })
+    }
+
+    /**
+     * @description 计算价格
+     */
+    calculationPrice = (str):number => {
+        const { groupPrice } = this.props.document;
+        const { Lists, ListStore } = this.state;
+        let price = 0.00;
+
+        groupPrice.map((item) => {
+            if (item.printType == str) {
+                price = item.printPrice
+            }
+        })
+        price *= Lists[ListStore[0]].docPageTotal;
+        return price;
     }
 
     handleShowPrice = (e):any => {
         const { printList, selectedprintList, preprint } = this.state;
         const { detail } = e;
+        
         let newselectedprintList = selectedprintList.slice();
         let newpreprint = preprint.slice();
         let nowprice: number | any = 0;
 
         newpreprint[detail.column] = detail.value;
+       
         while (detail.column < 3 && detail.column >= 0) {     
             newpreprint[detail.column+1] = 0;
             detail.column++;
@@ -232,23 +264,10 @@ class Document extends Component<IProps, PageState> {
         newpreprint.map((value,index) => {
             newselectedprintList[index] = printList[index][value]
         })
-        newselectedprintList.map((item) => {
-            if (item === 'A4' || item === 'B5') {
-                nowprice += 0.8;
-            }
-            else if (typeof (item) === 'number') {
-                nowprice *= (item);
-            }
-            else if (item === '黑白' || item === '彩色') {
-                nowprice += 0.8;
-            }
-            else if (item === '双面' || item === '单面') {
-                nowprice += 0.8;
-            }
-            else {
-                nowprice = 0;
-            }
-        })
+       
+        let str = newselectedprintList[3] + newselectedprintList[2] + newselectedprintList[0];
+        nowprice = this.calculationPrice(str);
+        nowprice *= newselectedprintList[1];
         nowprice = nowprice.toFixed(2);
         
         this.setState({
@@ -260,9 +279,23 @@ class Document extends Component<IProps, PageState> {
     }
 
     handleShowPicker = () => {
+        const { selectedprintList } = this.state;
+        let str = selectedprintList[3] + selectedprintList[2] + selectedprintList[0];
+        let price = 0.00;
+        
+        price = this.calculationPrice(str);
         if (this.state.selectedDocument) {
             this.setState({
-                show: !this.state.show
+                show: true,
+                price: price
+            })
+        } 
+    }
+
+    handleHidePicker = () => {
+        if (this.state.selectedDocument) {
+            this.setState({
+                show: false,
             })
         } 
     }
@@ -287,13 +320,16 @@ class Document extends Component<IProps, PageState> {
      *@description 下拉刷新
      */
     handleToLower = () => {
+        
         if (this.props.document && this.props.document.documentList.total > this.state.count) {
             this.setState({
-                count: this.state.count + 5
+                page: this.state.page+1,
+                count: this.props.document.documentList.total
             }, () => {
+                console.log(this.state.page,"page")
                 this.props.getList({
-                    page: 1,
-                    count: this.state.count
+                    page: this.state.page,
+                    count: 7
                 })
             });
         }
@@ -314,31 +350,36 @@ class Document extends Component<IProps, PageState> {
     componentDidMount() {
         this.props.getList({
             page: 1,
-            count: 10
+            count: 7
         })
+        if (this.state.shopId !== -1) {
+            this.props.getGroupPrice({
+                'merchantId': this.state.shopId
+            })
+        }
     }
 
     componentWillReceiveProps(nextProps) {     
-       
+        
         let ListA = nextProps.document.documentList ? nextProps.document.documentList.documentDTOList : [];
-        const { ListStore } = this.state;
+        const { ListStore, Lists } = this.state;
         let flag = false;
         
-        let Lists: list = [];
+        let List: list = Lists || [];
 
         if (ListA.length !== 0) {
             ListA.map((item) => {
-                Lists.push(Object.assign({}, item, { checked: false }))
+                List.push(Object.assign({}, item, { checked: false }))
             });
         }
-        if (ListStore.length !== 0 && Lists.length !== 0) {
+        if (ListStore.length !== 0 && List.length !== 0) {
             ListStore.map((item) => {
-                Lists[item].checked = true
+                List[item].checked = true
             });
             flag = true;
         }
         this.setState({
-            Lists: Lists,
+            Lists: List,
             selectedDocument: flag,
         })   
     } 
@@ -352,6 +393,7 @@ class Document extends Component<IProps, PageState> {
             }
         })
         Taro.setStorageSync('documentId', selectArray);      
+        
     }
    
     render() {
@@ -425,13 +467,11 @@ class Document extends Component<IProps, PageState> {
                 onChange={this.handlePrint.bind(this)} 
                 value={preprint}
                 onColumnChange={this.handleShowPrice} 
-                onCancel={this.handleShowPicker} 
+                onCancel={this.handleHidePicker} 
                 disabled={!selectedDocument}
             >
                 <View onClick={this.handleShowPicker} >
-                    <Button className='docprint docButt' 
-                        style={{ background: `${selectedDocument ? '' : '#D7D7D7'}` }}
-                        >打印</Button>
+                    <Button className='docprint docButt' style={{ background: `${selectedDocument ? '' : '#D7D7D7'}` }}>打印</Button>
                 </View>
             </Picker>
         )

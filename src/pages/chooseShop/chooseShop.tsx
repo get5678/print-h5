@@ -22,6 +22,7 @@ type PageOwnProps = {}
 
 type PageState = {
     shopId: number;
+    selected: boolean;
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -46,9 +47,9 @@ class ChooseShop extends Component<IProps, PageState> {
 
     constructor(props) {
         super(props);
-
         this.state = {
             shopId: 0,
+            selected: false
         }
     }
 
@@ -59,23 +60,29 @@ class ChooseShop extends Component<IProps, PageState> {
     }
 
     handleChooseShop = (index) => {
+        const { shopList } = this.props.shop;
         this.setState({
-            shopId: index,
+            shopId: shopList[index].shopId,
+            selected: true,
         })
     }
 
     handleNext = () => {
-        const {shopId} = this.state;
-        const { shopList } = this.props.shop;
-        let title = '';
-        shopList.map((item,index) => {
-            if (shopId === index) {
-                title = item.shopName
-            }
-        })
-        Taro.navigateTo({
-            url: `../document/document?id=${shopId}&title=${encodeURI(title)}`
-        })
+        if(this.state.selected) {
+            const { shopId } = this.state;
+            const { shopList } = this.props.shop;
+            let title = '';
+            
+            shopList.map((item) => {
+                if (shopId === item.shopId) {
+                    title = item.shopName
+                }
+            })
+            Taro.navigateTo({
+                url: `../document/document?id=${shopId}&title=${encodeURI(title)}`
+            })
+        }
+        
     }
 
     componentDidMount() {
@@ -104,7 +111,7 @@ class ChooseShop extends Component<IProps, PageState> {
                         </Text>
                     </View>
                     <View className='index-item-column'>
-                        <Icon className={`${this.state.shopId === index  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
+                        <Icon className={`${this.state.shopId === item.shopId  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
                     </View>
                 </View>
             )
@@ -115,9 +122,10 @@ class ChooseShop extends Component<IProps, PageState> {
                 <Button className='bottomButtons-back bottomButtons-item' onClick={this.handleBack.bind(this)}>
                     返回
                 </Button>
-                <Button className='bottomButtons-next bottomButtons-item' onClick={this.handleNext.bind(this)}>
+
+                <Button className='bottomButtons-next bottomButtons-item' onClick={this.handleNext.bind(this)} style={{ background: `${this.state.selected ? '' : '#D7D7D7'}` }}>
                     下一步
-                </Button>
+                </Button> 
             </View>
         )
 
