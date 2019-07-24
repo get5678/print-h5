@@ -62,7 +62,7 @@ ToMore(orderId,thisPage,e){
   componentDidShow () {
     this.props.historyList({
       page: 1,
-      count: 1
+      count: 5
     })
    }
 
