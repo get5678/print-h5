@@ -26,6 +26,9 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 55px;
+    border-radius: 16px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 27.6px 2.4px rgba(153, 153, 153, 0.08);      
 }
 .order-logo-box{
     width: 690px;
@@ -47,28 +50,41 @@
 .order-detail-table{
     width: 620px;
     margin: 0 auto;
-    height: 490px;
+    height: 360px;
+    padding: 26px;
     display: flex;
     font-size: 26px;
     margin-bottom: 50px;
+    border-radius: 16px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 27.6px 2.4px rgba(153, 153, 153, 0.08);
+}
+.order-detail-table-bottom{
+    height: 140px;
 }
 .order-detail-left{
     width: 170px;
-    height: 490px;
+    height: 360px;
     color: #7e7e7e
+}
+.order-detail-left-bottom{
+    height: 140px;
 }
 .order-detail-right{
     width: 450px;
-    height: 490px;
+    height: 360px;
+}
+
+.order-detail-right-bottom{
+    height: 140px;
 }
 .order-detail-top,
 .order-detail-bottom{
-    height: 327px;
+    height: 360px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    margin-bottom: 40px;
 }
 .order-detail-bottom{
-    height: 98px;
+    height: 140px;
 }
