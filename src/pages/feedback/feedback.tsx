@@ -59,13 +59,19 @@ class Feedback extends Taro.Component<{}, PageState> {
   }
 
 GotoFeedback(inputValue,justIcon){
-  this.props.feedback({
-    content: inputValue,
-    score: justIcon
-  });
-  this.setState({
-    flag:true
-  })
+  console.log(inputValue)
+  if(inputValue){
+    this.props.feedback({
+      content: inputValue,
+      score: justIcon
+    });
+
+    this.setState({
+      flag:true
+    })
+  } else{
+    alert('评价不能为空')
+  }
 }
 
 Return(){

@@ -1,6 +1,7 @@
 .body-box{
     width: 750px;
     margin: 0 auto;
+    padding-bottom: 180px;
 }
 .nowOrder-top-box{
     width: 690px;
@@ -58,7 +59,6 @@
         width: 224px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
     }
     .status{
         color: #2fb9c3;
@@ -110,5 +110,6 @@
 }
 .orderStore{
     width: 24px;
-    height: 28px;
+    height: 25px;
+    margin-right: 18px;
 }

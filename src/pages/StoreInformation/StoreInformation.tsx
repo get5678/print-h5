@@ -71,18 +71,23 @@ class StoreInformation extends Component<{}, PageState> {
 
   Return(){
       Taro.navigateTo({
-          url:'../'
+          url:'../index/index'
       })
   }
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps)
   }
 
-  componentWillUnmount () { }
+  componentWillMount () {
+    if (this.$router.params.storeId) {
+      this.props.shopGet({ id:this.$router.params.storeId })
+    }
+  }
 
-  componentDidShow () {
-    this.props.shopGet({id:1})
-   }
+  componentWillUnmount () {
+  }
+
+  componentDidShow () { }
 
   componentDidHide () { }
 
@@ -112,7 +117,7 @@ class StoreInformation extends Component<{}, PageState> {
       <View className='index'>
          <View className='top'>
           <View className='top-box'>
-            <Image onClick={this.Return} className='return' src={returnPng}></Image>
+            <Image onClick={this.Return} className='store-return' src={returnPng}></Image>
             <View className='top-tittle'>店面信息</View>
           </View>
         </View>
