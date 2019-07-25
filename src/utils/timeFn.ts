@@ -23,6 +23,8 @@ export default function timeFn(before) {
         return `发布于${minuteDiff}分钟前`
     } else if (secondDiff < 60 && secondDiff >= 1) {
         return `发布于${secondDiff}秒前`
+    } else {
+        return `发布于刚刚`
     }
 }
 

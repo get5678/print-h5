@@ -4,7 +4,7 @@
     white-space: nowrap;
 }
 .myDocument {
-    background: #fbfbfb;
+    background: #fff;
     height: 100vh;
 }
 .myContent{
@@ -366,10 +366,10 @@ element.style {
         border-top-left-radius: 10px;
         background: linear-gradient(to top, #d7f2f3  30%, #e1f3f4 50%,#dddbdc 51%);
         background-size: 100% 200%;
-        background-position: 0 100%;
+        // background-position: 0 100%;
         top: -102px;
         position: absolute;
-        animation: loadingUpPrint linear 6s;
+      //  animation: loadingUpPrint linear 6s;
         &::after{
             content: '';
             position: absolute;
@@ -385,14 +385,14 @@ element.style {
     @at-root #{&}_printer{
         width: 160px;
         height: 86px;
-        border-radius: 24px;
         background: linear-gradient(to top, #7fcbd0  4%, #cbf4f7 40% 49.4%, #dddcdc 50%,#cccccc 60%);
+        border-radius: 24px;
         background-size: 100% 200%;
         background-position: 0 100%;
         position: relative;
         top: 74px;
         right: 30px;
-        animation: loadingUpPrint linear 3s;
+        //animation: loadingUpPrint linear 3s;
     }
 
     @keyframes loadingUpPrint {

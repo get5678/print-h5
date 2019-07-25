@@ -40,11 +40,9 @@ interface  ChooseShop {
     })
 )
 class ChooseShop extends Component<IProps, PageState> {
-
     config: Config = {
         navigationBarTitleText: '选择打印店',
     }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -116,7 +114,6 @@ class ChooseShop extends Component<IProps, PageState> {
                 </View>
             )
         })
-
         const buttons = (
             <View className='bottomButtons'>
                 <Button className='bottomButtons-back bottomButtons-item' onClick={this.handleBack.bind(this)}>
@@ -128,7 +125,6 @@ class ChooseShop extends Component<IProps, PageState> {
                 </Button> 
             </View>
         )
-
         return (
             <View>
                 <NavaBar
@@ -141,11 +137,7 @@ class ChooseShop extends Component<IProps, PageState> {
                 </ScrollView>
                 {buttons}
             </View>
-
-            
         )
     }
-
 }
-
 export default ChooseShop as ComponentClass<PageOwnProps, PageState>
