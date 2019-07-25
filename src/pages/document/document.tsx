@@ -353,10 +353,14 @@ class Document extends Component<IProps, PageState> {
      * @description 下拉刷新
      */
     handleToTop = () => {
-        this.props.getList({
-            page: 1,
-            count: 7
+        Taro.startPullDownRefresh().
+        then( () => {
+            this.props.getList({
+                page: 1,
+                count: 7
+            })
         })
+        
     }
 
     componentWillMount() {
