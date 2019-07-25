@@ -18,7 +18,8 @@ type PageDispatchProps = {
   getShopList: () => void;
 }
 
-type PageOwnProps = {}
+type PageOwnProps = {
+}
 
 type PageState = {
   searchText: string;
@@ -49,11 +50,16 @@ interface ShopList {
   })
 )
 
-class Index extends Component<PageStateProps, PageState> {
+class Index extends Component<{}, PageState> {
 
   config: Config = {
-    navigationBarTitleText: '主页'
+    navigationBarTitleText: '主页',
   }
+  
+  state = {
+    searchText: ''
+  }
+
   /**
    * @description 方便测试用的跳转功能
    * @param {number} type
@@ -123,6 +129,15 @@ class Index extends Component<PageStateProps, PageState> {
   render() {
     const { searchText } = this.state;
     const { shopList = [] } = this.props.shop
+    const shopData = shopList.filter((item) => {
+      if (searchText && searchText !== '') {
+        return item.shopName.indexOf(searchText) > -1
+      } else {
+        return true
+      }
+    })
+    
+    
 
     const indexTop = (
       <View className='index-top'>
@@ -134,7 +149,7 @@ class Index extends Component<PageStateProps, PageState> {
         </View>
     )
 
-    const items = shopList.map(item => {
+    const items = shopData.map(item => {
       return (
         <View key={item.shopId} className='index-item'>
           <Image className='index-item-image' src={item.shopAvatar}></Image>
@@ -155,11 +170,9 @@ class Index extends Component<PageStateProps, PageState> {
 
     return (
       <View className='index'>
-        {/* <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button> */}
-        {/* <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button> */}
         {indexTop}
         {
-          shopList.length > 0 ?
+          shopData && shopData.length > 0 ?
             <View className='index-content'>
               <Text className='index-title'>附近打印店</Text>
               <ScrollView className='index-list'>
@@ -168,10 +181,12 @@ class Index extends Component<PageStateProps, PageState> {
             </View>
             :
             <BlankPage
-              title='暂无打印店相关信息'
+              title='暂无相关打印店信息'
               picture={require('../../assets/images/index/blank-house.png')}
             />
         }
+        <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button>
+        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button>
         <TabBar current={0} />
       </View>
     )
@@ -179,4 +194,3 @@ class Index extends Component<PageStateProps, PageState> {
 }
 
 export default Index as ComponentClass<PageOwnProps, PageState>
-
