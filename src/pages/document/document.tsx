@@ -16,6 +16,7 @@ import close from './pic/close.png'
 import { connect } from '@tarojs/redux'
 import { asyncGetDocumentList, asyncGetGroupPrice } from '../../actions/document'
 
+import { controller, signal } from './controller'
 
 type list = {
     id: number;
@@ -66,7 +67,7 @@ type PageState = {
     src?: any;
     taostText: string;
     uploadsuccess: boolean;
-    loadingProcess: number;
+    loadingProcess: any;
     uploadshow: boolean;
     ListStore: number[];
 }
@@ -102,7 +103,7 @@ class Document extends Component<IProps, PageState> {
         this.state = {
             Lists: [],
             page: 1,
-            count: 5,
+            count: 0,
             selected: false,
             selectedDocument: false,
             show: false,
@@ -126,7 +127,6 @@ class Document extends Component<IProps, PageState> {
             ListStore: [],
         }       
     }
-
     handleBack = () => {
         Taro.redirectTo({
             url: '../mine/mine'
@@ -194,28 +194,33 @@ class Document extends Component<IProps, PageState> {
         e.preventDefault();
         const file = e.target.files[0];
         const data = new FormData();
-        // const reader = new FileReader();
+        
         data.append('file',file);
         fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
             method: 'POST',
             body: data,
             headers: {
                 token: '2f8dfdf4-c324-4201-a186-2e618500fa09',
-            }
+            },
+            //mode: 'cors',
+            signal
         })
         .then(res => {
-            // console.log(res, "res")
+            console.log("response: ",res)
             if(res.ok) {
+                
                 this.props.getList({
                     page: 1,
-                    count:this.state.count+5,
+                    count:7,
                 })
                 this.setState({
-                    uploadshow: false,
-                    uploadsuccess: true,
-                    showToast: true
+                    Lists: [],
+                   // uploadshow: false,
+                    //uploadsuccess: true,
+                    //showToast: true
                 })
             } else {
+                
                 this.setState({
                     uploadshow: false,
                     uploadsuccess: false,
@@ -223,40 +228,57 @@ class Document extends Component<IProps, PageState> {
                 })
             }
         })
-        .catch(err => console.error('Error:', err))
+        .catch(err => console.log('Error:', err))
+
+        let i = 0
+        const mm = setInterval(() => {
+            this.setState({
+                loadingProcess: i
+            },() => {
+                i++
+                if(i == 100) {
+                    clearInterval(mm)
+                }
+            })
+        },10)
 
         this.setState({
             uploadshow: true,
         })
     }
 
+    handleCancelUpload = () => {
+        controller.abort();
+        console.log("controller : ", controller)
+        this.setState({
+            uploadshow: false
+        })
+    }
+
     /**
      * @description 计算价格
      */
-    calculationPrice = (str):number => {
+    calculationPrice = (str:string, count:number):number => {
         const { groupPrice } = this.props.document;
         const { Lists, ListStore } = this.state;
-        let price = 0.00;
-
+        let price:any = 0.00;
         groupPrice.map((item) => {
             if (item.printType == str) {
                 price = item.printPrice
             }
         })
-        price *= Lists[ListStore[0]].docPageTotal;
+        price = Lists[ListStore[0]].docPageTotal * count * price;
+        price = price.toFixed(2);
         return price;
     }
 
     handleShowPrice = (e):any => {
         const { printList, selectedprintList, preprint } = this.state;
         const { detail } = e;
-        
         let newselectedprintList = selectedprintList.slice();
         let newpreprint = preprint.slice();
         let nowprice: number | any = 0;
-
         newpreprint[detail.column] = detail.value;
-       
         while (detail.column < 3 && detail.column >= 0) {     
             newpreprint[detail.column+1] = 0;
             detail.column++;
@@ -266,10 +288,7 @@ class Document extends Component<IProps, PageState> {
         })
        
         let str = newselectedprintList[3] + newselectedprintList[2] + newselectedprintList[0];
-        nowprice = this.calculationPrice(str);
-        nowprice *= newselectedprintList[1];
-        nowprice = nowprice.toFixed(2);
-        
+        nowprice = this.calculationPrice(str,newselectedprintList[1]);
         this.setState({
             selectedprintList: newselectedprintList,
             preprint: newpreprint,
@@ -282,8 +301,7 @@ class Document extends Component<IProps, PageState> {
         const { selectedprintList } = this.state;
         let str = selectedprintList[3] + selectedprintList[2] + selectedprintList[0];
         let price = 0.00;
-        
-        price = this.calculationPrice(str);
+        price = this.calculationPrice(str,selectedprintList[1]);
         if (this.state.selectedDocument) {
             this.setState({
                 show: true,
@@ -311,22 +329,16 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
-    handleCancelUpload = () => {
-        this.setState({
-            uploadshow: false
-        })
-    }
+   
     /**
-     *@description 下拉刷新
+     *@description 上拉刷新
      */
     handleToLower = () => {
-        
         if (this.props.document && this.props.document.documentList.total > this.state.count) {
+            console.log("refresh")
             this.setState({
-                page: this.state.page+1,
-                count: this.props.document.documentList.total
+                page: this.state.page+1
             }, () => {
-                console.log(this.state.page,"page")
                 this.props.getList({
                     page: this.state.page,
                     count: 7
@@ -334,6 +346,20 @@ class Document extends Component<IProps, PageState> {
             });
         }
         
+        
+    }
+
+    /**
+     * @description 下拉刷新
+     */
+    handleToTop = () => {
+        Taro.startPullDownRefresh().
+        then( () => {
+            this.props.getList({
+                page: 1,
+                count: 7
+            })
+        })
         
     }
 
@@ -352,7 +378,7 @@ class Document extends Component<IProps, PageState> {
             page: 1,
             count: 7
         })
-        if (this.state.shopId !== -1) {
+        if (this.state.shopId) {
             this.props.getGroupPrice({
                 'merchantId': this.state.shopId
             })
@@ -364,9 +390,10 @@ class Document extends Component<IProps, PageState> {
         let ListA = nextProps.document.documentList ? nextProps.document.documentList.documentDTOList : [];
         const { ListStore, Lists } = this.state;
         let flag = false;
-        
-        let List: list = Lists || [];
-
+        let List = Lists;
+        if (ListA.toString() === List.toString()) {
+            return ;
+        }
         if (ListA.length !== 0) {
             ListA.map((item) => {
                 List.push(Object.assign({}, item, { checked: false }))
@@ -381,6 +408,7 @@ class Document extends Component<IProps, PageState> {
         this.setState({
             Lists: List,
             selectedDocument: flag,
+            count: List.length
         })   
     } 
 
@@ -392,8 +420,7 @@ class Document extends Component<IProps, PageState> {
                 selectArray.push(index)
             }
         })
-        Taro.setStorageSync('documentId', selectArray);      
-        
+        Taro.setStorageSync('documentId', selectArray); 
     }
    
     render() {
@@ -419,6 +446,7 @@ class Document extends Component<IProps, PageState> {
                 className='myContent' 
                 style={{overflow: `${show ? 'hidden': ''}`}}
                 onScrollToLower={this.handleToLower.bind(this)}
+                onScrollToUpper={this.handleToTop.bind(this)}
                 >
                 { Lists.map((list, index) => (
                     <View key={list.id} className='docuList'>
@@ -471,7 +499,7 @@ class Document extends Component<IProps, PageState> {
                 disabled={!selectedDocument}
             >
                 <View onClick={this.handleShowPicker} >
-                    <Button className='docprint docButt' style={{ background: `${selectedDocument ? '' : '#D7D7D7'}` }}>打印</Button>
+                    <Button className='docprint docButt' style={`background: ${selectedDocument ? '' : '#D7D7D7'}`}>打印</Button>
                 </View>
             </Picker>
         )
@@ -528,8 +556,8 @@ class Document extends Component<IProps, PageState> {
         const loading = (
             <View className='loading_cover'>
                 <View className='loading_toast'>
-                    <View className='loading_paper'>
-                        <View className='loading_printer'>
+                    <View className='loading_paper' style={`background-position:  0 ${loadingProcess - 20}%`}>
+                        <View className='loading_printer' style={`background-position:  0 ${loadingProcess}%` } >
                         </View>
                     </View>
                     <Image className='loading_img' src={require('./pic/uploading.png')} />
@@ -537,22 +565,19 @@ class Document extends Component<IProps, PageState> {
                     <Button className='loading_button' onClick={this.handleCancelUpload.bind(this)}>取消上传</Button>
                 </View>
             </View>
-
         )
         
 
 
-        const myDocuemnt = (
-            Lists.length !== 0 ? 
+        const myDocuemnt = (         
             <View className='alldocument'>
-                {documentLists}
+               { Lists.length !== 0 ?   documentLists  : 
+                <BlankPage
+                    title='暂无文档赶快上传吧~'
+                    picture={require('../../assets/blank-compents/blank-box-empty.png')}
+                />}
                 {showprint}
             </View> 
-            :  
-            <BlankPage
-                title='暂无文档赶快上传吧~'
-                picture={require('../../assets/blank-compents/blank-box-empty.png')}
-            />
         )
 
         const shopTitleTop = (
@@ -569,6 +594,7 @@ class Document extends Component<IProps, PageState> {
                 {this.props.document ? myDocuemnt : uploadPage}    
                 {showToast ? toast : '' }
                 {uploadshow ? loading: ''} 
+                
             </View>
         )
     }

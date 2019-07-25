@@ -84,6 +84,16 @@
 .gary{
     color: #eee;
 }
+.weui-icon-success{
+  &:before{
+      width: 36px;
+      height: 36px;
+      margin: 0;
+
+  }
+}
+
+
 .bottomButtons{
     padding: 0 80px;
     box-sizing: border-box;
