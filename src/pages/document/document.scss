@@ -98,12 +98,13 @@
         background: #fff;
         box-sizing: border-box;
         display: flex;
-        padding: 0 80px;
+        padding: 0 8vw;
         align-items: center;
         justify-content: space-between;
     }
     @at-root #{&}Butt{
-        width: 260px;
+        max-width: 260px;
+        flex-shrink: 1;
         height: 80px;
         font-size: 30px;
         border-radius: 120px;

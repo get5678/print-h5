@@ -56,6 +56,7 @@ export default class TabBar extends Component<props> {
 
     render() {
         return (
+            
                 <AtTabBar
                     tabList={this.state.lists}
                     onClick={this.handleClick.bind(this)}
@@ -65,6 +66,8 @@ export default class TabBar extends Component<props> {
                     selectedColor="#000"
                     iconSize={20}
                 />
+          
+                
         )
     }
 

@@ -26,6 +26,8 @@ type list = {
     docAvatar: string;
     checked?: boolean;
     docPageTotal: number;
+    status?:number;
+    docUrl?: string;
 }[];
 
 type PageStateProps = {
@@ -51,6 +53,8 @@ type PageState = {
         docAvatar: string;
         checked?: boolean;
         docPageTotal: number;
+        status?: number;
+        docUrl :string;
     }[];
     count: number | any;
     page: number;
@@ -68,6 +72,7 @@ type PageState = {
     taostText: string;
     uploadsuccess: boolean;
     loadingProcess: any;
+    loadingProc: any;
     uploadshow: boolean;
     ListStore: number[];
 }
@@ -123,6 +128,7 @@ class Document extends Component<IProps, PageState> {
             src: '',
             taostText: '上传失败',
             loadingProcess: 0,
+            loadingProc: 0,
             uploadshow: false,
             ListStore: [],
         }       
@@ -154,11 +160,23 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
+    /**
+     * @description 预览
+     */
     handlePreview = (id: number) => {
-        console.log(id,'预览')
-        Taro.redirectTo({
-            url: '../uploadFile/uploadFile'
-        })
+        const { Lists } = this.state;
+        if (Lists[id].status === 1) {
+            window.open(Lists[id].docUrl)
+        }
+        else {
+            Taro.showToast({
+                title: '文件转换中',
+                icon: 'loading',
+                mask: true,
+                duration: 1000
+            })
+        }
+        
     }
 
     handleToShop = () => {
@@ -171,7 +189,6 @@ class Document extends Component<IProps, PageState> {
             this.setState({
                 show: false,
             })
-            console.log("请选择打印文档")
         }
     }
 
@@ -232,15 +249,21 @@ class Document extends Component<IProps, PageState> {
         let i = 0
         const mm = setInterval(() => {
             this.setState({
-                loadingProcess: i
-            },() => {
-                i++
-                if(i == 100) {
+                loadingProcess: i,
+
+            }, () => {
+                i++;
+                if (i <= 50) {
+                    this.setState({
+                        loadingProc: i * 2,
+                    })
+                }
+                if (i == 100) {
                     clearInterval(mm)
                 }
             })
-        },10)
-
+        }, 50)
+        
         this.setState({
             uploadshow: true,
         })
@@ -388,6 +411,8 @@ class Document extends Component<IProps, PageState> {
             shopId: id,
             ListStore: ListStore
         })
+        
+
     }
 
     componentDidMount() {
@@ -459,6 +484,7 @@ class Document extends Component<IProps, PageState> {
             shopTitle, 
             selectedDocument,
             loadingProcess,
+            loadingProc,
             uploadshow
         } = this.state; 
       
@@ -589,8 +615,8 @@ class Document extends Component<IProps, PageState> {
         const loading = (
             <View className='loading_cover'>
                 <View className='loading_toast'>
-                    <View className='loading_paper' style={`background-position:  0 ${loadingProcess - 20}%`}>
-                        <View className='loading_printer' style={`background-position:  0 ${loadingProcess}%` } >
+                    <View className='loading_paper' style={`background-position:  0 ${loadingProcess}%`}>
+                        <View className='loading_printer' style={`background-position:  0 ${loadingProc}%` } >
                         </View>
                     </View>
                     <Image className='loading_img' src={require('./pic/uploading.png')} />
@@ -627,7 +653,6 @@ class Document extends Component<IProps, PageState> {
                 {this.props.document.documentList ? myDocuemnt : uploadFail}    
                 {showToast ? toast : '' }
                 {uploadshow ? loading: ''} 
-                
             </View>
         )
     }

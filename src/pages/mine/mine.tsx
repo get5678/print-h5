@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image, Text } from '@tarojs/components'
+import { View, Image, Text, ScrollView } from '@tarojs/components'
 import TabBar from '../../components/TabBar/TabBar'
 
 import headPic from './pic/headPic.png'

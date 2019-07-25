@@ -13,8 +13,9 @@
 }
 
 .contentHeadpic{
-    min-width: 690px;
+    width: 690px;
     height: 236px;
+    flex-shrink: 1;
     margin-top: 160px;
     background: #fff;
     border-radius: 16px;
@@ -41,6 +42,7 @@
 .mineList{
     width: 690px;
     height: 460px;
+    padding-bottom: 140px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -50,13 +52,11 @@
 .infoList{
     width: 690px;
     height: 90px;
+    flex-shrink: 1;
     box-sizing: border-box;
-    padding-bottom: 29px;
     display: flex;
-    align-items: flex-end;
-    background: #fff;
+    align-items: center;
     font-size: 28px;
-    line-height: 90px;
     box-shadow: 1px 1px 8px rgba($color: #999, $alpha: 0.1);
 }
 .listText{
