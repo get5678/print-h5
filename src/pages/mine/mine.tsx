@@ -93,21 +93,15 @@ class Mine extends Component {
             </View>
         )
         return (
-            <View>
+            <View className='myPage'>
                 <View className='mine'>
-                    <View className='mineTop'></View>
-                    {/* <View className='nav'>
-                        我的
-                    </View> */}
                     <View className='mineContent'>
                         <View className='contentHeadpic'>                    
                             <Image src={headPic} className='headPic'/>
                             <Text className='headName'>{this.state.name}</Text>
                             <Text className='headPhone'>{this.state.phone}</Text>
-                        </View>
-                        <View className='mineLists'>
-                            {InfoLists}
-                        </View>
+                        </View>             
+                        {InfoLists}
                     </View>
                 </View>
                 <TabBar current={2}/>
