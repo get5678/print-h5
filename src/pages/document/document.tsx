@@ -202,20 +202,21 @@ class Document extends Component<IProps, PageState> {
             headers: {
                 token: '2f8dfdf4-c324-4201-a186-2e618500fa09',
             },
-            //mode: 'cors',
-            signal
+            signal 
         })
         .then(res => {
+
+            this.props.getList({
+                page: 1,
+                count: 7,
+            })
             console.log("response: ",res)
             if(res.ok) {
                 
-                this.props.getList({
-                    page: 1,
-                    count:7,
-                })
                 this.setState({
                     Lists: [],
-                   // uploadshow: false,
+                    page:1,
+                    uploadshow: false,
                     //uploadsuccess: true,
                     //showToast: true
                 })
@@ -249,7 +250,6 @@ class Document extends Component<IProps, PageState> {
 
     handleCancelUpload = () => {
         controller.abort();
-        console.log("controller : ", controller)
         this.setState({
             uploadshow: false
         })
@@ -334,11 +334,13 @@ class Document extends Component<IProps, PageState> {
      *@description 上拉刷新
      */
     handleToLower = () => {
+        console.log("count: ",this.state.count, this.props.document.documentList.total)
         if (this.props.document && this.props.document.documentList.total > this.state.count) {
-            console.log("refresh")
+            console.log("refresh 上拉刷新")
             this.setState({
                 page: this.state.page+1
             }, () => {
+                console.log(this.state.page,"page")
                 this.props.getList({
                     page: this.state.page,
                     count: 7
@@ -391,9 +393,15 @@ class Document extends Component<IProps, PageState> {
         const { ListStore, Lists } = this.state;
         let flag = false;
         let List = Lists;
-        if (ListA.toString() === List.toString()) {
+        if(this.state.page === 1) {
+            List = [];
+        }
+        
+        if (ListA.length !== 0 && List.length !== 0 && List[0].id === ListA[0].id) {
+            console.log("不刷新！！！！！！！！！！")
             return ;
         }
+        console.log("刷新！！！！！！！！！！！！")
         if (ListA.length !== 0) {
             ListA.map((item) => {
                 List.push(Object.assign({}, item, { checked: false }))
@@ -405,6 +413,7 @@ class Document extends Component<IProps, PageState> {
             });
             flag = true;
         }
+        console.log("刷新后的state :",List)
         this.setState({
             Lists: List,
             selectedDocument: flag,
@@ -421,6 +430,9 @@ class Document extends Component<IProps, PageState> {
             }
         })
         Taro.setStorageSync('documentId', selectArray); 
+    }
+
+    componentWillUnmount() {
     }
    
     render() {

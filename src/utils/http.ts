@@ -21,7 +21,7 @@ export default class Http {
    * @param {} data 请求参数
    * @param {} contentType 请求格式 
    */
-  post(url: string, data?: object, contentType = defaultContentType) {
+  post(url: string, data?: object, contentType = defaultContentType, signal) {
     return this.commonHttp('POST', url, data || {}, contentType);
   }
   /**
@@ -54,7 +54,7 @@ export default class Http {
           header: {
             'content-type': contentType || defaultContentType,
             'token': token
-          }
+          },
         });
         // Taro.hideNavigationBarLoading();
         console.log(
