@@ -259,15 +259,16 @@ class Document extends Component<IProps, PageState> {
      * @description 计算价格
      */
     calculationPrice = (str:string, count:number):number => {
-        const { groupPrice } = this.props.document;
+        const { combination, prirce } = this.props.document.groupPrice;
         const { Lists, ListStore } = this.state;
         let price:any = 0.00;
-        groupPrice.map((item) => {
+        combination.map((item) => {
             if (item.printType == str) {
-                price = item.printPrice
+                price += item.printPrice
             }
         })
         price = Lists[ListStore[0]].docPageTotal * count * price;
+        price += prirce/100;
         price = price.toFixed(2);
         return price;
     }
@@ -388,7 +389,6 @@ class Document extends Component<IProps, PageState> {
     }
 
     componentWillReceiveProps(nextProps) {     
-        
         let ListA = nextProps.document.documentList ? nextProps.document.documentList.documentDTOList : [];
         const { ListStore, Lists } = this.state;
         let flag = false;
@@ -396,12 +396,9 @@ class Document extends Component<IProps, PageState> {
         if(this.state.page === 1) {
             List = [];
         }
-        
         if (ListA.length !== 0 && List.length !== 0 && List[0].id === ListA[0].id) {
-            console.log("不刷新！！！！！！！！！！")
             return ;
         }
-        console.log("刷新！！！！！！！！！！！！")
         if (ListA.length !== 0) {
             ListA.map((item) => {
                 List.push(Object.assign({}, item, { checked: false }))
@@ -413,7 +410,6 @@ class Document extends Component<IProps, PageState> {
             });
             flag = true;
         }
-        console.log("刷新后的state :",List)
         this.setState({
             Lists: List,
             selectedDocument: flag,
@@ -452,6 +448,17 @@ class Document extends Component<IProps, PageState> {
             uploadshow
         } = this.state; 
         
+        // let prirce;
+        // if(this.props.document) {
+            
+        //     prirce = this.props.document.groupPrice.prirce;
+        // } else {
+        //     prirce = undefined;
+        // }
+
+       
+        let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;
+        console.log("price: ",prirce/100)
         const documentLists = (
             <ScrollView 
                 scrollY 
@@ -488,6 +495,7 @@ class Document extends Component<IProps, PageState> {
                 </View>
                 <View className='totallprice'>
                     合计：<Text className='price'>￥{price}</Text>
+                    {prirce && prirce !== 0 ? <Text className='extralPrice'>{prirce/100}</Text> : ''}
                 </View>
                 <View className='surebutton'>
                     <Button className='printbut'>确认打印</Button>

@@ -6,6 +6,7 @@ import pdf from '../pages/document/pic/pdf.png'
 import ppt from '../pages/document/pic/ppt.png'
 import question from '../pages/document/pic/question.png'
 import unkown from '../pages/document/pic/unknown.png'
+import excel from '../pages/document/pic/excel.png'
 
  export default function testFile(name) {
      
@@ -21,6 +22,8 @@ import unkown from '../pages/document/pic/unknown.png'
         case 'ppt':
         case 'pptx':
             return ppt;
+        case 'excel':
+            return excel;
         default:
             return question;
     }
