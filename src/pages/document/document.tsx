@@ -335,13 +335,10 @@ class Document extends Component<IProps, PageState> {
      *@description 上拉刷新
      */
     handleToLower = () => {
-        console.log("count: ",this.state.count, this.props.document.documentList.total)
-        if (this.props.document && this.props.document.documentList.total > this.state.count) {
-            console.log("refresh 上拉刷新")
+        if (this.props.document && this.props.document.documentList.total > this.state.count) {  
             this.setState({
                 page: this.state.page+1
             }, () => {
-                console.log(this.state.page,"page")
                 this.props.getList({
                     page: this.state.page,
                     count: 7
@@ -456,7 +453,7 @@ class Document extends Component<IProps, PageState> {
         //     prirce = undefined;
         // }
 
-       
+       console.log("props",this.props.document)
         let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;
         console.log("price: ",prirce/100)
         const documentLists = (
