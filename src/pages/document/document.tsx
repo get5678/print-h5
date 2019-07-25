@@ -552,6 +552,13 @@ class Document extends Component<IProps, PageState> {
             </View>
         )
 
+        const uploadFail = (
+            <BlankPage 
+                title='加载失败'
+                picture={require(`../../assets/blank-compents/load-fail.png`)}
+            />
+        )
+
         const toast = ( uploadsuccess ?  
                 <Toast 
                 picture={require('./pic/uploadsuccess.png') }
@@ -608,7 +615,7 @@ class Document extends Component<IProps, PageState> {
             <View className='myDocument'>
                 <NavBar title='我的文档' handleBack={this.handleBack} />
                 {shopTitle === 'undefined' ? '' : shopTitleTop}
-                {this.props.document ? myDocuemnt : uploadPage}    
+                {this.props.document.documentList ? myDocuemnt : uploadFail}    
                 {showToast ? toast : '' }
                 {uploadshow ? loading: ''} 
                 
