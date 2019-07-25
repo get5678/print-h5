@@ -81,23 +81,7 @@ class UploadFile extends Component<IProps, PageState> {
 
         const OwnPicker = (
             <View className='ownpicker'>
-                {
-                    printList.map((item) => 
-                     (
-                            <ScrollView className='ownpicker_li' 
-                             
-                            scrollWithAnimation
-                            onScroll={this.hanleScroll}	>
-                                <View className='ownpicker_li_clo'>
-                                {
-                                    item.map((element) =>
-                                        (<View className='ownpicker_item'>{element}</View>))
-                                } 
-                            </View>
-                        </ScrollView>
-                    
-                    )
-                }
+               
             </View>
         )
 
@@ -113,11 +97,7 @@ class UploadFile extends Component<IProps, PageState> {
                             
                             >
                                 
-                                    {option.map((value,index) => (
-                                        <SwiperItem className='pickersItem' key={index}>
-                                            {value}
-                                        </SwiperItem>
-                                    ))}
+                                   
                                 
                         </Swiper>
                     ))

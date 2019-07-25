@@ -2,6 +2,7 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Button, Image, Input, Text } from '@tarojs/components'
 import { Toast } from '../../components/toast/toast'
+import { sendAuthCode, toBindPhone } from '../../utils/api'
 // import { connect } from '@tarojs/redux'
 
 import './bindPhone.scss'
@@ -32,14 +33,6 @@ interface BindPhone {
 }
 
 class BindPhone extends Component<{}, PageState> {
-
-  /**
- * 指定config的类型声明为: Taro.Config
- *
- * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
- * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
- * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
- */
   config: Config = {
     navigationBarTitleText: '绑定手机'
   }
@@ -90,10 +83,10 @@ class BindPhone extends Component<{}, PageState> {
             showWarn: true,
             warnText: '请输入正确的电话号码'
           })
-        } else if (this.state.code.length !== 4) {
+        } else if (this.state.code.length !== 6) {
           this.setState({
             showWarn: true,
-            warnText: '请输入4位验证码'
+            warnText: '请输入6位验证码'
           })
         } else {
           this.setState({
@@ -109,7 +102,7 @@ class BindPhone extends Component<{}, PageState> {
    * @description 点击发送验证码
    * @memberof BindPhone
    */
-  sendVerificationCode() {
+  async sendVerificationCode() {
     const phone = this.state.phone;
     if (!isPhoneNumber(phone)) {
       this.setState({
@@ -117,7 +110,25 @@ class BindPhone extends Component<{}, PageState> {
         warnText: '请输入正确的电话号码'
       })
     } else {
-      this.countDown(60)
+      await sendAuthCode({
+        phoneNum: phone
+      }, null, true).then(res => {
+        console.log(res)
+        if (res.code === 1) {
+          Taro.showToast({
+            title: res.msg,
+            icon: 'success',
+            mask: true
+          })
+          this.countDown(60)
+        } else {
+          Taro.showToast({
+            title: res.msg,
+            icon: 'none',
+            mask: true
+          })
+        }
+      })
     }
   }
 
@@ -125,7 +136,7 @@ class BindPhone extends Component<{}, PageState> {
    * @description 提交登陆或者注册
    * @memberof BindPhone
    */
-  submitBindPhone() {
+  async submitBindPhone() {
     const phone = this.state.phone;
     const code = this.state.code;
     if (!isPhoneNumber(phone)) {
@@ -133,14 +144,33 @@ class BindPhone extends Component<{}, PageState> {
         showWarn: true,
         warnText: '请输入正确的电话号码'
       })
-    } else if (code.length !== 4) {
+    } else if (code.length !== 6) {
       this.setState({
         showWarn: true,
-        warnText: '请输入4位验证码'
+        warnText: '请输入6位验证码'
       })
     } else {
-      this.setState({
-        showToast: true
+      Taro.showToast({
+        title: '提交中···',
+        icon: 'loading',
+        mask: true
+      })
+      await toBindPhone({
+        phoneNum: phone,
+        authCode: code
+      }, null, true).then(res => {
+        Taro.hideToast()
+        if (res.code === 1) {
+          this.setState({
+            showToast: true
+          })
+        } else {
+          Taro.showToast({
+            title: res.msg,
+            icon: 'none',
+            mask: true
+          })
+        }
       })
     }
   }
@@ -152,6 +182,9 @@ class BindPhone extends Component<{}, PageState> {
   closeToast() {
     this.setState({
       showToast: false
+    })
+    Taro.redirectTo({
+      url: '../index/index'
     })
   }
 
@@ -207,7 +240,7 @@ class BindPhone extends Component<{}, PageState> {
             </View>
             <View className='bind-box-row'>
               <Image className='bind-icon bind-icon-code' src={require('../../assets/images/bindPhone/bind-verify.png')}></Image>
-              <Input name='code' className='bind-input' placeholder='请输入验证码' placeholderClass='bind-inputPL' type='number' maxLength={4} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
+              <Input name='code' className='bind-input' placeholder='请输入验证码' placeholderClass='bind-inputPL' type='number' maxLength={6} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
               <Button className={buttonDisabled ? 'bind-code bind-codeDisabled' : 'bind-code'} disabled={buttonDisabled ? true : false} onClick={this.sendVerificationCode.bind(this)}>{codeButtonText}</Button>
             </View>
             {showWarn ? <View className='bind-warn'>

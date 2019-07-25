@@ -12,6 +12,7 @@
   top: 0;
   bottom: 0;
   margin: auto;
+  z-index: -100;
   @at-root #{&}-picture {
     width: 367px;
     height: 236px;

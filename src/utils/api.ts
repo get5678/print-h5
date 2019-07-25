@@ -39,3 +39,11 @@ export async function groupPrice(data) {
 export async function shopList(data) {
   return http.post(`${baseUrl}merchant/getAllShopInfo`,data)
 }
+// 绑定手机 发送验证码
+export async function sendAuthCode(data: {phoneNum: string | number}, contentType?, hasMessage = true): Promise<{code: number | string, msg: string}> {
+  return http.get(`${baseUrl}client/sendAuthCode`,data, contentType, hasMessage)
+}
+// 绑定手机 确认验证码
+export async function toBindPhone(data: {phoneNum: string | number, authCode: string | number}, contentType?, hasMessage = true) {
+  return http.post(`${baseUrl}client/bindPhone`,data, contentType, hasMessage)
+}
