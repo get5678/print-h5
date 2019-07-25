@@ -80,20 +80,20 @@ ToMore(orderId,thisPage,e){
         <View className='order-store-top'>
           <View className='order-store-name'>
             <Image className='orderStore' src={orderStore}/>
-            <View>{res.shopName||'阳光图文打印店'}</View>
+            <View>{res.shopName}</View>
           </View>
           <Text className='status'>{res.orderStatus==2?'已完成':'正在打印'}</Text>
         </View>
         <View className='file-type-box'>
-          <Image className='file-type' src={res.documentTypeUrl||ppt}/>
+          <Image className='file-type' src={res.documentTypeUrl}/>
           <View className='order-time-box'>
-            <View>{res.receivingCode||14435454534243423}</View>
-            <View className='order-time'>{res.gmtCreate||'2019/06/02'}</View>
+            <View>提货码：{res.receivingCode}</View>
+            <View className='order-time'>{res.gmtCreate}</View>
           </View>
         </View>
         <View className='file-type-bottom'>
-          <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment||1.6}</Text></View>
-          <View onClick={this.ToMore.bind(this,res.orderId||1,'historyorder/historyorder')} className='ToMore'>查看详情</View>
+          <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment}</Text></View>
+          <View onClick={this.ToMore.bind(this,res.orderId,'historyorder/historyorder')} className='ToMore'>查看详情</View>
         </View>
       </View>)}
       )

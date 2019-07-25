@@ -27,6 +27,7 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+      'pages/document/document',
       'pages/index/index',
       'pages/feedback/feedback',
       'pages/StoreInformation/StoreInformation',
@@ -35,7 +36,6 @@ class App extends Component {
       'pages/noworder/noworder',
       'pages/bindPhone/bindPhone',
       'pages/mine/mine',
-      'pages/document/document',
       'pages/bindWX/bindWX',
       'pages/uploadFile/uploadFile',
       'pages/chooseShop/chooseShop'

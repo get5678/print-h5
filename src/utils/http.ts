@@ -46,7 +46,7 @@ export default class Http {
 
   async commonHttp(method: HttpMethod, url: string, data: object, contentType?, hasMessage?: boolean) {
     return new Promise(async (resolve, reject) => {
-      const token = Taro.getStorageSync('token')||'2f8dfdf4-c324-4201-a186-2e618500fa09';
+      const token = Taro.getStorageSync('token')||'60f21165-556e-4fdb-8530-2f83e2e4e6bb';
       try {
         const res = await Taro.request({
           url,
