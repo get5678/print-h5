@@ -96,10 +96,10 @@ class generateorders extends Taro.Component<{}, PageState>  {
         <View className='order-top-box'>
           <View className='order-logo-box'>
             <Image className='order-logo' src={orderlogo}/>
-            <View>已经付款给{res.shopName||'阳光打印店'}</View>
+            <View>已经付款给{res.shopName}</View>
           </View>
-          <View className='order-logo-price'>{res.payment||24.2}</View>
-          <View className='order-loge-code'>收货码：{res.receivingCode||12532674525467}</View>
+          <View className='order-logo-price'>-{res.payment}</View>
+          <View className='order-loge-code'>收货码：{res.receivingCode}</View>
         </View>
         <View className='order-detail-table'>
           <View className='order-detail-left'>
@@ -118,15 +118,15 @@ class generateorders extends Taro.Component<{}, PageState>  {
           </View>
           <View className='order-detail-right'>
             <View className='order-detail-top'>
-              <View>{res.shopName||'阳光图文打印店'}</View>
-              <View>{res.phoneNum||'13617698456'}</View>
-              <View>{res.printSize||'A4'}</View>
-              <View>{res.printNum||1}</View>
-              <View>{res.printDirection||'单面'}</View>
-              <View>{res.printType||'黑白'}</View>
+              <View>{res.shopName}</View>
+              <View>{res.phoneNum}</View>
+              <View>{res.printSize}</View>
+              <View>{res.printNum}</View>
+              <View>{res.printDirection}</View>
+              <View>{res.printType}</View>
             </View>
             <View className='order-detail-bottom'>
-              <View>{res.gmtCreate||2019-23-23}</View>
+              <View>{res.gmtCreate}</View>
               <View>{res.payMethod?'在线下单':'线下支付'}</View>
             </View>
           </View>

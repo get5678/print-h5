@@ -46,6 +46,7 @@
         padding: 0 28px;
         color: #a5a5a5;
         letter-spacing: 1px;
+        overflow: hidden;
         .phone,.address{
             height: 38px;
         }
@@ -94,9 +95,13 @@
     width: 93px;
     height: 93px;
 }
+.printing-detail{
+    color: #000;
+}
 .yuan{
     width: 16px;
     height: auto;
+    margin-right: 20px;
 }
 .fire{
     width: 70px;
@@ -111,14 +116,13 @@
 }
 .printing{
     display: flex;
-    width: 250px;
+    width: 280px;
     justify-content: space-between;
-    color: #ffbb78;
 }
 .yuan-box{
     display: flex;
     height: 62px;
-    width: 104px;
-    justify-content: space-between;
+    width: 140px;
+    color: #ffbb78;
     align-items: center;
 }

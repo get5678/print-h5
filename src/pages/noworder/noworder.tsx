@@ -78,9 +78,9 @@ ToMore(orderId,thisPage,e){
           <Text className='status'>{res.orderStatus==2?'已完成':'正在打印'}</Text>
         </View>
         <View className='file-type-box'>
-          <Image className='file-type' src={res.documentTypeUrl||ppt}/>
+          <Image className='file-type' src={res.documentTypeUrl}/>
           <View className='order-time-box'>
-            <View>{res.receivingCode}</View>
+            <View>提货码：{res.receivingCode}</View>
             <View className='order-time'>{res.gmtCreate}</View>
           </View>
         </View>

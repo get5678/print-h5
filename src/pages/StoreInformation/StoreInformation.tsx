@@ -57,15 +57,12 @@ class StoreInformation extends Component<{}, PageState> {
   constructor (props) {
     super(props);
     this.state = { 
-        name: '阳光图文打印店',
-        phone: 1345454545445,
-        address: '重庆邮电大学15栋'
      }
   }
 
   GotoPrint(){
       Taro.navigateTo({
-          url:'../index/index'
+          url:'../document/document'
       })
   }
 
@@ -92,21 +89,20 @@ class StoreInformation extends Component<{}, PageState> {
   componentDidHide () { }
 
   render () {
-    console.log(this.props)
     const response = this.props.getShopDetail.data;
-    let pricebox = response.shopPrice || [];
+    let pricebox = response.shopPrice||[];
 
     const printingBox = (pricebox.map((res)=>{
       return (<View className='price-box'>
             <View className='printing'>
-              <Image className='printingPng' src={res.printTypeUrl||grey}></Image>
-              <View>
+              <Image className='printingPng' src={res.printTypeUrl}></Image>
+              <View className='printing-detail'>
                 <Text>
-                  {res.price.printType||'黑白打印'}
+                  {res.price.printType}
                 </Text>
                 <View className='yuan-box'>
                   <Image className='yuan' src={yuan}></Image>
-                  {res.price.printPrice||0.2}/张
+                  {res.price.printPrice}/张
                 </View>
               </View>
             </View>
@@ -122,16 +118,16 @@ class StoreInformation extends Component<{}, PageState> {
           </View>
         </View>
         <View className='information'>
-          <Image className='store' src={response.shopAvatar||storePng}></Image>
+          <Image className='store' src={response.shopAvatar}></Image>
           <View className='detail'>
-            <View className='storeName'>{response.shopName||this.state.name}</View>
+            <View className='storeName'>{response.shopName}</View>
             <View className='phone'>
-              <Image className='detailPng' src={phonePng||phonePng}></Image>
-              <Text>{response.shopPhone||this.state.phone}</Text>
+              <Image className='detailPng' src={phonePng}></Image>
+              <Text>{response.shopPhone}</Text>
             </View>
             <View className='address'>
               <Image className='detailPng' src={addressPng}></Image>
-              <Text>{response.shopAddress||this.state.address}</Text>
+              <Text>{response.shopAddress}</Text>
             </View>
           </View>
         </View>
