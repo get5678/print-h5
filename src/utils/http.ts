@@ -46,7 +46,11 @@ export default class Http {
 
   async commonHttp(method: HttpMethod, url: string, data: object, contentType?, hasMessage?: boolean) {
     return new Promise(async (resolve, reject) => {
+<<<<<<< HEAD
       const token = Taro.getStorageSync('token')||'60f21165-556e-4fdb-8530-2f83e2e4e6bb';
+=======
+      const token = Taro.getStorageSync('token') ||'60f21165-556e-4fdb-8530-2f83e2e4e6bb';
+>>>>>>> e2df64bd8ebf056cef56d6d34150489f9aa825a7
       try {
         const res = await Taro.request({
           url,
@@ -55,7 +59,7 @@ export default class Http {
           header: {
             'content-type': contentType || defaultContentType,
             'token': token
-          }
+          },
         });
         // Taro.hideNavigationBarLoading();
         console.log(

@@ -82,6 +82,7 @@
         height: 124px;
         position: fixed;
         bottom: 0;
+        z-index: 1;
     }
     @at-root #{&}Button {
         height: 124px;

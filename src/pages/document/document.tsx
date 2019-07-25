@@ -202,20 +202,21 @@ class Document extends Component<IProps, PageState> {
             headers: {
                 token: '2f8dfdf4-c324-4201-a186-2e618500fa09',
             },
-            //mode: 'cors',
-            signal
+            signal 
         })
         .then(res => {
+
+            this.props.getList({
+                page: 1,
+                count: 7,
+            })
             console.log("response: ",res)
             if(res.ok) {
                 
-                this.props.getList({
-                    page: 1,
-                    count:7,
-                })
                 this.setState({
                     Lists: [],
-                   // uploadshow: false,
+                    page:1,
+                    uploadshow: false,
                     //uploadsuccess: true,
                     //showToast: true
                 })
@@ -249,7 +250,6 @@ class Document extends Component<IProps, PageState> {
 
     handleCancelUpload = () => {
         controller.abort();
-        console.log("controller : ", controller)
         this.setState({
             uploadshow: false
         })
@@ -259,15 +259,16 @@ class Document extends Component<IProps, PageState> {
      * @description 计算价格
      */
     calculationPrice = (str:string, count:number):number => {
-        const { groupPrice } = this.props.document;
+        const { combination, prirce } = this.props.document.groupPrice;
         const { Lists, ListStore } = this.state;
         let price:any = 0.00;
-        groupPrice.map((item) => {
+        combination.map((item) => {
             if (item.printType == str) {
-                price = item.printPrice
+                price += item.printPrice
             }
         })
         price = Lists[ListStore[0]].docPageTotal * count * price;
+        price += prirce/100;
         price = price.toFixed(2);
         return price;
     }
@@ -334,8 +335,7 @@ class Document extends Component<IProps, PageState> {
      *@description 上拉刷新
      */
     handleToLower = () => {
-        if (this.props.document && this.props.document.documentList.total > this.state.count) {
-            console.log("refresh")
+        if (this.props.document && this.props.document.documentList.total > this.state.count) {  
             this.setState({
                 page: this.state.page+1
             }, () => {
@@ -386,12 +386,14 @@ class Document extends Component<IProps, PageState> {
     }
 
     componentWillReceiveProps(nextProps) {     
-        
         let ListA = nextProps.document.documentList ? nextProps.document.documentList.documentDTOList : [];
         const { ListStore, Lists } = this.state;
         let flag = false;
         let List = Lists;
-        if (ListA.toString() === List.toString()) {
+        if(this.state.page === 1) {
+            List = [];
+        }
+        if (ListA.length !== 0 && List.length !== 0 && List[0].id === ListA[0].id) {
             return ;
         }
         if (ListA.length !== 0) {
@@ -422,6 +424,9 @@ class Document extends Component<IProps, PageState> {
         })
         Taro.setStorageSync('documentId', selectArray); 
     }
+
+    componentWillUnmount() {
+    }
    
     render() {
 
@@ -440,6 +445,17 @@ class Document extends Component<IProps, PageState> {
             uploadshow
         } = this.state; 
         
+        // let prirce;
+        // if(this.props.document) {
+            
+        //     prirce = this.props.document.groupPrice.prirce;
+        // } else {
+        //     prirce = undefined;
+        // }
+
+       console.log("props",this.props.document)
+        let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;
+        console.log("price: ",prirce/100)
         const documentLists = (
             <ScrollView 
                 scrollY 
@@ -476,6 +492,7 @@ class Document extends Component<IProps, PageState> {
                 </View>
                 <View className='totallprice'>
                     合计：<Text className='price'>￥{price}</Text>
+                    {prirce && prirce !== 0 ? <Text className='extralPrice'>{prirce/100}</Text> : ''}
                 </View>
                 <View className='surebutton'>
                     <Button className='printbut'>确认打印</Button>
@@ -535,6 +552,13 @@ class Document extends Component<IProps, PageState> {
             </View>
         )
 
+        const uploadFail = (
+            <BlankPage 
+                title='加载失败'
+                picture={require(`../../assets/blank-compents/load-fail.png`)}
+            />
+        )
+
         const toast = ( uploadsuccess ?  
                 <Toast 
                 picture={require('./pic/uploadsuccess.png') }
@@ -591,7 +615,7 @@ class Document extends Component<IProps, PageState> {
             <View className='myDocument'>
                 <NavBar title='我的文档' handleBack={this.handleBack} />
                 {shopTitle === 'undefined' ? '' : shopTitleTop}
-                {this.props.document ? myDocuemnt : uploadPage}    
+                {this.props.document.documentList ? myDocuemnt : uploadFail}    
                 {showToast ? toast : '' }
                 {uploadshow ? loading: ''} 
                 
