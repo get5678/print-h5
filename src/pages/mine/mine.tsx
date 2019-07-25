@@ -13,11 +13,9 @@ import arrow from '../../assets/arrow.png'
 import './mine.scss'
 
 type PageStateProps = {
-
 }
 
 type PageDispatchProps = {
-
 }
 
 type PageOwnProps = {}
@@ -37,8 +35,14 @@ class Mine extends Component {
         navigationBarBackgroundColor: '#31c0cb'
     }
 
-    componentDidMount() {
-        // Taro.setNavigationBarColor: '#31c0cb'
+    componentWillMount() {
+        const token = Taro.getStorageSync('token');
+        if (token === '') {
+            this.setState({
+                phone: '请绑定手机号'
+            })
+        }
+       
     }
 
     state = {
@@ -79,6 +83,14 @@ class Mine extends Component {
         }
     }
 
+    handleToBindphone = () => {
+        if(typeof(this.state.phone) !== 'number') {
+            Taro.redirectTo({
+                url: '../bindPhone/bindPhone'
+            })
+        }
+    }
+
     render() {
         const { lists } = this.state;
 
@@ -99,7 +111,7 @@ class Mine extends Component {
                         <View className='contentHeadpic'>                    
                             <Image src={headPic} className='headPic'/>
                             <Text className='headName'>{this.state.name}</Text>
-                            <Text className='headPhone'>{this.state.phone}</Text>
+                            <Text className='headPhone' onClick={this.handleToBindphone.bind(this)}>{this.state.phone}</Text>
                         </View>             
                         {InfoLists}
                     </View>

@@ -46,7 +46,7 @@ export default class Http {
 
   async commonHttp(method: HttpMethod, url: string, data: object, contentType?, hasMessage?: boolean) {
     return new Promise(async (resolve, reject) => {
-      const token = Taro.getStorageSync('token') ||'60f21165-556e-4fdb-8530-2f83e2e4e6bb';
+      const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
       try {
         const res = await Taro.request({
           url,
@@ -57,7 +57,6 @@ export default class Http {
             'token': token
           },
         });
-        // Taro.hideNavigationBarLoading();
         console.log(
           `以下为调试信息:\n 请求地址:${url}\n 请求方式: ${method}\n token: ${token} \n 请求格式: ${contentType} \n 请求参数: ${JSON.stringify(
             data)}\n 返回结果:  `, res),"ghghghghghgghg";

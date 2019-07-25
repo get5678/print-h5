@@ -1,9 +1,7 @@
 .index {
-
     height: 74vh;
     box-sizing: border-box;
     padding-top: 5%;
-
   @at-root #{&}-item {
     margin-left: 5%;
     width: 90%;
@@ -74,6 +72,7 @@
       color: #2fb9c3;
       border: none;
       touch-action: manipulation;
+      background: transparent;
       width: 36px;
       height: 36px;
       margin: 0;
@@ -82,7 +81,6 @@
       }
     }
   }
-  
 }
 .gary{
     color: #eee;
@@ -95,7 +93,6 @@
 
   }
 }
-
 
 .bottomButtons{
     padding: 0 80px;

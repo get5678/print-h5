@@ -17,7 +17,6 @@ export const getGroupPrice = data => {
 export function asyncGetDocumentList(payload) {
     return async dispatch => {
         const res = await documentList(payload).catch( err => console.log("err",err));
-        console.log("res:",res)
         dispatch(getDocumentList(res));
     }
 }
