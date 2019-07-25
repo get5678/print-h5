@@ -111,10 +111,6 @@ class generateorders extends Taro.Component<{}, PageState>  {
               <View>打印方向</View>
               <View>打印方式</View>
             </View>
-            <View className='order-detail-bottom'>
-              <View>下单时间</View>
-              <View>支付方式</View>
-            </View>
           </View>
           <View className='order-detail-right'>
             <View className='order-detail-top'>
@@ -125,11 +121,21 @@ class generateorders extends Taro.Component<{}, PageState>  {
               <View>{res.printDirection}</View>
               <View>{res.printType}</View>
             </View>
-            <View className='order-detail-bottom'>
-              <View>{res.gmtCreate}</View>
-              <View>{res.payMethod?'在线下单':'线下支付'}</View>
-            </View>
           </View>
+        </View>
+        <View className='order-detail-table order-detail-table-bottom'>
+          <View className='order-detail-left order-detail-left-bottom'>
+              <View className='order-detail-bottom'>
+                <View>下单时间</View>
+                <View>支付方式</View>
+              </View>
+            </View>
+            <View className='order-detail-right order-detail-right-bottom'>
+              <View className='order-detail-bottom'>
+                <View>{res.gmtCreate}</View>
+                <View>{res.payMethod?'在线下单':'线下支付'}</View>
+              </View>
+            </View>          
         </View>
       </View>
     )
