@@ -194,13 +194,13 @@ class Document extends Component<IProps, PageState> {
         e.preventDefault();
         const file = e.target.files[0];
         const data = new FormData();
-        
+        const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
         data.append('file',file);
         fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
             method: 'POST',
             body: data,
             headers: {
-                token: '2f8dfdf4-c324-4201-a186-2e618500fa09',
+                token: token,
             },
             signal 
         })
@@ -211,8 +211,7 @@ class Document extends Component<IProps, PageState> {
                 count: 7,
             })
             console.log("response: ",res)
-            if(res.ok) {
-                
+            if(res.ok) {    
                 this.setState({
                     Lists: [],
                     page:1,
@@ -221,7 +220,6 @@ class Document extends Component<IProps, PageState> {
                     //showToast: true
                 })
             } else {
-                
                 this.setState({
                     uploadshow: false,
                     uploadsuccess: false,
@@ -345,8 +343,6 @@ class Document extends Component<IProps, PageState> {
                 })
             });
         }
-        
-        
     }
 
     /**
@@ -366,6 +362,27 @@ class Document extends Component<IProps, PageState> {
     componentWillMount() {
         const { id, title } = this.$router.params;
         const ListStore = Taro.getStorageSync('documentId');  
+        const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
+        if(token === '') {
+            Taro.showModal({
+                title: '暂未登录',
+                content: '点击确认按钮跳转登录页面',
+                confirmText: '登录',
+                confirmColor: '#31c0cb',
+                success: (res) => {
+                    if (res.confirm) {
+                        Taro.redirectTo({
+                            url: '../bindPhone/bindPhone'
+                        })
+                    }
+                    if(res.cancel) {
+                        Taro.redirectTo({
+                            url:'../mine/mine'
+                        })
+                    }
+                }
+            }).then( res => console.log("redsdsdsdss:",res))
+        }
         this.setState({
             shopTitle: decodeURI(title),
             shopId: id,
@@ -444,21 +461,11 @@ class Document extends Component<IProps, PageState> {
             loadingProcess,
             uploadshow
         } = this.state; 
-        
-        // let prirce;
-        // if(this.props.document) {
-            
-        //     prirce = this.props.document.groupPrice.prirce;
-        // } else {
-        //     prirce = undefined;
-        // }
-
-       console.log("props",this.props.document)
-        let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;
-        console.log("price: ",prirce/100)
+      
+        let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;    
         const documentLists = (
             <ScrollView 
-                scrollY 
+                scrollY={!show}
                 className='myContent' 
                 style={{overflow: `${show ? 'hidden': ''}`}}
                 onScrollToLower={this.handleToLower.bind(this)}
@@ -478,7 +485,9 @@ class Document extends Component<IProps, PageState> {
                                 <Text>{timeFn(list.docUploadTime)}</Text>
                             </View>
                         </View>
-                        <Image src={arrow} className='arrowright' onClick={this.handlePreview.bind(this, index)} />
+                        <View className='arrowTo' onClick={this.handlePreview.bind(this, index)}>
+                            <Image src={arrow} className='arrowright'  />
+                        </View>
                     </View>)) }
             </ScrollView>
         )

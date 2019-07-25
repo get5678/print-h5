@@ -11,7 +11,6 @@ export default function timeFn(before) {
     const dayDiff = Math.floor(dataDiff / (24 * 3600 * 1000));
     const hoursDiff = Math.floor(dataDiff / (3600 * 1000));
     const minuteDiff = Math.floor(dataDiff / (60 * 1000));
-    const secondDiff = Math.floor(dataDiff / (1000));
 
     if (dayDiff >= 7) {
         return `发布于7天前`;
@@ -21,8 +20,6 @@ export default function timeFn(before) {
         return `发布于${hoursDiff}小时前`
     } else if (hoursDiff < 1 && minuteDiff <= 60 && minuteDiff >= 1) {
         return `发布于${minuteDiff}分钟前`
-    } else if (secondDiff < 60 && secondDiff >= 1) {
-        return `发布于${secondDiff}秒前`
     } else {
         return `发布于刚刚`
     }
