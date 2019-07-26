@@ -218,8 +218,7 @@ class BindPhone extends Component<{}, PageState> {
       await toBindPhone({
         phoneNum: phone,
         authCode: code,
-        psw: password,
-        flag: 2
+        psw: password
       }, null, true).then(async res => {
         Taro.hideLoading()
         if (res.code === 1) {
@@ -276,11 +275,6 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         showWarn: true,
         warnText: '请输入正确的电话号码'
-      })
-    } else if (!isSafePassword(password)) {
-      this.setState({
-        showWarn: true,
-        warnText: '密码至少是6位并且包含大小写字母'
       })
     } else {
       // 成功输入逻辑
