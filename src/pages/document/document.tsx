@@ -180,9 +180,11 @@ class Document extends Component<IProps, PageState> {
     }
 
     handleToShop = () => {
+        
+        let shopId = this.state.shopId !== -1 ? this.state.shopId : undefined;
         if(this.state.selectedDocument) {
             Taro.navigateTo({
-                url: '../chooseShop/chooseShop'
+                url: `../chooseShop/chooseShop?id=${shopId}`
             })
         }
         else {
@@ -204,6 +206,7 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
+
     /**
      * @description 上传文件
      */
@@ -213,39 +216,6 @@ class Document extends Component<IProps, PageState> {
         const data = new FormData();
         const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
         data.append('file',file);
-        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
-            method: 'POST',
-            body: data,
-            headers: {
-                token: token,
-            },
-            signal 
-        })
-        .then(res => {
-
-            this.props.getList({
-                page: 1,
-                count: 7,
-            })
-            console.log("response: ",res)
-            if(res.ok) {    
-                this.setState({
-                    Lists: [],
-                    page:1,
-                    uploadshow: false,
-                    //uploadsuccess: true,
-                    //showToast: true
-                })
-            } else {
-                this.setState({
-                    uploadshow: false,
-                    uploadsuccess: false,
-                    showToast: true
-                })
-            }
-        })
-        .catch(err => console.log('Error:', err))
-
         let i = 0
         const mm = setInterval(() => {
             this.setState({
@@ -263,16 +233,64 @@ class Document extends Component<IProps, PageState> {
                 }
             })
         }, 50)
-        
         this.setState({
             uploadshow: true,
         })
+        
+
+        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
+            method: 'POST',
+            body: data,
+            headers: {
+                token: token,
+            },
+            signal 
+        }).then( (res) => {
+                res.json().then(data => {
+                    console.log("response",data)
+                    this.props.getList({
+                        page: 1,
+                        count: 7,
+                    })
+                    switch(data.code) {
+                        case 1:
+                            this.setState({
+                                Lists: [],
+                                page: 1,
+                                uploadshow: false,
+                                uploadsuccess: true,
+                                showToast: true
+                            })
+                            break;
+                        case 10301:
+                            this.setState({
+                                Lists: [],
+                                page: 1,
+                                uploadshow: false,
+                            })
+                            Taro.showToast({
+                                title: data.msg,
+                                image: require(`../../assets/error.png`),
+                                duration: 1500
+                            })
+                            break;
+                        default:
+                            console.log('d',data.code);
+                            break;
+                    }
+                })
+            }).catch(e => console.log("err",e))
     }
 
     handleCancelUpload = () => {
         controller.abort();
         this.setState({
             uploadshow: false
+        })
+        Taro.showToast({
+            title: '取消上传成功',
+            icon: 'success',
+            duration: 1500
         })
     }
 
@@ -281,14 +299,23 @@ class Document extends Component<IProps, PageState> {
      */
     calculationPrice = (str:string, count:number):number => {
         const { combination, prirce } = this.props.document.groupPrice;
-        const { Lists, ListStore } = this.state;
+        const { Lists } = this.state;
+        let page = Taro.getStorageSync('documentId');
+        let pages = 0;
+        
+        
         let price:any = 0.00;
         combination.map((item) => {
             if (item.printType == str) {
                 price += item.printPrice
             }
         })
-        price = Lists[ListStore[0]].docPageTotal * count * price;
+        Lists.map((item, index) => {
+            if (item.id === page[index]) {
+                pages += item.docPageTotal;
+            }
+        })
+        price = pages * count * price;
         price += prirce/100;
         price = price.toFixed(2);
         return price;
@@ -345,12 +372,6 @@ class Document extends Component<IProps, PageState> {
             showToast: !this.state.showToast
         })
     }
-    handlePreshow = () => {
-        this.setState({
-            showToast: !this.state.showToast
-        })
-    }
-
    
     /**
      *@description 上拉刷新
@@ -365,6 +386,17 @@ class Document extends Component<IProps, PageState> {
                     count: 7
                 })
             });
+            Taro.showToast({
+                title: '加载中',
+                icon: 'loading',
+                duration: 1200
+            })
+        }else {
+            Taro.showToast({
+                title: '已显示全部文档',
+                icon: 'success',
+                duration: 1500
+            })
         }
     }
 
@@ -459,9 +491,9 @@ class Document extends Component<IProps, PageState> {
     componentDidUpdate() {
         const { Lists } = this.state;
         let selectArray:any = [];
-        Lists.map((item,index) => {
+        Lists.map((item) => {
             if(item.checked) {
-                selectArray.push(index)
+                selectArray.push(item.id)
             }
         })
         Taro.setStorageSync('documentId', selectArray); 

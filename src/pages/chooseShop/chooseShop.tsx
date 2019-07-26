@@ -60,7 +60,7 @@ class ChooseShop extends Component<IProps, PageState> {
     handleChooseShop = (index) => {
         const { shopList } = this.props.shop;
         this.setState({
-            shopId: shopList[index].shopId,
+            shopId: Number(shopList[index].shopId),
             selected: true,
         })
     }
@@ -70,9 +70,8 @@ class ChooseShop extends Component<IProps, PageState> {
             const { shopId } = this.state;
             const { shopList } = this.props.shop;
             let title = '';
-            
             shopList.map((item) => {
-                if (shopId === item.shopId) {
+                if (shopId === Number(item.shopId)) {
                     title = item.shopName
                 }
             })
@@ -80,7 +79,16 @@ class ChooseShop extends Component<IProps, PageState> {
                 url: `../document/document?id=${shopId}&title=${encodeURI(title)}`
             })
         }
-        
+    }
+
+    componentWillMount() {
+        let id = Number(this.$router.params.id);
+        if(id) {
+            this.setState({
+                shopId:id,
+                selected: true,
+            })
+        }
     }
 
     componentDidMount() {
@@ -93,7 +101,6 @@ class ChooseShop extends Component<IProps, PageState> {
     render () {
         const{ shopList } = this.props.shop;
         const shopData = shopList ? shopList : [] ;
-
         const items = shopData.map((item, index) => {
             return (
                 <View className='index-item' onClick={this.handleChooseShop.bind(this,index)}>
@@ -109,7 +116,7 @@ class ChooseShop extends Component<IProps, PageState> {
                         </Text>
                     </View>
                     <View className='index-item-column'>
-                        <Icon className={`${this.state.shopId === item.shopId  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
+                        <Icon className={`${this.state.shopId === Number(item.shopId)  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
                     </View>
                 </View>
             )

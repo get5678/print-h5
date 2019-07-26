@@ -90,7 +90,6 @@
         height: 124px;
         position: fixed;
         bottom: 0;
-        z-index: 1;
     }
     @at-root #{&}Button {
         height: 124px;
@@ -103,7 +102,7 @@
         justify-content: space-between;
     }
     @at-root #{&}Butt{
-        max-width: 260px;
+        width: 260px;
         flex-shrink: 1;
         height: 80px;
         font-size: 30px;
@@ -336,7 +335,7 @@ element.style {
         font-size: 26px;
         height: 26px;
         color: #666;
-        line-height: 24px;
+        line-height: 26px;
         width: 200px;
         text-align: center;
         @include toShow;

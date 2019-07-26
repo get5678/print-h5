@@ -2,7 +2,7 @@ import { ComponentClass } from 'react'
 import Taro, {Config } from '@tarojs/taro'
 import { View, Image, Textarea} from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import return2Png from '../../assets/return2.png';
+import return2Png from '../../assets/backArrow.png';
 import { asynFeedBack } from '../../actions/feedBack'
 
 import './feedback.scss'
@@ -125,9 +125,7 @@ Icon(this,Icon,e){
             <Image onClick={this.Icon.bind(this, 1)} className='just-icon' src={justIcon==1?fine1:fine}/>
             <Image onClick={this.Icon.bind(this, 2)} className='just-icon' src={justIcon==2?ok1:ok}/>
         </View>
-        <View className='button-box'>
-          <View className='button' onClick={this.GotoFeedback.bind(this,inputValue,justIcon)}>提交</View>
-        </View>
+        <View className='button' onClick={this.GotoFeedback.bind(this,inputValue,justIcon)}>提交</View>
         {box}
       </View>
     )
