@@ -180,9 +180,11 @@ class Document extends Component<IProps, PageState> {
     }
 
     handleToShop = () => {
+        
+        let shopId = this.state.shopId !== -1 ? this.state.shopId : undefined;
         if(this.state.selectedDocument) {
             Taro.navigateTo({
-                url: '../chooseShop/chooseShop'
+                url: `../chooseShop/chooseShop?id=${shopId}`
             })
         }
         else {
@@ -222,22 +224,22 @@ class Document extends Component<IProps, PageState> {
             signal 
         })
         .then(res => {
-
             this.props.getList({
                 page: 1,
                 count: 7,
             })
-            console.log("response: ",res)
             if(res.ok) {    
                 this.setState({
                     Lists: [],
                     page:1,
                     uploadshow: false,
-                    //uploadsuccess: true,
-                    //showToast: true
+                    uploadsuccess: true,
+                    showToast: true
                 })
             } else {
                 this.setState({
+                    Lists: [],
+                    page: 1,
                     uploadshow: false,
                     uploadsuccess: false,
                     showToast: true
@@ -273,6 +275,11 @@ class Document extends Component<IProps, PageState> {
         controller.abort();
         this.setState({
             uploadshow: false
+        })
+        Taro.showToast({
+            title: '取消上传成功',
+            icon: 'success',
+            duration: 1500
         })
     }
 
@@ -365,6 +372,17 @@ class Document extends Component<IProps, PageState> {
                     count: 7
                 })
             });
+            Taro.showToast({
+                title: '加载中',
+                icon: 'loading',
+                duration: 1200
+            })
+        }else {
+            Taro.showToast({
+                title: '已显示全部文档',
+                icon: 'success',
+                duration: 1500
+            })
         }
     }
 

@@ -103,7 +103,7 @@
         justify-content: space-between;
     }
     @at-root #{&}Butt{
-        max-width: 260px;
+        width: 260px;
         flex-shrink: 1;
         height: 80px;
         font-size: 30px;
