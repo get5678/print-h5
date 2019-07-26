@@ -57,10 +57,17 @@ class StoreInformation extends Component<{}, PageState> {
     super(props);
   }
 
-  GotoPrint(id: number, title: string){
+  GotoPrint(id: string | number, title){
+    if(Taro.getStorageSync('token')){
       Taro.navigateTo({
-          url:`../document/document?id=${id}&title=${encodeURI(title)}`
+        url:`../document/document?id=${id}&title=${encodeURI(title)}`
       })
+    }else{
+      alert("请先登陆哟！");
+      Taro.navigateTo({
+        url:'../mine/mine'
+      })
+    }
   }
 
   Return(){

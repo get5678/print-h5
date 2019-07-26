@@ -214,7 +214,7 @@ class Document extends Component<IProps, PageState> {
         e.preventDefault();
         const file = e.target.files[0];
         const data = new FormData();
-        const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
+        const token = Taro.getStorageSync('token');
         data.append('file',file);
         let i = 0
         const mm = setInterval(() => {
@@ -415,7 +415,7 @@ class Document extends Component<IProps, PageState> {
     componentWillMount() {
         const { id, title } = this.$router.params;
         const ListStore = Taro.getStorageSync('documentId');  
-        const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
+        const token = Taro.getStorageSync('token');
         if(token === '') {
             Taro.showModal({
                 title: '暂未登录',

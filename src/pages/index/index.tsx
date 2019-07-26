@@ -118,7 +118,7 @@ class Index extends Component<{}, PageState> {
    * @param {number} id 商店id
    * @memberof Index
    */
-  handleToShop(id: number, e) {
+  handleToShop(id: number) {
     Taro.navigateTo({
       url: `../StoreInformation/StoreInformation?storeId=${id}`
     })
