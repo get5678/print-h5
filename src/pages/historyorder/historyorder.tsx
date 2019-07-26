@@ -3,7 +3,7 @@ import { ComponentClass } from 'react'
 import { View, Image, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import TabBar from '../../components/TabBar/TabBar';
-import return2Png from '../../assets/return2.png';
+import return2Png from '../../assets/backArrow.png';
 import orderStore from '../../assets/orderStore.png';
 import { BlankPage } from '../../components/blankPage/blankPage'
 import ppt from '../../assets/ppt.png';

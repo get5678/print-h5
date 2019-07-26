@@ -4,15 +4,14 @@ import { View, Text,Image } from '@tarojs/components'
 import returnPng from '../../assets/return.png';
 import storePng from '../../assets/store.png';
 import { connect } from '@tarojs/redux'
-
 import { asyncShopGet } from '../../actions/getShopDetail';
-
 import './StoreInformation.scss';
 import addressPng from '../../assets/address.png';
 import phonePng from '../../../.temp/assets/phone.png';
 import grey from '../../assets/grey.png';
 import yuan from '../../assets/yuan.png';
 import great from '../../assets/great.png';
+import normal from '../../assets/normal.png';
 
 
 type PageStateProps = {
@@ -106,7 +105,7 @@ class StoreInformation extends Component<{}, PageState> {
                 </View>
               </View>
             </View>
-            <Image className='fire' src={great}></Image>
+            <Image className='fire' src={res.hot > 10? great:normal}></Image>
           </View>)
     }))
     return (
