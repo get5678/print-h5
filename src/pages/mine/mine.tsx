@@ -1,9 +1,8 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image, Text, ScrollView } from '@tarojs/components'
+import { View, Image, Text } from '@tarojs/components'
 import TabBar from '../../components/TabBar/TabBar'
 
-import headPic from './pic/headPic.png'
 import feedback from './pic/feedback.png'
 import myorder from './pic/myorder.png'
 import mydoc from './pic/mydoc.png'
@@ -37,17 +36,22 @@ class Mine extends Component {
 
     componentWillMount() {
         const token = Taro.getStorageSync('token');
-        if (token === '') {
+        const data = Taro.getStorageSync('userInfo');
+        if(token !== '') {
             this.setState({
-                phone: '请绑定手机号'
+                login: true,
+                phone: data.phoneNum,
+                name: data.nickName,
+                topPic: data.avatar
             })
         }
-       
     }
 
     state = {
-        name: '小邮',
-        phone: 1576668888,
+        name: '请登录',
+        phone: '请绑定手机号',
+        topPic: '',
+        login: false,
         lists: [
             { id: 0, img: mydoc, title: '我的文档' },
             { id: 1, img: myorder, title: '我的订单' },
@@ -89,8 +93,16 @@ class Mine extends Component {
         }
     }
 
+    handletoLogin = () => {
+        if(!this.state.login) {
+            Taro.redirectTo({
+                url: '../bindPhone/bindPhone'
+            })
+        }
+    }
+
     handleToBindphone = () => {
-        if(typeof(this.state.phone) !== 'number') {
+        if(!this.state.login) {
             Taro.redirectTo({
                 url: '../bindPhone/bindPhone'
             })
@@ -98,7 +110,7 @@ class Mine extends Component {
     }
 
     render() {
-        const { lists } = this.state;
+        const { lists, topPic } = this.state;
 
         const InfoLists =  (
             <View className='mineList'>
@@ -115,7 +127,7 @@ class Mine extends Component {
                 <View className='mine'>
                     <View className='mineContent'>
                         <View className='contentHeadpic'>                    
-                            <Image src={headPic} className='headPic'/>
+                            <Image src={topPic} className='headPic' onClick={this.handletoLogin.bind(this)}/>
                             <Text className='headName'>{this.state.name}</Text>
                             <Text className='headPhone' onClick={this.handleToBindphone.bind(this)}>{this.state.phone}</Text>
                         </View>             
