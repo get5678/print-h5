@@ -74,7 +74,7 @@ type PageState = {
     loadingProcess: any;
     loadingProc: any;
     uploadshow: boolean;
-    ListStore: number[];
+    ListStore: any[];
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -237,7 +237,6 @@ class Document extends Component<IProps, PageState> {
             uploadshow: true,
         })
         
-
         fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
             method: 'POST',
             body: data,
@@ -302,7 +301,6 @@ class Document extends Component<IProps, PageState> {
         const { Lists } = this.state;
         let page = Taro.getStorageSync('documentId');
         let pages = 0;
-        
         
         let price:any = 0.00;
         combination.map((item) => {
@@ -476,9 +474,11 @@ class Document extends Component<IProps, PageState> {
             });
         }
         if (ListStore.length !== 0 && List.length !== 0) {
-            ListStore.map((item) => {
-                List[item].checked = true
-            });
+            List.map((item,index) => {
+                if (ListStore[index] === item.id) {
+                    item.checked = true;
+                }
+            })
             flag = true;
         }
         this.setState({
@@ -492,15 +492,15 @@ class Document extends Component<IProps, PageState> {
         const { Lists } = this.state;
         let selectArray:any = [];
         Lists.map((item) => {
-            if(item.checked) {
+            if (item.checked) {
                 selectArray.push(item.id)
             }
         })
+        
+       
         Taro.setStorageSync('documentId', selectArray); 
     }
 
-    componentWillUnmount() {
-    }
    
     render() {
 

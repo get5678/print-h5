@@ -43,7 +43,23 @@ export async function shopList(data) {
 export async function sendAuthCode(data: {phoneNum: string | number}, contentType?, hasMessage = true): Promise<{code: number | string, msg: string}> {
   return http.get(`${baseUrl}client/sendAuthCode`,data, contentType, hasMessage)
 }
-// 绑定手机 确认验证码
-export async function toBindPhone(data: {phoneNum: string | number, authCode: string | number}, contentType?, hasMessage = true) {
+/**
+ * @description 绑定手机 确认验证码
+ * @param {({phoneNum: string | number, authCode: string | number, psw: string, flag: number})} data
+ * @param {*} [contentType]
+ * @param {boolean} [hasMessage=true]
+ * @returns
+ */
+export async function toBindPhone(data: {phoneNum: string | number, authCode: string | number, psw: string, flag: number}, contentType?, hasMessage = true) {
   return http.post(`${baseUrl}client/bindPhone`,data, contentType, hasMessage)
+}
+
+/**
+ * @description 手机号登录
+ * @export
+ * @param {{phoneNum: string, psw: string}} data
+ * @returns
+ */
+export async function toLogin(data: {phoneNum: string, psw: string}, contentType?, hasMessage = true) {
+  return http.post(`${baseUrl}client/phone/login`, data, contentType, hasMessage)
 }
