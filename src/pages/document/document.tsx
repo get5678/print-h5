@@ -299,14 +299,23 @@ class Document extends Component<IProps, PageState> {
      */
     calculationPrice = (str:string, count:number):number => {
         const { combination, prirce } = this.props.document.groupPrice;
-        const { Lists, ListStore } = this.state;
+        const { Lists } = this.state;
+        let page = Taro.getStorageSync('documentId');
+        let pages = 0;
+        
+        
         let price:any = 0.00;
         combination.map((item) => {
             if (item.printType == str) {
                 price += item.printPrice
             }
         })
-        price = Lists[ListStore[0]].docPageTotal * count * price;
+        Lists.map((item, index) => {
+            if (item.id === page[index]) {
+                pages += item.docPageTotal;
+            }
+        })
+        price = pages * count * price;
         price += prirce/100;
         price = price.toFixed(2);
         return price;
@@ -482,9 +491,9 @@ class Document extends Component<IProps, PageState> {
     componentDidUpdate() {
         const { Lists } = this.state;
         let selectArray:any = [];
-        Lists.map((item,index) => {
+        Lists.map((item) => {
             if(item.checked) {
-                selectArray.push(index)
+                selectArray.push(item.id)
             }
         })
         Taro.setStorageSync('documentId', selectArray); 
