@@ -4,18 +4,30 @@ import { View, Button, Input, Image, Text, ScrollView } from '@tarojs/components
 import { BlankPage } from '../../components/blankPage/blankPage'
 import { connect } from '@tarojs/redux'
 import { asyncGetShopList } from '../../actions/shop'
+// import { asyncOnLogin } from '../../actions/login'
 // import { add, minus, asyncAdd } from '../../actions/counter'
 import TabBar from '../../components/TabBar/TabBar'
 import './index.scss'
 
+interface LoginInfo {
+  data: {
+    phoneNum: string;
+    psw: string;
+  },
+  contentType?: string;
+  hasMessage: boolean;
+}
+
 type PageStateProps = {
   shop: {
     shopList: ShopList[]
-  }
+  },
+  login
 }
 
 type PageDispatchProps = {
   getShopList: () => void;
+  onLogin: (param: LoginInfo) => void;
 }
 
 type PageOwnProps = {
@@ -185,8 +197,8 @@ class Index extends Component<{}, PageState> {
               picture={require('../../assets/images/index/blank-house.png')}
             />
         }
-        <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button>
-        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button>
+        {/* <Button className='nav' onClick={this.navTo.bind(this, 1)}>nav to login</Button>
+        <Button className='nav' onClick={this.navTo.bind(this, 2)}>nav to bindWX</Button> */}
         <TabBar current={0} />
       </View>
     )
