@@ -303,9 +303,9 @@ class BindPhone extends Component<{}, PageState> {
             url: '../index/index'
           })
         }, 3000)
-      } else if (res.code === 4000) {
+      } else {
         Taro.showToast({
-          title: '密码错误',
+          title: res.msg,
           icon: 'none',
           mask: true
         })
