@@ -2,13 +2,11 @@ import { ComponentClass } from 'react'
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text,Image } from '@tarojs/components'
 import returnPng from '../../assets/return.png';
-import storePng from '../../assets/store.png';
 import { connect } from '@tarojs/redux'
 import { asyncShopGet } from '../../actions/getShopDetail';
 import './StoreInformation.scss';
 import addressPng from '../../assets/address.png';
 import phonePng from '../../../.temp/assets/phone.png';
-import grey from '../../assets/grey.png';
 import yuan from '../../assets/yuan.png';
 import great from '../../assets/great.png';
 import normal from '../../assets/normal.png';
@@ -27,11 +25,7 @@ type PageDispatchProps = {
 
 type PageOwnProps = {}
 
-type PageState = {
-  phone: number,
-  name:string,
-  address: string
-}
+type PageState = {}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
@@ -55,17 +49,24 @@ class StoreInformation extends Component<{}, PageState> {
 
   constructor (props) {
     super(props);
-    this.state = { 
-     }
   }
 
-  GotoPrint(){
+  GotoPrint(id: string | number, title){
     if(Taro.getStorageSync('token')){
       Taro.navigateTo({
-        url:'../document/document'
+        url:`../document/document?id=${id}&title=${encodeURI(title)}`
       })
     }else{
-      alert("请先登陆哟！")；
+<<<<<<< HEAD
+      Taro.showToast({
+        title: '请先登陆哟',
+        icon: 'none',
+        duration: 2000,
+        mask:true
+      })
+=======
+      alert("请先登陆哟！");
+>>>>>>> db49ad3e7b2c1acdd5dfabe616bc8b529760afd1
       Taro.navigateTo({
         url:'../mine/mine'
       })
@@ -142,7 +143,7 @@ class StoreInformation extends Component<{}, PageState> {
           {printingBox}
         </View>
         <View className='button-box'>
-          <View className='button' onClick={this.GotoPrint}>去打印</View>
+          <View className='button' onClick={this.GotoPrint.bind(this, response.id, response.shopName)}>去打印</View>
         </View>
       </View>
     )

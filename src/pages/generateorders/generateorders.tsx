@@ -1,9 +1,8 @@
 import Taro from '@tarojs/taro';
 import { View, Image} from '@tarojs/components';
 import { connect } from '@tarojs/redux'
-
 import './generateorders.scss';
-import backArrow from '../../../.temp/assets/backArrow.png';
+import backArrow from '../../assets/backArrow.png';
 import orderlogo from '../../assets/orderlogo.png';
 import { asyncorderDetail } from '../../actions/orderDetail';
 

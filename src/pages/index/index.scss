@@ -28,18 +28,18 @@
     width: 530px;
     margin-left: 16px;
     color: #000;
-    font-size: 24px;
+    font-size: 28px;
   }
 
   @at-root #{&}-inputPL {
     color: #ccc;
-    font-size: 24px;
+    font-size: 28px;
   }
 
   @at-root #{&}-icon {
     &:first-child {
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
     }
     width: 44px;
     height: 36px;

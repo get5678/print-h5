@@ -70,7 +70,12 @@ GotoFeedback(inputValue,justIcon){
       flag:true
     })
   } else{
-    alert('评价不能为空')
+    Taro.showToast({
+      title: '评价不能为空',
+      icon: 'none',
+      duration: 2000,
+      mask:true
+    })
   }
 }
 

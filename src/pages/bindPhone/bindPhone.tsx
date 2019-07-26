@@ -145,10 +145,17 @@ class BindPhone extends Component<{}, PageState> {
    */
   async sendVerificationCode() {
     const phone = this.state.phone;
+    const password = this.state.password
+    const passwordConfirm = this.state.passwordConfirm
     if (!isPhoneNumber(phone)) {
       this.setState({
         showWarn: true,
         warnText: '请输入正确的电话号码'
+      })
+    } else if (!isSafePassword(password) && !isSafePassword(passwordConfirm)){
+      this.setState({
+        showWarn: true,
+        warnText: '密码格式错误'
       })
     } else {
       await sendAuthCode({
@@ -211,8 +218,7 @@ class BindPhone extends Component<{}, PageState> {
       await toBindPhone({
         phoneNum: phone,
         authCode: code,
-        psw: password,
-        flag: 2
+        psw: password
       }, null, true).then(async res => {
         Taro.hideLoading()
         if (res.code === 1) {
@@ -269,11 +275,6 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         showWarn: true,
         warnText: '请输入正确的电话号码'
-      })
-    } else if (!isSafePassword(password)) {
-      this.setState({
-        showWarn: true,
-        warnText: '密码至少是6位并且包含大小写字母'
       })
     } else {
       // 成功输入逻辑

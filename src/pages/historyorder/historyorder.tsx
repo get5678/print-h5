@@ -6,7 +6,6 @@ import TabBar from '../../components/TabBar/TabBar';
 import return2Png from '../../assets/backArrow.png';
 import orderStore from '../../assets/orderStore.png';
 import { BlankPage } from '../../components/blankPage/blankPage'
-import ppt from '../../assets/ppt.png';
 import './historyorder.scss';
 import { asyncHistoryOrder } from '../../actions/historyOrderList';
 import { isArray } from 'util';
@@ -99,16 +98,18 @@ ToMore(orderId,thisPage,e){
       )
     return (
       <View className='body-box'>
-        <View className='nowOrder-top-box'>
-          <Image onClick={this.Return} className='nowOrder-return' src={return2Png}></Image>
-          <View className='nowOrder-top-tittle'>历史订单</View>
+        <View className='order-top-box'>
+          <View className='nowOrder-top-box'>
+            <Image onClick={this.Return} className='nowOrder-return' src={return2Png}></Image>
+            <View className='nowOrder-top-tittle'>历史订单</View>
+          </View>
+          <View className='all-order'>
+              <Text>全部</Text>
+              <View className='all-line'></View>
+          </View>
         </View>
         {this.props.historyOrderList.data.length > 0?
-        <View>
-          <View className='all-order'>
-            <Text>全部</Text>
-            <View className='all-line'></View>
-          </View>
+        <View className='content'>
           {OrderStoreBox}
         </View>:<BlankPage
                     title='您当前还没有订单'

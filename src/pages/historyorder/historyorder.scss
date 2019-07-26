@@ -3,6 +3,16 @@
     margin: 0 auto;
     padding-bottom: 180px;
 }
+.content{
+    padding-top:210px
+}
+.order-top-box{
+    height: 220px;
+    width: 750px;
+    background-color: #fff;
+    z-index: 10;
+    position: fixed;
+}
 .nowOrder-top-box{
     width: 690px;
     margin: 0 auto;
@@ -37,6 +47,7 @@
 .all-line{
     width: 70px;
     height: 6px;
+    border-radius: 6px;
     background: #2fb9c3;
 }
 .order-store-box{
@@ -83,6 +94,7 @@
     .file-type{
         height: 121px;
         width: 121px;
+        border-radius: 10px;
         margin-right: 28px;
     }
 }
