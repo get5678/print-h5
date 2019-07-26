@@ -22,7 +22,8 @@ import excel from '../pages/document/pic/excel.png'
         case 'ppt':
         case 'pptx':
             return ppt;
-        case 'excel':
+        case 'xlsx':
+        case 'xls':
             return excel;
         default:
             return question;
