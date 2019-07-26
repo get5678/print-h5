@@ -206,6 +206,7 @@ class Document extends Component<IProps, PageState> {
         })
     }
 
+
     /**
      * @description 上传文件
      */
@@ -215,39 +216,6 @@ class Document extends Component<IProps, PageState> {
         const data = new FormData();
         const token = Taro.getStorageSync('token') || 'b4ed6334-c27f-40a5-83b5-d0f96c3a3e03';
         data.append('file',file);
-        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
-            method: 'POST',
-            body: data,
-            headers: {
-                token: token,
-            },
-            signal 
-        })
-        .then(res => {
-            this.props.getList({
-                page: 1,
-                count: 7,
-            })
-            if(res.ok) {    
-                this.setState({
-                    Lists: [],
-                    page:1,
-                    uploadshow: false,
-                    uploadsuccess: true,
-                    showToast: true
-                })
-            } else {
-                this.setState({
-                    Lists: [],
-                    page: 1,
-                    uploadshow: false,
-                    uploadsuccess: false,
-                    showToast: true
-                })
-            }
-        })
-        .catch(err => console.log('Error:', err))
-
         let i = 0
         const mm = setInterval(() => {
             this.setState({
@@ -265,10 +233,53 @@ class Document extends Component<IProps, PageState> {
                 }
             })
         }, 50)
-        
         this.setState({
             uploadshow: true,
         })
+        
+
+        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
+            method: 'POST',
+            body: data,
+            headers: {
+                token: token,
+            },
+            signal 
+        }).then( (res) => {
+                res.json().then(data => {
+                    console.log("response",data)
+                    this.props.getList({
+                        page: 1,
+                        count: 7,
+                    })
+                    switch(data.code) {
+                        case 1:
+                            this.setState({
+                                Lists: [],
+                                page: 1,
+                                uploadshow: false,
+                                uploadsuccess: true,
+                                showToast: true
+                            })
+                            break;
+                        case 10301:
+                            this.setState({
+                                Lists: [],
+                                page: 1,
+                                uploadshow: false,
+                            })
+                            Taro.showToast({
+                                title: data.msg,
+                                image: require(`../../assets/error.png`),
+                                duration: 1500
+                            })
+                            break;
+                        default:
+                            console.log('d',data.code);
+                            break;
+                    }
+                })
+            }).catch(e => console.log("err",e))
     }
 
     handleCancelUpload = () => {
@@ -352,12 +363,6 @@ class Document extends Component<IProps, PageState> {
             showToast: !this.state.showToast
         })
     }
-    handlePreshow = () => {
-        this.setState({
-            showToast: !this.state.showToast
-        })
-    }
-
    
     /**
      *@description 上拉刷新
