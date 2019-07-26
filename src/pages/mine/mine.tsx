@@ -52,7 +52,8 @@ class Mine extends Component {
             { id: 0, img: mydoc, title: '我的文档' },
             { id: 1, img: myorder, title: '我的订单' },
             { id: 2, img: feedback, title: '我的反馈' },
-            { id: 3, img: aboutus, title: '关于我们' }
+            { id: 3, img: aboutus, title: '关于我们' },
+            { id: 4, img: aboutus, title: '注册/登录' }
         ]
     }
 
@@ -76,6 +77,11 @@ class Mine extends Component {
           case 3:
             Taro.redirectTo({
                 url:'/'
+            })
+            break;
+          case 4:
+            Taro.redirectTo({
+                url:'/pages/bindPhone/bindPhone'
             })
             break;
           default:

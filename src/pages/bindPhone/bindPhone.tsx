@@ -214,7 +214,7 @@ class BindPhone extends Component<{}, PageState> {
         psw: password,
         flag: 2
       }, null, true).then(async res => {
-        Taro.hideToast()
+        Taro.hideLoading()
         if (res.code === 1) {
           this.setState({
             toastText: '注册成功',
