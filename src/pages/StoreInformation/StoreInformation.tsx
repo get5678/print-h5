@@ -51,18 +51,22 @@ class StoreInformation extends Component<{}, PageState> {
     super(props);
   }
 
-  GotoPrint(){
+  GotoPrint(id: string | number, title){
     if(Taro.getStorageSync('token')){
       Taro.navigateTo({
-        url:'../document/document'
+        url:`../document/document?id=${id}&title=${encodeURI(title)}`
       })
     }else{
+<<<<<<< HEAD
       Taro.showToast({
         title: '请先登陆哟',
         icon: 'none',
         duration: 2000,
         mask:true
       })
+=======
+      alert("请先登陆哟！");
+>>>>>>> db49ad3e7b2c1acdd5dfabe616bc8b529760afd1
       Taro.navigateTo({
         url:'../mine/mine'
       })
@@ -139,7 +143,7 @@ class StoreInformation extends Component<{}, PageState> {
           {printingBox}
         </View>
         <View className='button-box'>
-          <View className='button' onClick={this.GotoPrint}>去打印</View>
+          <View className='button' onClick={this.GotoPrint.bind(this, response.id, response.shopName)}>去打印</View>
         </View>
       </View>
     )

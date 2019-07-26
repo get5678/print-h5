@@ -124,6 +124,18 @@ class Index extends Component<{}, PageState> {
     })
   }
 
+  /**
+   * @description 跳转到我的文档
+   * @param {number} id
+   * @memberof Index
+   */
+  handleToMyDocument(id: number, title: string, e) {
+    e.stopPropagation()
+    Taro.navigateTo({
+      url:`../document/document?id=${id}&title=${encodeURI(title)}`
+    })
+  }
+
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
   }
@@ -163,7 +175,7 @@ class Index extends Component<{}, PageState> {
 
     const items = shopData.map(item => {
       return (
-        <View key={item.shopId} className='index-item'>
+        <View onClick={this.handleToShop.bind(this, item.shopId)} key={item.shopId} className='index-item'>
           <Image className='index-item-image' src={item.shopAvatar}></Image>
           <View className='index-item-column'>
             <Text className='index-item-title'>{item.shopName}</Text>
@@ -174,7 +186,7 @@ class Index extends Component<{}, PageState> {
           </View>
           <View className='index-item-column'>
             <Text className='index-item-price'>{item.shopPrice}/张</Text>
-            <Button onClick={this.handleToShop.bind(this, item.shopId)} className='index-item-button'>打印</Button>
+            <Button onClick={this.handleToMyDocument.bind(this, item.shopId, item.shopName)} className='index-item-button'>打印</Button>
           </View>
         </View>
       )

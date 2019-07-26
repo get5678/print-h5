@@ -50,8 +50,8 @@ export async function sendAuthCode(data: {phoneNum: string | number}, contentTyp
  * @param {boolean} [hasMessage=true]
  * @returns
  */
-export async function toBindPhone(data: {phoneNum: string | number, authCode: string | number, psw: string, flag: number}, contentType?, hasMessage = true) {
-  return http.post(`${baseUrl}client/bindPhone`,data, contentType, hasMessage)
+export async function toBindPhone(data: {phoneNum: string | number, authCode: string | number, psw: string}, contentType?, hasMessage = true) {
+  return http.post(`${baseUrl}client/phone/register`,data, contentType, hasMessage)
 }
 
 /**
