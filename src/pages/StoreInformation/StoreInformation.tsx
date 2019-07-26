@@ -60,9 +60,16 @@ class StoreInformation extends Component<{}, PageState> {
   }
 
   GotoPrint(){
+    if(Taro.getStorageSync('token')){
       Taro.navigateTo({
-          url:'../document/document'
+        url:'../document/document'
       })
+    }else{
+      alert("请先登陆哟！")；
+      Taro.navigateTo({
+        url:'../mine/mine'
+      })
+    }
   }
 
   Return(){
