@@ -3,6 +3,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+$PX: 18px;
+
 .myDocument {
     background: #fff;
     height: 100vh;
@@ -12,13 +14,22 @@
     box-sizing: border-box;
     height: 74vh;
 }
+.UploadOvertext{
+    font-size: 30px;
+    color: #999;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    letter-spacing: 1px;
+}
 .docu {
     @at-root #{&}Before{
         width: 16px;
         height: 16px;
         display: block;
         background: #eaeaea;
-        border-radius: 50%;
+        border-radius: 8px;
+        box-sizing: border-box;
         margin-right: 20px;
         margin-left: 34px;
     }
