@@ -18,29 +18,29 @@
         font-size: 36px;
     }
 }
-.button-box{
-    .button{
-        width: 598px;
-        height: 83px;
-        background-color: #2fb9c3;
-        margin: 0 auto;
-        color: #fff;
-        text-align: center;
-        font-size: 30px;
-        line-height: 83px;
-        letter-spacing: 6px;
-        border-radius: 80px;
-    }
+.button{
+    width: 598px;
+    height: 83px;
+    background-color: #2fb9c3;
+    margin: 0 auto;
+    margin-top: 40px;
+    color: #fff;
+    text-align: center;
+    font-size: 30px;
+    line-height: 83px;
+    letter-spacing: 6px;
+    border-radius: 80px;
 }
-.input-feedback{
-    width: 600px;
+.input-feedback{    
+    width: 640px;
     margin: 0 auto;
     display: block;
     height: 324px;
     font-size: 32px;
-    border-radius: 20px;
+    border-radius: 16px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 27px 3px rgba(41, 50, 117, 0.08);
     border: 0;
-    box-shadow:  0 0 30px 1px rgba(204, 202, 202, 0.61);    
     padding: 40px 20px;
     outline:none;
 }
@@ -50,8 +50,9 @@
     justify-content: center; 
     width: 600px;
     margin: 0 auto;
-    height: 180px;
-    line-height: 180px;
+    margin-top: 70px;
+    height: 70px;
+    line-height: 70px;
     font-size: 34px;
 }
 .line{
@@ -62,9 +63,7 @@
 }
 .just{
     width: 400px;
-    height: 160px;
-    position: relative;
-    top: -80px;
+    height: 100px;
     margin: 0 auto;
     display: flex;
     justify-content: space-around;
