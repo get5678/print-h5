@@ -55,13 +55,11 @@ class StoreInformation extends Component<{}, PageState> {
 
   constructor (props) {
     super(props);
-    this.state = { 
-     }
   }
 
-  GotoPrint(){
+  GotoPrint(id: number, title: string){
       Taro.navigateTo({
-          url:'../document/document'
+          url:`../document/document?id=${id}&title=${encodeURI(title)}`
       })
   }
 
@@ -135,7 +133,7 @@ class StoreInformation extends Component<{}, PageState> {
           {printingBox}
         </View>
         <View className='button-box'>
-          <View className='button' onClick={this.GotoPrint}>去打印</View>
+          <View className='button' onClick={this.GotoPrint.bind(this, response.id, response.shopName)}>去打印</View>
         </View>
       </View>
     )

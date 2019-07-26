@@ -145,10 +145,17 @@ class BindPhone extends Component<{}, PageState> {
    */
   async sendVerificationCode() {
     const phone = this.state.phone;
+    const password = this.state.password
+    const passwordConfirm = this.state.passwordConfirm
     if (!isPhoneNumber(phone)) {
       this.setState({
         showWarn: true,
         warnText: '请输入正确的电话号码'
+      })
+    } else if (!isSafePassword(password) && !isSafePassword(passwordConfirm)){
+      this.setState({
+        showWarn: true,
+        warnText: '密码格式错误'
       })
     } else {
       await sendAuthCode({
