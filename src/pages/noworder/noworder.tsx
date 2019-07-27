@@ -160,7 +160,7 @@ class noworder extends Taro.Component<{}, PageState> {
           {OrderStoreBox}
         </View>:<BlankPage
                     title='您当前还没有订单'
-                    picture={require('../../assets/blank-compents/blank-box-empty.png')}
+                    picture={require('../../assets/blank-compents/blank-order.png')}
                 />}
         <TabBar current={1}/>
       </View>
