@@ -5,6 +5,7 @@ import './generateorders.scss';
 import backArrow from '../../assets/backArrow.png';
 import orderlogo from '../../assets/orderlogo.png';
 import { asyncorderDetail } from '../../actions/orderDetail';
+import yuan from '../../assets/yuan.png';
 
 type PageStateProps = {
   orderDetail: {
@@ -89,7 +90,9 @@ class generateorders extends Taro.Component<{}, PageState>  {
     return (
       <View>
         <View className='top-box'>
-          <Image onClick={this.Return.bind(this,this.state.router)} className='return' src={backArrow}></Image>
+          <View onClick={this.Return.bind(this,this.state.router)} className='return'>
+            <Image className='return' src={backArrow}></Image>
+          </View>
           <View className='top-tittle'>生成订单</View>
         </View>
         <View className='order-top-box'>
@@ -97,7 +100,7 @@ class generateorders extends Taro.Component<{}, PageState>  {
             <Image className='order-logo' src={orderlogo}/>
             <View>已经付款给{res.shopName}</View>
           </View>
-          <View className='order-logo-price'>-{res.payment}</View>
+          <View className='order-logo-price'><Image className="yuan-icon" src={yuan}/>{res.payment}</View>
           <View className='order-loge-code'>收货码：{res.receivingCode}</View>
         </View>
         <View className='order-detail-table'>

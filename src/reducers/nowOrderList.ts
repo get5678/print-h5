@@ -7,6 +7,10 @@ export default function nowOrderList (state = INITIAL_STATE, actions) {
       return {
         data: actions.data
       };
+      case 'NOWTOSURE':
+        return {
+          data: actions.data
+        };
     default:
       return state;
   }

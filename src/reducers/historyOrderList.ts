@@ -7,6 +7,10 @@ export default function historyOrderList (state = INITIAL_STATE, actions) {
       return {
         data: actions.data
       };
+    case 'TOSURE':
+      return {
+        data: actions.data
+      };
     default:
       return state;
   }

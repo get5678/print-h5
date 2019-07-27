@@ -4,6 +4,10 @@
     height: 172px;
     display: flex;
     align-items: center;
+    .return-box{
+        width: 50px;
+        margin-right: -50px;
+    }
     .return{
         width: 20px;
         height: auto;
@@ -87,4 +91,9 @@
 }
 .order-detail-bottom{
     height: 140px;
+}
+.yuan-icon{
+    width: 22px;
+    height: auto;
+    margin-right: 20px;
 }
