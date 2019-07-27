@@ -61,7 +61,8 @@ class Mine extends Component {
         ]
     }
 
-    handleClick = (id) => {
+    handleClick = (id,e) => {
+        e.preventDefault();
         switch(id) {
           case 0:
             Taro.redirectTo({

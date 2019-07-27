@@ -19,7 +19,9 @@
         const { backArrow  } = this.props;
         const test = 
         <View className='navBar'>
-                <Image className='navImage' src={backArrow ? backArrow : back} onClick={this.props.handleBack}/>
+                <View className='navBack' onClick={this.props.handleBack.bind(this)}>
+                    <Image className='navImage' src={backArrow ? backArrow : back} />
+                </View>
             <Text className='navText'>{this.props.title}</Text>
         </View>
         return (

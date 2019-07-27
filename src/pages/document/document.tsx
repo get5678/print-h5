@@ -71,6 +71,7 @@ type PageState = {
     src?: any;
     taostText: string;
     uploadsuccess: boolean;
+    showUploadOvertext: boolean;
     loadingProcess: any;
     loadingProc: any;
     uploadshow: boolean;
@@ -130,6 +131,7 @@ class Document extends Component<IProps, PageState> {
             loadingProcess: 0,
             loadingProc: 0,
             uploadshow: false,
+            showUploadOvertext: false,
             ListStore: [],
         }       
     }
@@ -215,6 +217,7 @@ class Document extends Component<IProps, PageState> {
         const file = e.target.files[0];
         const data = new FormData();
         const token = Taro.getStorageSync('token');
+        
         data.append('file',file);
         let i = 0
         const mm = setInterval(() => {
@@ -390,10 +393,8 @@ class Document extends Component<IProps, PageState> {
                 duration: 1200
             })
         }else {
-            Taro.showToast({
-                title: '已显示全部文档',
-                icon: 'success',
-                duration: 1500
+            this.setState({
+                showUploadOvertext: true;
             })
         }
     }
@@ -517,7 +518,8 @@ class Document extends Component<IProps, PageState> {
             selectedDocument,
             loadingProcess,
             loadingProc,
-            uploadshow
+            uploadshow,
+            showUploadOvertext
         } = this.state; 
       
         let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;    
@@ -547,6 +549,7 @@ class Document extends Component<IProps, PageState> {
                             <Image src={arrow} className='arrowright'  />
                         </View>
                     </View>)) }
+                {showUploadOvertext ? <View className='UploadOvertext'>~已显示全部文档~</View> : '' }
             </ScrollView>
         )
 
