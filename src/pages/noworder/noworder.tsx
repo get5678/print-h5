@@ -54,7 +54,24 @@ class noworder extends Taro.Component<{}, PageState> {
   }
 
   ToSure(id){
-    this.props.tosure({orderId:id});
+    Taro.showModal({
+      title: '确认收货',
+      content: '点击确认收货成功',
+    }).then((res)=>{
+        if(res.confirm){
+          this.props.tosure({orderId:id});
+        }
+      }
+    ).then(()=>{
+      this.forceUpdate(()=>{
+          this.props.NowList({
+            page: 1,
+            count: 5
+          });
+        }
+      )
+    })
+    
   }
 
   componentWillReceiveProps (nextProps) {
@@ -89,6 +106,15 @@ class noworder extends Taro.Component<{}, PageState> {
   render () {
     let res = this.props.nowOrderList.data;
     res = isArray(res)?res:[];
+    let status;
+
+    if(res.orderStatus==2){
+      status = '已完成'
+    } else if(res.orderStatus==1){
+      status = '正在打印'
+    } else {
+      status = '取货成功'
+    }
     
     const OrderStoreBox = res.map((res)=>{
       return (
@@ -109,10 +135,11 @@ class noworder extends Taro.Component<{}, PageState> {
         </View>
         <View className='file-type-bottom'>
           <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment}</Text></View>
-          <View className='choose-box' >
+          {status==='取货成功'?<View onClick={this.ToMore.bind(this,res.orderId||1,'noworder/noworder')} className='ToMore'>查看详情</View>
+          :<View className='choose-box' >
             <View onClick={this.ToSure.bind(this,res.orderId)} className='ToSure'>确认收货</View>
             <View onClick={this.ToMore.bind(this,res.orderId||1,'noworder/noworder')} className='ToMore'>查看详情</View>
-          </View>
+          </View>}
         </View>
       </View>)}
       )

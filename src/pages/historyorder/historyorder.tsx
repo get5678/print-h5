@@ -44,22 +44,38 @@ interface historyorder {
 }))
 
 class historyorder extends Taro.Component<{}, PageState> {
- 
-Return(){
+
+  Return(){
+      Taro.navigateTo({
+          url:'../mine/mine'
+      })
+  }
+
+  ToMore(orderId,thisPage,e){
     Taro.navigateTo({
-        url:'../mine/mine'
+      url:'../generateorders/generateorders?orderId='+orderId+'&return='+thisPage
     })
-}
+  }
 
-ToMore(orderId,thisPage,e){
-  Taro.navigateTo({
-    url:'../generateorders/generateorders?orderId='+orderId+'&return='+thisPage
-  })
-}
-
-ToSure(id){
-  this.props.tosure({orderId:id});
-}
+  ToSure(id){
+    Taro.showModal({
+      title: '确认收货',
+      content: '点击确认收货成功',
+    }).then((res)=>{
+        if(res.confirm){
+          this.props.tosure({orderId:id});
+        }
+      }
+    ).then(()=>{
+      this.forceUpdate(()=>{
+          this.props.historyList({
+            page: 1,
+            count: 5
+          });
+        }
+      )
+    })
+  }
 
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps,"props")
@@ -72,7 +88,7 @@ ToSure(id){
       this.props.historyList({
         page: 1,
         count: 5
-      })
+      });
     } else{
       Taro.showModal({
         title: '暂未登陆',
@@ -91,11 +107,20 @@ ToSure(id){
   componentDidHide () { }
 
   render () {
-    
-    let res = this.props.historyOrderList.data;
+    let res = this.props.historyOrderList.data;   
     res = isArray(res)?res:[];
-    
+    console.log(this.props.historyOrderList.data)
     const OrderStoreBox = res.map((res)=>{
+      let status;
+
+      if(res.orderStatus==2){
+        status = '已完成'
+      } else if(res.orderStatus==1){
+        status = '正在打印'
+      } else {
+        status = '取货成功'
+      }
+
       return (
       <View className='order-store-box'>
         <View className='order-store-top'>
@@ -103,7 +128,7 @@ ToSure(id){
             <Image className='orderStore' src={orderStore}/>
             <View>{res.shopName}</View>
           </View>
-          <Text className='status'>{res.orderStatus==2?'已完成':'正在打印'}</Text>
+         <Text className='status'>{status}</Text>
         </View>
         <View className='file-type-box'>
           <Image className='file-type' src={res.documentTypeUrl}/>
@@ -114,10 +139,13 @@ ToSure(id){
         </View>
         <View className='file-type-bottom'>
           <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment}</Text></View>
-          <View className='choose-box' >
+          {status=='取货成功'?
+            <View onClick={this.ToMore.bind(this,res.orderId,'historyorder/historyorder')} className='ToMore'>查看详情</View>:
+            <View className='choose-box' >
             <View onClick={this.ToSure.bind(this,res.orderId)} className='ToSure'>确认收货</View>
             <View onClick={this.ToMore.bind(this,res.orderId,'historyorder/historyorder')} className='ToMore'>查看详情</View>
           </View>
+        }
         </View>
       </View>)}
       )
@@ -135,7 +163,7 @@ ToSure(id){
               <View className='all-line'></View>
           </View>
         </View>
-        {this.props.historyOrderList.data.length > 0?
+        {res.length > 0?
         <View className='history-content'>
           {OrderStoreBox}
         </View>:<BlankPage
