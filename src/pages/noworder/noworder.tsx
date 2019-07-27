@@ -6,7 +6,7 @@ import TabBar from '../../components/TabBar/TabBar';
 import './noworder.scss'
 import orderStore from '../../assets/orderStore.png';
 import { BlankPage } from '../../components/blankPage/blankPage'
-import { asyncNoworder } from '../../actions/nowOrderList';
+import { asyncNoworder,asyncNowToSure } from '../../actions/nowOrderList';
 import { isArray } from 'util';
 
 type PageStateProps = {
@@ -17,7 +17,9 @@ type PageStateProps = {
 
 type PageDispatchProps = {
   asyncNoworder: (payload) => any,
-  NowList: (payload) => any
+  NowList: (payload) => any,
+  tosure: (payload) => any,
+  asyncnNowToSure: (payload) => any
 }
 
 type PageOwnProps = {}
@@ -36,17 +38,25 @@ interface noworder {
   NowList(payload={}){
     dispatch(asyncNoworder(payload))
   },
+  tosure(payload={}){
+    dispatch(asyncNowToSure(payload))
+  }
 }))
 
 
 class noworder extends Taro.Component<{}, PageState> {
  
 
-ToMore(orderId,thisPage,e){
-  Taro.navigateTo({
-    url:'../generateorders/generateorders?orderId='+orderId+'&return='+thisPage
-  })
-}
+  ToMore(orderId,thisPage,e){
+    Taro.navigateTo({
+      url:'../generateorders/generateorders?orderId='+orderId+'&return='+thisPage
+    })
+  }
+
+  ToSure(id){
+    this.props.tosure({orderId:id});
+  }
+
   componentWillReceiveProps (nextProps) {
     console.log(this.props, nextProps);
   }
@@ -54,10 +64,24 @@ ToMore(orderId,thisPage,e){
   componentWillUnmount () { }
 
   componentDidShow () { 
-    this.props.NowList({
-      page: 1,
-      count:4
-    })
+    if(Taro.getStorageSync('token')){
+      this.props.NowList({
+        page: 1,
+        count:5
+      })
+    } else{
+      Taro.showModal({
+        title: '暂未登陆',
+        content: '请点击确认按钮跳转登陆页面',
+      }).then((res)=>{
+          if(res.confirm){
+            Taro.navigateTo({
+              url:'../bindPhone/bindPhone'
+            })
+          }
+        }
+      )
+    }
   }
 
   componentDidHide () { }
@@ -85,14 +109,17 @@ ToMore(orderId,thisPage,e){
         </View>
         <View className='file-type-bottom'>
           <View className='file-price'>价格：<Text className='price-yuan'>￥{res.payment}</Text></View>
-          <View onClick={this.ToMore.bind(this,res.orderId||1,'noworder/noworder')} className='ToMore'>查看详情</View>
+          <View className='choose-box' >
+            <View onClick={this.ToSure.bind(this,res.orderId)} className='ToSure'>确认收货</View>
+            <View onClick={this.ToMore.bind(this,res.orderId||1,'noworder/noworder')} className='ToMore'>查看详情</View>
+          </View>
         </View>
       </View>)}
       )
 
     return (
       <View className='body-box'>
-        <View className='order-top-box'>
+        <View className='now-order-top-box'>
           <View className='nowOrder-top-box'>
             <View className='nowOrder-top-tittle'>当前订单</View>
           </View>
@@ -102,7 +129,7 @@ ToMore(orderId,thisPage,e){
           </View>
         </View>
         {this.props.nowOrderList.data.length > 0?
-        <View className='content'>
+        <View className='now-content'>
           {OrderStoreBox}
         </View>:<BlankPage
                     title='您当前还没有订单'

@@ -3,10 +3,10 @@
     margin: 0 auto;
     padding-bottom: 180px;
 }
-.content{
+.history-content{
     padding-top:210px
 }
-.order-top-box{
+.history-order-top-box{
     height: 220px;
     width: 750px;
     background-color: #fff;
@@ -19,10 +19,13 @@
     height: 152px;
     display: flex;
     align-items: center;
+    .return-box{
+        width: 50px;
+        margin-right: -50px;
+    }
     .nowOrder-return{
         width: 16px;
         height: auto;
-        margin-right: -16px;
     }
     .nowOrder-top-tittle{
         text-align: center;
@@ -105,13 +108,13 @@
     align-items: center;
     .file-price{
         font-size: 24px;
-        color: #727272;
+        // color: #727272;
         .price-yuan{
             color: #000;
         }
     }
 }
-.ToMore{
+.ToMore,.ToSure{
     width: 150px;
     height: 48px;
     border-radius: 48px;
@@ -125,4 +128,16 @@
     width: 24px;
     height: 25px;
     margin-right: 18px;
+}
+
+.choose-box{
+    width: 320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ToSure{
+    border: 1Px solid #5f6263;
+    color: #5f6263;
 }

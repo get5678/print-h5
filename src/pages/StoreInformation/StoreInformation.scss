@@ -8,6 +8,10 @@
     height: 172px;
     display: flex;
     align-items: center;
+    .return-box{
+        width: 50px;
+        margin-right: -50px;
+    }
     .store-return{
         width: 20px;
         height: auto;

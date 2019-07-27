@@ -4,6 +4,10 @@
     height: 172px;
     display: flex;
     align-items: center;
+    .return-box{
+        width: 50px;
+        margin-right: -50px;
+    }
     .return{
         width: 16px;
         height: auto;

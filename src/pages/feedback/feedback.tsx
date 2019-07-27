@@ -59,23 +59,35 @@ class Feedback extends Taro.Component<{}, PageState> {
   }
 
 GotoFeedback(inputValue,justIcon){
-  console.log(inputValue)
-  if(inputValue){
-    this.props.feedback({
-      content: inputValue,
-      score: justIcon
-    });
-
-    this.setState({
-      flag:true
-    })
+  if(Taro.getStorageSync('token')){
+    if(inputValue){
+        this.props.feedback({
+        content: inputValue,
+        score: justIcon
+      });
+      this.setState({
+        flag:true
+      })
+    } else{
+      Taro.showToast({
+        title: '评价不能为空',
+        icon: 'none',
+        duration: 2000,
+        mask:true
+      })
+    }
   } else{
-    Taro.showToast({
-      title: '评价不能为空',
-      icon: 'none',
-      duration: 2000,
-      mask:true
-    })
+    Taro.showModal({
+      title: '暂未登陆',
+      content: '请点击确认按钮跳转登陆页面',
+    }).then((res)=>{
+        if(res.confirm){
+          Taro.navigateTo({
+            url:'../bindPhone/bindPhone'
+          })
+        }
+      }
+    )
   }
 }
 
@@ -116,7 +128,9 @@ Icon(this,Icon,e){
     return (
       <View>
         <View className='top-box'>
-          <Image onClick={this.Return} className='return' src={return2Png}></Image>
+          <View onClick={this.Return}>
+            <Image className='return' src={return2Png}></Image>
+          </View>
           <View className='top-tittle'>我的反馈</View>
         </View>
           <Textarea onInput={this.onInput.bind(this)} className='input-feedback' value={inputValue} placeholderClass='placeholder' placeholder='请输入您宝贵的意见和建议!'/>

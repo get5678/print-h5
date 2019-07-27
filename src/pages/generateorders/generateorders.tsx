@@ -89,7 +89,9 @@ class generateorders extends Taro.Component<{}, PageState>  {
     return (
       <View>
         <View className='top-box'>
-          <Image onClick={this.Return.bind(this,this.state.router)} className='return' src={backArrow}></Image>
+          <View onClick={this.Return.bind(this,this.state.router)} className='return'>
+            <Image className='return' src={backArrow}></Image>
+          </View>
           <View className='top-tittle'>生成订单</View>
         </View>
         <View className='order-top-box'>

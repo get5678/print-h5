@@ -35,6 +35,10 @@ export async function uploadFile(data, contentType?) {
 export async function groupPrice(data) {
   return http.get(`${baseUrl}merchant/combination`,data)
 }
+// 确认收货
+export async function Tosure(data) {
+  return http.get(`${baseUrl}order/verify`,data)
+}
 // 获取店铺列表
 export async function shopList(data) {
   return http.post(`${baseUrl}merchant/getAllShopInfo`,data)

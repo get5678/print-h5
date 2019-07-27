@@ -57,19 +57,17 @@ class StoreInformation extends Component<{}, PageState> {
         url:`../document/document?id=${id}&title=${encodeURI(title)}`
       })
     }else{
-<<<<<<< HEAD
-      Taro.showToast({
-        title: '请先登陆哟',
-        icon: 'none',
-        duration: 2000,
-        mask:true
-      })
-=======
-      alert("请先登陆哟！");
->>>>>>> db49ad3e7b2c1acdd5dfabe616bc8b529760afd1
-      Taro.navigateTo({
-        url:'../mine/mine'
-      })
+      Taro.showModal({
+        title: '暂未登陆',
+        content: '请点击确认按钮跳转登陆页面',
+      }).then((res)=>{
+          if(res.confirm){
+            Taro.navigateTo({
+              url:'../bindPhone/bindPhone'
+            })
+          }
+        }
+      )
     }
   }
 
@@ -120,7 +118,9 @@ class StoreInformation extends Component<{}, PageState> {
       <View className='index'>
          <View className='top'>
           <View className='top-box'>
-            <Image onClick={this.Return} className='store-return' src={returnPng}></Image>
+            <View onClick={this.Return} className='return-box'>
+              <Image className='store-return' src={returnPng}></Image>
+            </View>
             <View className='top-tittle'>店面信息</View>
           </View>
         </View>
