@@ -16,7 +16,7 @@ import close from './pic/close.png'
 import { connect } from '@tarojs/redux'
 import { asyncGetDocumentList, asyncGetGroupPrice } from '../../actions/document'
 
-import { controller, signal } from './controller'
+import {  xhr } from './controller'
 
 type list = {
     id: number;
@@ -217,82 +217,92 @@ class Document extends Component<IProps, PageState> {
         const file = e.target.files[0];
         const data = new FormData();
         const token = Taro.getStorageSync('token');
-        
+       
         data.append('file',file);
-        let i = 0
-        const mm = setInterval(() => {
-            this.setState({
-                loadingProcess: i,
 
-            }, () => {
-                i++;
-                if (i <= 50) {
-                    this.setState({
-                        loadingProc: i * 2,
-                    })
-                }
-                if (i == 100) {
-                    clearInterval(mm)
-                }
-            })
-        }, 50)
         this.setState({
             uploadshow: true,
         })
-        
-        fetch('https://pin.varbee.com/cloudprint/api/document/upload',{
-            method: 'POST',
-            body: data,
-            headers: {
-                token: token,
-            },
-            signal 
-        }).then( (res) => {
-                res.json().then(data => {
-                    console.log("response",data)
+
+        xhr.upload.onprogress = (e) => {   
+            if(e.lengthComputable) {
+                const process = Number(((e.loaded / e.total) * 100).toFixed(1));
+                this.setState({
+                    loadingProcess: process,
+                })
+                if (process <= 51) {
+                    this.setState({
+                        loadingProc: process * 2,
+                    })
+                }
+                if (process == 100) {
+                    this.setState({
+                        loadingProc: 100,
+                    })
+                }
+            }
+            else {
+                this.setState({
+                    loadingProc: 0,
+                    loadingProcess: 0,
+                })
+            }
+            
+        }
+
+        xhr.onload = () => {
+                console.log("response:", xhr.response)
+                if (xhr.status >= 200 && xhr.status < 300 || xhr.status == 304) {
                     this.props.getList({
                         page: 1,
-                        count: 7,
+                        count: 7
                     })
-                    switch(data.code) {
-                        case 1:
-                            this.setState({
-                                Lists: [],
-                                page: 1,
-                                uploadshow: false,
-                                uploadsuccess: true,
-                                showToast: true
-                            })
-                            break;
-                        case 10301:
-                            this.setState({
-                                Lists: [],
-                                page: 1,
-                                uploadshow: false,
-                            })
-                            Taro.showToast({
-                                title: data.msg,
-                                image: require(`../../assets/error.png`),
-                                duration: 1500
-                            })
-                            break;
-                        default:
-                            console.log('d',data.code);
-                            break;
+                    if (xhr.response.code == 1 && xhr.response.msg == '上传成功') {
+                        this.setState({
+                            Lists: [],
+                            page: 1,
+                            uploadshow: false,
+                            uploadsuccess: true,
+                            showToast: true
+                        })
                     }
+                    else{
+                        this.setState({
+                            Lists: [],
+                            page: 1,
+                            uploadshow: false,
+                            uploadsuccess: false,
+                            showToast: true,
+                            taostText: xhr.response.msg
+                        })
+                    }
+                }
+        }
+        xhr.onerror = () => { console.log("err:", xhr.statusText)}
+        xhr.onabort = () => {
+            data.delete("file");
+            console.log("abort",xhr.status)
+            if (xhr.status == 0) {
+                Taro.showToast({
+                title: '取消上传成功',
+                icon: 'success',
+                duration: 1500
                 })
-            }).catch(e => console.log("err",e))
+            }
+        }
+        
+        xhr.open('POST', 'https://pin.varbee.com/cloudprint/api/document/upload', true);
+        xhr.setRequestHeader('token', token);
+        xhr.responseType = "json";
+        xhr.send(data);
+       
     }
 
-    handleCancelUpload = () => {
-        controller.abort();
+    handleCancelUpload = (e) => {
+        e.preventDefault();
+        xhr.abort();
         this.setState({
             uploadshow: false
-        })
-        Taro.showToast({
-            title: '取消上传成功',
-            icon: 'success',
-            duration: 1500
         })
     }
 
@@ -394,7 +404,7 @@ class Document extends Component<IProps, PageState> {
             })
         }else {
             this.setState({
-                showUploadOvertext: true;
+                showUploadOvertext: true
             })
         }
     }
