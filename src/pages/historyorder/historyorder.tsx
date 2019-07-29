@@ -2,7 +2,6 @@ import Taro from '@tarojs/taro';
 import { ComponentClass } from 'react'
 import { View, Image, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
-import TabBar from '../../components/TabBar/TabBar';
 import return2Png from '../../assets/backArrow.png';
 import orderStore from '../../assets/orderStore.png';
 import { BlankPage } from '../../components/blankPage/blankPage'
@@ -170,7 +169,6 @@ class historyorder extends Taro.Component<{}, PageState> {
                     title='您当前还没有订单'
                     picture={require('../../assets/blank-compents/blank-order.png')}
                 />}
-        <TabBar current={1}/>
       </View>
     )
   }
