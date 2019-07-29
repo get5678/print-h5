@@ -64,8 +64,8 @@
 
   @at-root #{&}-icon {
     @at-root #{&}-code {
-      width: 40px;
-      height: 39px;
+      width: 70px;
+      height: 44px;
     }
     @at-root #{&}-phone {
       width: 28px;
@@ -166,10 +166,23 @@
     }
   }
 }
-
+.at-tabs__underline {
+  display: none;
+}
+.at-tabs__item {
+  color: #999;
+  font-size: 32px;
+  font-weight: 300;
+}
 .at-tabs__item--active {
   color: #2fb9c3;
 }
 .at-tabs__item-underline {
-  background: #2fb9c3;
+  background: #eee;
+  transform: scaleX(1);
+}
+.at-tabs__item--active {
+  .at-tabs__item-underline {
+    background: #2fb9c3;
+  }
 }
