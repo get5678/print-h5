@@ -300,8 +300,10 @@ class BindPhone extends Component<{}, PageState> {
               toastText: '登录成功',
               showToast: true
             })
+            const that = this
             // 3s回首页
             setTimeout(() => {
+              that.clearAll()
               Taro.redirectTo({
                 url: '../index/index'
               })
@@ -322,6 +324,22 @@ class BindPhone extends Component<{}, PageState> {
         }
       })
     }
+  }
+
+  /**
+   * @description 清空数据
+   * @memberof BindPhone
+   */
+  clearAll () {
+    this.setState({
+      phone: '',
+      code: '',
+      picture: '',
+      showWarn: false,
+      warnText: '',
+      password: '',
+      passwordConfirm: ''
+    })
   }
 
   /**
@@ -358,8 +376,10 @@ class BindPhone extends Component<{}, PageState> {
           toastText: '登录成功',
           showToast: true
         })
+        const that = this
         // 3s回首页
         setTimeout(() => {
+          that.clearAll()
           Taro.redirectTo({
             url: '../index/index'
           })
@@ -443,7 +463,7 @@ class BindPhone extends Component<{}, PageState> {
         <View className="bind-top-wrapper" onClick={this.back.bind(this)}>
           <Image className='bind-top-return' src={return2Png}></Image>
         </View>
-        <View className='bind-top-title'>登陆/注册</View>
+        <View className='bind-top-title'>{current === 0 ? '登录' : '注册'}</View>
       </View>
     )
 

@@ -138,6 +138,9 @@
     &:active {
       color: #29a6af;
     }
+    &:hover {
+      color: #2fb9c3;
+    }
   }
 
   @at-root #{&}-top {
