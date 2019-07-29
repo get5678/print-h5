@@ -48,6 +48,7 @@
     text-shadow: 0 -1px 0 rgba(0,0,0,.12);
     box-shadow: 0 2px 0 rgba(0,0,0,.045);
     touch-action: manipulation;
+    margin-bottom: 88px;
     &:active {
       background: #29a6af;
       border-color: #29a6af;
@@ -126,6 +127,16 @@
   @at-root #{&}-codeDisabled {
     border: #999 2px solid;
     color: #999;
+  }
+
+  @at-root #{&}-forget {
+    margin-top: 20px;
+    color: #999;
+    font-size: 24px;
+    margin-left: auto;
+    &:active {
+      color: #29a6af;
+    }
   }
 
   @at-root #{&}-top {

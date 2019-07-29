@@ -485,6 +485,7 @@ class BindPhone extends Component<{}, PageState> {
           <Image className='bind-icon bind-icon-password' src={require('../../assets/images/bindPhone/password.png')}></Image>
           <Input name='password' className='bind-input' placeholder='请输入密码' placeholderClass="bind-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
         </View>
+        <Text className='bind-forget'>忘记密码</Text>
         {showWarn ? <View className='bind-warn'>
           <Text>{warnText}</Text>
         </View> :
