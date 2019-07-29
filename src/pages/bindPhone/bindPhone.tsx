@@ -461,7 +461,7 @@ class BindPhone extends Component<{}, PageState> {
         </View>
         <View className='bind-box-row'>
           <View className='bind-icon bind-icon-password'></View>
-          <Input name='password-confirm' className='bind-input' placeholder='请确认密码' placeholderClass="bind-inputPL" password maxLength={16} onInput={this.handlePhoneInput.bind(this, 4)}></Input>
+          <Input name='password-confirm' className='bind-input' placeholder='请确认密码' placeholderClass='bind-inputPL' password maxLength={16} onInput={this.handlePhoneInput.bind(this, 4)}></Input>
         </View>
         <View className='bind-box-row'>
           <Image className='bind-icon bind-icon-code' src={require('../../assets/images/bindPhone/bind-verify.png')}></Image>
