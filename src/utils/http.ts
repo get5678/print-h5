@@ -74,7 +74,7 @@ export default class Http {
                 success (res) {
                   if (res.confirm) {
                     Taro.navigateTo({
-                      url: '../pages/bindPhone/bindPhone'
+                      url: '/pages/bindPhone/bindPhone'
                     })
                   }
                 }
