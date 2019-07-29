@@ -75,6 +75,7 @@
     box-sizing: border-box;
     padding: 0 30px;
     margin-bottom: 30px;
+    transition:  0.3s;
     @at-root #{&}-image {
       border-radius: 10px;
       width: 100px;

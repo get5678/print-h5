@@ -2,8 +2,8 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Button, Image, Input, Text } from '@tarojs/components'
 import { Toast } from '../../components/toast/toast'
-import NavBar from '../../components/NavBar/NavBar'
 import { sendAuthCode, toBindPhone, toLogin } from '../../utils/api'
+import return2Png from '../../assets/backArrow.png';
 
 import './bindPhone.scss'
 
@@ -92,6 +92,16 @@ class BindPhone extends Component<{}, PageState> {
             showWarn: true,
             warnText: '请输入正确的电话号码'
           })
+        } else if (!isSafePassword(this.state.password) || !isSafePassword(this.state.passwordConfirm)) {
+          this.setState({
+            showWarn: true,
+            warnText: '密码至少是6位并且包含大小写字母'
+          })
+        } else if (this.state.passwordConfirm !== this.state.password) {
+          this.setState({
+            showWarn: true,
+            warnText: '两次输入的密码不同'
+          })
         } else if (this.state.code.length !== 6) {
           this.setState({
             showWarn: true,
@@ -108,10 +118,20 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         password: e.detail.value
       }, () => {
-        if (!isSafePassword(this.state.password)) {
+        if (!isPhoneNumber(this.state.phone)) {
+          this.setState({
+            showWarn: true,
+            warnText: '请输入正确的电话号码'
+          })
+        } else if (!isSafePassword(this.state.password)) {
           this.setState({
             showWarn: true,
             warnText: '密码至少是6位并且包含大小写字母'
+          })
+        } else if (this.state.passwordConfirm !== '' && this.state.passwordConfirm !== this.state.password) {
+          this.setState({
+            showWarn: true,
+            warnText: '两次输入的密码不同'
           })
         } else {
           this.setState({
@@ -124,10 +144,20 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         passwordConfirm: e.detail.value
       }, () => {
-        if (this.state.passwordConfirm !== this.state.password) {
+        if (!isPhoneNumber(this.state.phone)) {
           this.setState({
             showWarn: true,
-            warnText: '两次输入密码不同'
+            warnText: '请输入正确的电话号码'
+          })
+        } else if (!isSafePassword(this.state.password) || !isSafePassword(this.state.passwordConfirm)) {
+          this.setState({
+            showWarn: true,
+            warnText: '密码至少是6位并且包含大小写字母'
+          })
+        } else if (this.state.passwordConfirm !== this.state.password) {
+          this.setState({
+            showWarn: true,
+            warnText: '两次输入的密码不同'
           })
         } else {
           this.setState({
@@ -155,7 +185,12 @@ class BindPhone extends Component<{}, PageState> {
     } else if (!isSafePassword(password) && !isSafePassword(passwordConfirm)){
       this.setState({
         showWarn: true,
-        warnText: '密码格式错误'
+        warnText: '密码至少是6位并且包含大小写字母'
+      })
+    } else if (password !== passwordConfirm) {
+      this.setState({
+        showWarn: true,
+        warnText: '两次输入的密码不同'
       })
     } else {
       await sendAuthCode({
@@ -198,10 +233,15 @@ class BindPhone extends Component<{}, PageState> {
         showWarn: true,
         warnText: '密码至少是6位并且包含大小写字母'
       })
+    } else if (!isSafePassword(passwordConfirm)) {
+      this.setState({
+        showWarn: true,
+        warnText: '密码至少是6位并且包含大小写字母'
+      })
     } else if (passwordConfirm !== password) {
       this.setState({
         showWarn: true,
-        warnText: '两次输入密码不同'
+        warnText: '两次输入的密码不同'
       })
     } else if (code.length !== 6) {
       this.setState({
@@ -377,9 +417,19 @@ class BindPhone extends Component<{}, PageState> {
   render() {
     const { codeButtonText, buttonDisabled, showToast, toastText, warnText, showWarn } = this.state;
 
+
+    const topBar = (
+      <View className='bind-top'>
+        <View className="bind-top-wrapper" onClick={this.back.bind(this)}>
+          <Image className='bind-top-return' src={return2Png}></Image>
+        </View>
+        <View className='bind-top-title'>登陆/注册</View>
+      </View>
+    )
+
     return (
       <View className='bind'>
-        <NavBar title='登录/注册' handleBack={this.back.bind(this)} />
+        {topBar}
         <View className='bind-card'>
           <View className="bind-title">注册</View>
           {/* <Image className='bind-portrait' src='https://static.runoob.com/images/demo/demo1.jpg'></Image> */}

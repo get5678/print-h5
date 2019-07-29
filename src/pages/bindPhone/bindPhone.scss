@@ -117,4 +117,27 @@
     border: none;
     outline: none;
   }
+
+  @at-root #{&}-top {
+    min-width: 690px;
+    margin: 0 auto;
+    height: 172px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 32px;
+    @at-root #{&}-return {
+      width: 16px;
+      height: auto;
+      margin-right: -16px;
+    }
+    @at-root #{&}-title {
+      text-align: center;
+      color: #000;
+      flex-grow:1;
+      height: 70px;
+      line-height: 70px;
+      font-size: 36px;
+    }
+  }
 }
