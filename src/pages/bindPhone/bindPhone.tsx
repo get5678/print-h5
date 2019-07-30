@@ -1,9 +1,10 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Button, Image, Input, Text } from '@tarojs/components'
+import { AtTabs, AtTabsPane } from 'taro-ui'
 import { Toast } from '../../components/toast/toast'
-import NavBar from '../../components/NavBar/NavBar'
 import { sendAuthCode, toBindPhone, toLogin } from '../../utils/api'
+import return2Png from '../../assets/backArrow.png';
 
 import './bindPhone.scss'
 
@@ -34,6 +35,7 @@ type PageState = {
   warnText: string;
   password: string;
   passwordConfirm: string;
+  current: number;
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -47,7 +49,12 @@ class BindPhone extends Component<{}, PageState> {
     navigationBarTitleText: '绑定手机'
   }
 
+  constructor () {
+    super(...arguments)
+  }
+
   state = {
+    current: 0,
     phone: '',
     code: '',
     picture: '',
@@ -59,6 +66,19 @@ class BindPhone extends Component<{}, PageState> {
     warnText: '',
     password: '',
     passwordConfirm: ''
+  }
+
+  /**
+   * @description 切换选项卡
+   * @param {number} value
+   * @memberof BindPhone
+   */
+  handleClick (value: number) {
+    this.setState({
+      current: value,
+      showWarn: false,
+      warnText: '',
+    })
   }
 
   /**
@@ -92,6 +112,16 @@ class BindPhone extends Component<{}, PageState> {
             showWarn: true,
             warnText: '请输入正确的电话号码'
           })
+        } else if (!isSafePassword(this.state.password) || !isSafePassword(this.state.passwordConfirm)) {
+          this.setState({
+            showWarn: true,
+            warnText: '密码至少是6位并且包含大小写字母'
+          })
+        } else if (this.state.passwordConfirm !== this.state.password) {
+          this.setState({
+            showWarn: true,
+            warnText: '两次输入的密码不同'
+          })
         } else if (this.state.code.length !== 6) {
           this.setState({
             showWarn: true,
@@ -108,10 +138,20 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         password: e.detail.value
       }, () => {
-        if (!isSafePassword(this.state.password)) {
+        if (!isPhoneNumber(this.state.phone)) {
+          this.setState({
+            showWarn: true,
+            warnText: '请输入正确的电话号码'
+          })
+        } else if (!isSafePassword(this.state.password)) {
           this.setState({
             showWarn: true,
             warnText: '密码至少是6位并且包含大小写字母'
+          })
+        } else if (this.state.passwordConfirm !== '' && this.state.passwordConfirm !== this.state.password) {
+          this.setState({
+            showWarn: true,
+            warnText: '两次输入的密码不同'
           })
         } else {
           this.setState({
@@ -124,10 +164,20 @@ class BindPhone extends Component<{}, PageState> {
       this.setState({
         passwordConfirm: e.detail.value
       }, () => {
-        if (this.state.passwordConfirm !== this.state.password) {
+        if (!isPhoneNumber(this.state.phone)) {
           this.setState({
             showWarn: true,
-            warnText: '两次输入密码不同'
+            warnText: '请输入正确的电话号码'
+          })
+        } else if (!isSafePassword(this.state.password) || !isSafePassword(this.state.passwordConfirm)) {
+          this.setState({
+            showWarn: true,
+            warnText: '密码至少是6位并且包含大小写字母'
+          })
+        } else if (this.state.passwordConfirm !== this.state.password) {
+          this.setState({
+            showWarn: true,
+            warnText: '两次输入的密码不同'
           })
         } else {
           this.setState({
@@ -155,7 +205,12 @@ class BindPhone extends Component<{}, PageState> {
     } else if (!isSafePassword(password) && !isSafePassword(passwordConfirm)){
       this.setState({
         showWarn: true,
-        warnText: '密码格式错误'
+        warnText: '密码至少是6位并且包含大小写字母'
+      })
+    } else if (password !== passwordConfirm) {
+      this.setState({
+        showWarn: true,
+        warnText: '两次输入的密码不同'
       })
     } else {
       await sendAuthCode({
@@ -198,10 +253,15 @@ class BindPhone extends Component<{}, PageState> {
         showWarn: true,
         warnText: '密码至少是6位并且包含大小写字母'
       })
+    } else if (!isSafePassword(passwordConfirm)) {
+      this.setState({
+        showWarn: true,
+        warnText: '密码至少是6位并且包含大小写字母'
+      })
     } else if (passwordConfirm !== password) {
       this.setState({
         showWarn: true,
-        warnText: '两次输入密码不同'
+        warnText: '两次输入的密码不同'
       })
     } else if (code.length !== 6) {
       this.setState({
@@ -240,8 +300,10 @@ class BindPhone extends Component<{}, PageState> {
               toastText: '登录成功',
               showToast: true
             })
+            const that = this
             // 3s回首页
             setTimeout(() => {
+              that.clearAll()
               Taro.redirectTo({
                 url: '../index/index'
               })
@@ -262,6 +324,22 @@ class BindPhone extends Component<{}, PageState> {
         }
       })
     }
+  }
+
+  /**
+   * @description 清空数据
+   * @memberof BindPhone
+   */
+  clearAll () {
+    this.setState({
+      phone: '',
+      code: '',
+      picture: '',
+      showWarn: false,
+      warnText: '',
+      password: '',
+      passwordConfirm: ''
+    })
   }
 
   /**
@@ -298,8 +376,10 @@ class BindPhone extends Component<{}, PageState> {
           toastText: '登录成功',
           showToast: true
         })
+        const that = this
         // 3s回首页
         setTimeout(() => {
+          that.clearAll()
           Taro.redirectTo({
             url: '../index/index'
           })
@@ -375,57 +455,82 @@ class BindPhone extends Component<{}, PageState> {
   componentDidHide() { }
 
   render() {
-    const { codeButtonText, buttonDisabled, showToast, toastText, warnText, showWarn } = this.state;
+    const { codeButtonText, buttonDisabled, showToast, toastText, warnText, showWarn, current } = this.state;
+
+
+    const topBar = (
+      <View className='bind-top'>
+        <View className="bind-top-wrapper" onClick={this.back.bind(this)}>
+          <Image className='bind-top-return' src={return2Png}></Image>
+        </View>
+        <View className='bind-top-title'>{current === 0 ? '登录' : '注册'}</View>
+      </View>
+    )
+
+    const tabList = [{ title: '登录' }, { title: '注册' }]
+
+    const register = (
+      <View className='bind-box'>
+        <View className='bind-box-row'>
+          <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
+          <Input name='phone' className='bind-input' placeholder='请输入手机号' placeholderClass="bind-inputPL" type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
+        </View>
+        <View className='bind-box-row'>
+          <Image className='bind-icon bind-icon-password' src={require('../../assets/images/bindPhone/password.png')}></Image>
+          <Input name='password' className='bind-input' placeholder='请输入密码' placeholderClass="bind-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
+        </View>
+        <View className='bind-box-row'>
+          <View className='bind-icon bind-icon-password'></View>
+          <Input name='password-confirm' className='bind-input' placeholder='请确认密码' placeholderClass='bind-inputPL' password maxLength={16} onInput={this.handlePhoneInput.bind(this, 4)}></Input>
+        </View>
+        <View className='bind-box-row'>
+          <Image className='bind-icon bind-icon-code' src={require('../../assets/images/bindPhone/bind-verify.png')}></Image>
+          <Input name='code' className='bind-input' placeholder='请输入验证码' placeholderClass="bind-inputPL" type='number' maxLength={6} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
+          <Button className={buttonDisabled ? 'bind-code bind-codeDisabled' : 'bind-code'} disabled={buttonDisabled ? true : false} onClick={this.sendVerificationCode.bind(this)}>{codeButtonText}</Button>
+        </View>
+        {showWarn ? <View className='bind-warn'>
+          <Text>{warnText}</Text>
+        </View> :
+        ''}
+      </View>
+    )
+
+    const login = (
+      <View className='bind-box'>
+        <View className='bind-box-row'>
+          <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
+          <Input name='phone' className='bind-input' placeholder='请输入手机号' placeholderClass="bind-inputPL" type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
+        </View>
+        <View className='bind-box-row'>
+          <Image className='bind-icon bind-icon-password' src={require('../../assets/images/bindPhone/password.png')}></Image>
+          <Input name='password' className='bind-input' placeholder='请输入密码' placeholderClass="bind-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
+        </View>
+        <Text className='bind-forget'>忘记密码</Text>
+        {showWarn ? <View className='bind-warn'>
+          <Text>{warnText}</Text>
+        </View> :
+        ''}
+      </View>
+    )
 
     return (
       <View className='bind'>
-        <NavBar title='登录/注册' handleBack={this.back.bind(this)} />
+        {topBar}
         <View className='bind-card'>
-          <View className="bind-title">注册</View>
-          {/* <Image className='bind-portrait' src='https://static.runoob.com/images/demo/demo1.jpg'></Image> */}
-          <View className='bind-box'>
-            <View className='bind-box-row'>
-              <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-              <Input name='phone' className='bind-input' placeholder='请输入手机号' type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
-            </View>
-            <View className='bind-box-row'>
-              <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-              <Input name='password' className='bind-input' placeholder='请输入密码' maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
-            </View>
-            <View className='bind-box-row'>
-              <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-              <Input name='password-confirm' className='bind-input' placeholder='请确认密码' password maxLength={16} onInput={this.handlePhoneInput.bind(this, 4)}></Input>
-            </View>
-            <View className='bind-box-row'>
-              <Image className='bind-icon bind-icon-code' src={require('../../assets/images/bindPhone/bind-verify.png')}></Image>
-              <Input name='code' className='bind-input' placeholder='请输入验证码' placeholderClass='bind-inputPL' type='number' maxLength={6} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
-              <Button className={buttonDisabled ? 'bind-code bind-codeDisabled' : 'bind-code'} disabled={buttonDisabled ? true : false} onClick={this.sendVerificationCode.bind(this)}>{codeButtonText}</Button>
-            </View>
-            {showWarn ? <View className='bind-warn'>
-              <Text>{warnText}</Text>
-            </View> :
-            ''}
-          </View>
+          <Image className='bind-portrait' src='https://static.runoob.com/images/demo/demo1.jpg'></Image>
+          <AtTabs className='bind-tabs' swipeable={false} current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
+          <AtTabsPane current={this.state.current} index={0} >
+            {login}
+          </AtTabsPane>
+          <AtTabsPane current={this.state.current} index={1}>
+            {register}
+          </AtTabsPane>
+        </AtTabs>
+        {
+          current === 0 ? 
+          <Button className='bind-button' onClick={this.submitLogin.bind(this)}>登录</Button> :
           <Button className='bind-button' onClick={this.submitBindPhone.bind(this)}>注册</Button>
-        </View>
-        <View className='bind-card'>
-          <View className="bind-title">登录</View>
-          {/* <Image className='bind-portrait' src='https://static.runoob.com/images/demo/demo1.jpg'></Image> */}
-          <View className='bind-box'>
-            <View className='bind-box-row'>
-              <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-              <Input name='phone' className='bind-input' placeholder='请输入手机号' type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
-            </View>
-            <View className='bind-box-row'>
-              <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-              <Input name='password' className='bind-input' placeholder='请输入密码' maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
-            </View>
-            {showWarn ? <View className='bind-warn'>
-              <Text>{warnText}</Text>
-            </View> :
-            ''}
-          </View>
-          <Button className='bind-button' onClick={this.submitLogin.bind(this)}>登录</Button>
+        }
         </View>
         {(!showToast) ? '' :
             <Toast

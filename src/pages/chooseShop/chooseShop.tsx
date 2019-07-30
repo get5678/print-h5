@@ -103,20 +103,20 @@ class ChooseShop extends Component<IProps, PageState> {
         const shopData = shopList ? shopList : [] ;
         const items = shopData.map((item, index) => {
             return (
-                <View className='index-item' onClick={this.handleChooseShop.bind(this,index)}>
-                    <Image className='index-item-image' src={item.shopAvatar}></Image>
-                    <View className='index-item-column'>
-                        <View className='index-item-title'>
-                            <Text className='index-item-shopname'> {item.shopName}</Text>
-                            <Text className='index-item-price'>{item.shopPrice}/张</Text>
+                <View className='choose-item' onClick={this.handleChooseShop.bind(this,index)}>
+                    <Image className='choose-item-image' src={item.shopAvatar}></Image>
+                    <View className='choose-item-column'>
+                        <View className='choose-item-title'>
+                            <Text className='choose-item-shopname'> {item.shopName}</Text>
+                            <Text className='choose-item-price'>{item.shopPrice}/张</Text>
                         </View>
-                        <Text className='index-item-address'>
-                            <Image className='index-item-address-icon' src={require('../../assets/images/index/address.png')}></Image>
+                        <Text className='choose-item-address'>
+                            <Image className='choose-item-address-icon' src={require('../../assets/images/index/address.png')}></Image>
                             {item.shopAddress}
                         </Text>
                     </View>
-                    <View className='index-item-column'>
-                        <Icon className={`${this.state.shopId === Number(item.shopId)  ? 'index-item-button' : 'gary' }`} size='20' type='success'  />
+                    <View className='choose-item-column'>
+                        <Icon className={`${this.state.shopId === Number(item.shopId)  ? 'choose-item-button' : 'gary' }`} size='20' type='success'  />
                     </View>
                 </View>
             )
@@ -139,7 +139,7 @@ class ChooseShop extends Component<IProps, PageState> {
                     handleBack={this.handleBack.bind(this)}
                 />
                 
-                <ScrollView scrollY className='index'>
+                <ScrollView scrollY className='choose'>
                     {items}
                 </ScrollView>
                 {buttons}

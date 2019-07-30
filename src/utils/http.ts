@@ -66,6 +66,19 @@ export default class Http {
           switch (res.data.code) {
             case 1:
               return resolve(res.data.data);
+            case 4000:
+              Taro.clearStorage()
+              Taro.showModal({
+                title: '提示',
+                content: '登录过期，点击跳转登录页面',
+                success (res) {
+                  if (res.confirm) {
+                    Taro.navigateTo({
+                      url: '/pages/bindPhone/bindPhone'
+                    })
+                  }
+                }
+              })
             default:
               reject(res.data);
           }
