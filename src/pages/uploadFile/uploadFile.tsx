@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, ScrollView, Swiper, SwiperItem} from '@tarojs/components'
+import { View, Swiper} from '@tarojs/components'
 
 import NavBar from '../../components/NavBar/NavBar'
 import backArrow from '../../assets/backArrow.png'

@@ -14,7 +14,7 @@ import arrow from '../../assets/arrow.png'
 import close from './pic/close.png'
 
 import { connect } from '@tarojs/redux'
-import { asyncGetDocumentList, asyncGetGroupPrice, asyncGetwxpayPrrint, asyncGetpayorderId } from '../../actions/document'
+import { asyncGetDocumentList, asyncGetGroupPrice, asyncGetpayorderId } from '../../actions/document'
 
 import {  xhr } from './controller'
 
@@ -31,7 +31,6 @@ type PageStateProps = {
 type PageDispatchProps = {
     getList: (payload) => any;
     getGroupPrice: (payload) => any;
-    wxpayPrint: (payload?) => any;
     getPayid: (payload) => any;
 }
 
@@ -85,9 +84,6 @@ interface Document {
         getGroupPrice(params) {
             dispatch(asyncGetGroupPrice(params));
         },
-        wxpayPrint(params) {
-            dispatch(asyncGetwxpayPrrint(params));
-        },
         getPayid(params) {
             dispatch(asyncGetpayorderId(params));
         }
@@ -106,7 +102,6 @@ class Document extends Component<IProps, PageState> {
             Lists: [],
             page: 1,
             count: 0,
-           
             choosedocid: undefined,
             selectedDocument: false,
             show: false,
@@ -169,7 +164,6 @@ class Document extends Component<IProps, PageState> {
     }
 
     handleToShop = () => {
-        
         let shopId = this.state.shopId !== -1 ? this.state.shopId : undefined;
         if(this.state.choosedocid) {
             Taro.navigateTo({
@@ -189,8 +183,9 @@ class Document extends Component<IProps, PageState> {
     handlePrint = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        const { selectedprintList, shopId, choosedocid } = this.state;
-       
+        const { price } = this.state;
+        const { shopId, choosedocid, selectedprintList } = this.state;
+        
         this.props.getPayid({
             printNum: selectedprintList[1],
             printSize: selectedprintList[0],
@@ -199,11 +194,35 @@ class Document extends Component<IProps, PageState> {
             merchantId: shopId,
             documentId: choosedocid,
         })
-        this.props.wxpayPrint();
+        Taro.showModal({
+            title: '价格',
+            content: `请确认支付${price}`,
+            success: () => {
+                const { orderId, totalFee } = this.props.document.payid
+                const params =
+                    `<xml>
+                        <out_trade_no>${orderId}</out_trade_no>
+                        <return_code>SUCCESS</return_code>
+                        <total_fee>${totalFee}</total_fee>
+                    </xml>`;
+                fetch('http://min.our16.top/cloudprint/api/wxpay/min/reback', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/xml',
+                    },
+                    body: params
+                    })
+                    .then(res => res.text())
+                    .then(data => console.log("data", data))
+                    .catch((err) => console.log("打印错误", err))
+            }
+        })
+        
         this.setState({
             show: false
         })
     }
+
 
 
     /**
@@ -308,21 +327,22 @@ class Document extends Component<IProps, PageState> {
      */
     calculationPrice = (str:string, count:number):number => {
         const { combination, prirce } = this.props.document.groupPrice;
-        const { Lists } = this.state;
-        let page = Taro.getStorageSync('documentId');
+        const { choosedocid, Lists } = this.state;
         let pages = 0;
-        
         let price:any = 0.00;
         combination.map((item) => {
             if (item.printType == str) {
                 price += item.printPrice
             }
         })
-        Lists.map((item, index) => {
-            if (item.id === page[index]) {
-                pages += item.docPageTotal;
+        Lists.map((item) => {
+            if(item.id === choosedocid) {
+                pages = item.docPageTotal;
             }
         })
+        if(str[2] === '双') {
+            pages = Math.ceil(pages / 2);
+        }
         price = pages * count * price;
         price += prirce/100;
         price = price.toFixed(2);
@@ -351,7 +371,6 @@ class Document extends Component<IProps, PageState> {
             preprint: newpreprint,
             price: nowprice
         });
-        
     }
 
     handleShowPicker = () => {
@@ -410,6 +429,7 @@ class Document extends Component<IProps, PageState> {
      * @description 下拉刷新
      */
     handleToTop = () => {
+       
         Taro.startPullDownRefresh().
         then( () => {
             this.props.getList({
@@ -523,7 +543,7 @@ class Document extends Component<IProps, PageState> {
                 className='myContent' 
                 style={{overflow: `${show ? 'hidden': ''}`}}
                 onScrollToLower={this.handleToLower.bind(this)}
-                onScrollToUpper={this.handleToTop.bind(this)}
+                // onScrollToUpper={this.handleToTop.bind(this)}
                 >
                 { Lists.map((list, index) => (
                     <View key={list.id} className='docuList'>

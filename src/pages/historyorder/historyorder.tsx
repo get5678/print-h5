@@ -108,7 +108,7 @@ class historyorder extends Taro.Component<{}, PageState> {
   render () {
     let res = this.props.historyOrderList.data;   
     res = isArray(res)?res:[];
-    console.log(this.props.historyOrderList.data)
+    console.log("history",this.props.historyOrderList.data)
     const OrderStoreBox = res.map((res)=>{
       let status;
 

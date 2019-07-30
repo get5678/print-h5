@@ -70,7 +70,7 @@ export async function toLogin(data: {phoneNum: string, psw: string}, contentType
 
 // 获取订单号码
 export async function payorderId(data) {
-  return http.post(`${baseUrl}wxpay/h5Pay`, data);
+  return http.post(`${baseUrl}wxpay/min`, data);
 }
 
 //  打印
