@@ -78,3 +78,12 @@ export async function toLogin(data: {phoneNum: string, psw: string}, contentType
 export async function changePsw(data: {phoneNum: string, psw: string, authCode: string}, contentType?: any, hasMessage: boolean = true) {
   return http.post(`${baseUrl}client/changePsw`, data, contentType, hasMessage)
 }
+// 获取订单号码
+export async function payorderId(data) {
+  return http.post(`${baseUrl}wxpay/min`, data);
+}
+
+//  打印
+export async function wxpayPrint(data, contentType) {
+  return http.post(`${baseUrl}wxpay/min/reback`,data, contentType);
+}
