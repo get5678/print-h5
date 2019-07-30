@@ -301,12 +301,29 @@ element.style {
     position: relative;
     letter-spacing: 1px;
 }
+.anotherPrice{
+    display: inline-block;
+    width: 180px;
+    height: 40px;
+    font-size: 30px;
+}
+.allPrice{
+    display: inline-block;
+    width: 234px;
+    height: 40px;
+}
+.extralPrice{
+    font-size: 30px;
+    width: 70px;
+    height: 50px;
+    color: #2fb9c3;
+}
 .price{
     width: 150px;
     height: 50px;
     display: inline-block;
     line-height: 50px;
-    font-size: 36px;
+    font-size: 40px;
     text-align: left;
     color: #2fb9c3;
 }

@@ -224,7 +224,6 @@ class Document extends Component<IProps, PageState> {
     }
 
 
-
     /**
      * @description 上传文件
      */
@@ -537,6 +536,7 @@ class Document extends Component<IProps, PageState> {
         } = this.state; 
       
         let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;    
+        console.log("price",prirce)
         const documentLists = (
             <ScrollView 
                 scrollY={!show}
@@ -577,8 +577,9 @@ class Document extends Component<IProps, PageState> {
                     <Image className='shoppic' src={close}/>
                 </View>
                 <View className='totallprice'>
-                    合计：<Text className='price'>￥{price}</Text>
-                    {prirce && prirce !== 0 ? <Text className='extralPrice'>{prirce/100}</Text> : ''}
+                    {prirce && prirce !== 0 ? <View className='anotherPrice'>附加费:<Text className='extralPrice'>￥{prirce / 100}</Text></View> : ''}
+                    <View className='allPrice'>合计:<Text className='price'>￥{price}</Text></View>
+                    
                 </View>
                 <View className='surebutton'>
                     <Button className='printbut'>确认打印</Button>
