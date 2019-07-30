@@ -9,37 +9,30 @@ import timeFn from '../../utils/timeFn'
 import testFile from '../../utils/testFile'
 
 import './document.scss'
-import list from './pic/list.png'
+
 import arrow from '../../assets/arrow.png'
 import close from './pic/close.png'
 
 import { connect } from '@tarojs/redux'
-import { asyncGetDocumentList, asyncGetGroupPrice } from '../../actions/document'
+import { asyncGetDocumentList, asyncGetGroupPrice, asyncGetwxpayPrrint, asyncGetpayorderId } from '../../actions/document'
 
 import {  xhr } from './controller'
 
-type list = {
-    id: number;
-    docName: string;
-    docUploadTime: Date;
-    docSize: string;
-    docAvatar: string;
-    checked?: boolean;
-    docPageTotal: number;
-    status?:number;
-    docUrl?: string;
-}[];
 
 type PageStateProps = {
     document:{
         documentList: any,
         groupPrice: any,
+        wxpay: any,
+        payid: any,
     },
 }
 
 type PageDispatchProps = {
     getList: (payload) => any;
     getGroupPrice: (payload) => any;
+    wxpayPrint: (payload?) => any;
+    getPayid: (payload) => any;
 }
 
 type PageOwnProps = {}
@@ -51,14 +44,13 @@ type PageState = {
         docUploadTime: Date;
         docSize: string;
         docAvatar: string;
-        checked?: boolean;
         docPageTotal: number;
         status?: number;
         docUrl :string;
     }[];
     count: number | any;
+    choosedocid: number| any;
     page: number;
-    selected: boolean;
     selectedDocument: boolean;
     show: boolean;
     printList: (string[] | number[])[];
@@ -68,14 +60,12 @@ type PageState = {
     shopId: number | any;
     shopTitle: string;
     showToast: boolean;
-    src?: any;
     taostText: string;
     uploadsuccess: boolean;
     showUploadOvertext: boolean;
     loadingProcess: any;
     loadingProc: any;
     uploadshow: boolean;
-    ListStore: any[];
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -95,6 +85,12 @@ interface Document {
         getGroupPrice(params) {
             dispatch(asyncGetGroupPrice(params));
         },
+        wxpayPrint(params) {
+            dispatch(asyncGetwxpayPrrint(params));
+        },
+        getPayid(params) {
+            dispatch(asyncGetpayorderId(params));
+        }
     })
 )
 class Document extends Component<IProps, PageState> {
@@ -110,7 +106,8 @@ class Document extends Component<IProps, PageState> {
             Lists: [],
             page: 1,
             count: 0,
-            selected: false,
+           
+            choosedocid: undefined,
             selectedDocument: false,
             show: false,
             printList: [
@@ -126,13 +123,11 @@ class Document extends Component<IProps, PageState> {
             shopId: -1,
             showToast: false,
             uploadsuccess: false,
-            src: '',
             taostText: '上传失败',
             loadingProcess: 0,
             loadingProc: 0,
             uploadshow: false,
             showUploadOvertext: false,
-            ListStore: [],
         }       
     }
     handleBack = () => {
@@ -143,23 +138,16 @@ class Document extends Component<IProps, PageState> {
     }
 
     handleChoose = (id: number) => {
-        const { Lists } = this.state;
-        let flag = false;
-        let ListsAnother: list = Object.assign({},Lists);
-        let ListArray :any = [];
-        for (let i in ListsAnother) {
-            ListArray.push(ListsAnother[i])
+        if(id === this.state.choosedocid) {
+            this.setState({
+                selectedDocument: !this.state.selectedDocument,
+            })
+        } else {
+            this.setState({
+                choosedocid: id,
+                selectedDocument: true,
+            })
         }
-        ListArray[id].checked = !ListArray[id].checked;
-        ListArray.map((item) => {
-            if (item.checked) {
-                flag = true;
-            }
-        })
-        this.setState({
-            Lists: ListArray,
-            selectedDocument: flag
-        })
     }
 
     /**
@@ -178,13 +166,12 @@ class Document extends Component<IProps, PageState> {
                 duration: 1000
             })
         }
-        
     }
 
     handleToShop = () => {
         
         let shopId = this.state.shopId !== -1 ? this.state.shopId : undefined;
-        if(this.state.selectedDocument) {
+        if(this.state.choosedocid) {
             Taro.navigateTo({
                 url: `../chooseShop/chooseShop?id=${shopId}`
             })
@@ -202,7 +189,17 @@ class Document extends Component<IProps, PageState> {
     handlePrint = (e) => {
         e.stopPropagation();
         e.preventDefault();
-
+        const { selectedprintList, shopId, choosedocid } = this.state;
+       
+        this.props.getPayid({
+            printNum: selectedprintList[1],
+            printSize: selectedprintList[0],
+            printDirection: selectedprintList[2],
+            printType: selectedprintList[3],
+            merchantId: shopId,
+            documentId: choosedocid,
+        })
+        this.props.wxpayPrint();
         this.setState({
             show: false
         })
@@ -281,7 +278,7 @@ class Document extends Component<IProps, PageState> {
         xhr.onerror = () => { console.log("err:", xhr.statusText)}
         xhr.onabort = () => {
             data.delete("file");
-            console.log("abort",xhr.status)
+           
             if (xhr.status == 0) {
                 Taro.showToast({
                 title: '取消上传成功',
@@ -425,8 +422,9 @@ class Document extends Component<IProps, PageState> {
 
     componentWillMount() {
         const { id, title } = this.$router.params;
-        const ListStore = Taro.getStorageSync('documentId');  
+        const choosedocid = Taro.getStorageSync('documentId');  
         const token = Taro.getStorageSync('token');
+        let flag = choosedocid ? true : false;
         if(token === '') {
             Taro.showModal({
                 title: '暂未登录',
@@ -450,10 +448,9 @@ class Document extends Component<IProps, PageState> {
         this.setState({
             shopTitle: decodeURI(title),
             shopId: id,
-            ListStore: ListStore
+            choosedocid: choosedocid,
+            selectedDocument: flag,
         })
-        
-
     }
 
     componentDidMount() {
@@ -470,8 +467,7 @@ class Document extends Component<IProps, PageState> {
 
     componentWillReceiveProps(nextProps) {     
         let ListA = nextProps.document.documentList ? nextProps.document.documentList.documentDTOList : [];
-        const { ListStore, Lists } = this.state;
-        let flag = false;
+        const {  Lists } = this.state;
         let List = Lists;
         if(this.state.page === 1) {
             List = [];
@@ -481,35 +477,22 @@ class Document extends Component<IProps, PageState> {
         }
         if (ListA.length !== 0) {
             ListA.map((item) => {
-                List.push(Object.assign({}, item, { checked: false }))
+                List.push(Object.assign({}, item))
             });
-        }
-        if (ListStore.length !== 0 && List.length !== 0) {
-            List.map((item,index) => {
-                if (ListStore[index] === item.id) {
-                    item.checked = true;
-                }
-            })
-            flag = true;
         }
         this.setState({
             Lists: List,
-            selectedDocument: flag,
             count: List.length
         })   
     } 
 
     componentDidUpdate() {
-        const { Lists } = this.state;
-        let selectArray:any = [];
-        Lists.map((item) => {
-            if (item.checked) {
-                selectArray.push(item.id)
-            }
-        })
-        
-       
-        Taro.setStorageSync('documentId', selectArray); 
+        const { choosedocid, selectedDocument } = this.state;
+        let docId = choosedocid;
+        if (!selectedDocument) {
+            docId = undefined;
+        }
+        Taro.setStorageSync('documentId', docId); 
     }
 
    
@@ -529,7 +512,8 @@ class Document extends Component<IProps, PageState> {
             loadingProcess,
             loadingProc,
             uploadshow,
-            showUploadOvertext
+            showUploadOvertext,
+            choosedocid
         } = this.state; 
       
         let prirce = this.props.document.groupPrice ? this.props.document.groupPrice.prirce : undefined;    
@@ -543,16 +527,18 @@ class Document extends Component<IProps, PageState> {
                 >
                 { Lists.map((list, index) => (
                     <View key={list.id} className='docuList'>
-                        <View className='docuBefore'
-                            style={{ background: `${list.checked ? '#2fb9c3' : ''}` }} onClick={this.handleChoose.bind(this, index)}
-                        ></View>
-                        <Image src={testFile(list.docName)} className='docuImg' onClick={this.handleChoose.bind(this, index)}
-                        />
-                        <View className='docuContent' onClick={this.handleChoose.bind(this, index)}>
-                            <Text className='docuTitle'>{list.docName}</Text>
-                            <View className='docuText'>
-                                <Text className='docuSize'>{list.docSize}</Text>
-                                <Text>{timeFn(list.docUploadTime)}</Text>
+                        <View className='docuLeft' onClick={this.handleChoose.bind(this, list.id)}>
+                            <View className='docuBefore'
+                                style={{ background: `${choosedocid === list.id && selectedDocument ? '#2fb9c3' : ''}` }}
+                            ></View>
+                            <Image src={testFile(list.docName)} className='docuImg' 
+                            />
+                            <View className='docuContent'>
+                                <Text className='docuTitle'>{list.docName}</Text>
+                                <View className='docuText'>
+                                    <Text className='docuSize'>{list.docSize}</Text>
+                                    <Text>{timeFn(list.docUploadTime)}</Text>
+                                </View>
                             </View>
                         </View>
                         <View className='arrowTo' onClick={this.handlePreview.bind(this, index)}>
@@ -613,22 +599,6 @@ class Document extends Component<IProps, PageState> {
                     { shopTitle === 'undefined' ? chooseShop : choosePrint}
                 </View>
                 {show ? Buttons : ''}
-            </View>
-        )
-
-       
-        const uploadPage = (
-            <View className='uploadPage'>
-                <Image className='upload_img' src={require('../../assets/blank-compents/load-success.png')}/>
-                <View className='upload_title'>
-                    <Text className='upload_text'>正在加载中</Text>
-                    <View className='upload_span'>
-                        <Text className='upload_item'></Text>
-                        <Text className='upload_item'></Text>
-                        <Text className='upload_item'></Text>
-                        <Text className='upload_item'></Text>
-                    </View>
-                </View>
             </View>
         )
 

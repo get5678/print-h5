@@ -67,3 +67,13 @@ export async function toBindPhone(data: {phoneNum: string | number, authCode: st
 export async function toLogin(data: {phoneNum: string, psw: string}, contentType?, hasMessage = true) {
   return http.post(`${baseUrl}client/phone/login`, data, contentType, hasMessage)
 }
+
+// 获取订单号码
+export async function payorderId(data) {
+  return http.post(`${baseUrl}wxpay/h5Pay`, data);
+}
+
+//  打印
+export async function wxpayPrint(data, contentType) {
+  return http.post(`${baseUrl}wxpay/min/reback`,data, contentType);
+}

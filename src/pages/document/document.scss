@@ -23,17 +23,6 @@ $PX: 18px;
     letter-spacing: 1px;
 }
 .docu {
-    @at-root #{&}Before{
-        width: 16px;
-        height: 16px;
-        display: block;
-        background: #eaeaea;
-        border-radius: 8px;
-        box-sizing: border-box;
-        margin-right: 20px;
-        margin-left: 34px;
-    }
-
     @at-root #{&}List{
         height: 160px;
         min-width: 690px;
@@ -44,7 +33,24 @@ $PX: 18px;
         margin-top: 30px;
         box-shadow: 1px 1px 8px rgba($color: #999, $alpha: .1);
     }
-
+    @at-root #{&}Left{
+        display: flex;
+        width: 80%;
+        height: 100%;
+        align-items: center;
+        box-sizing: border-box;
+        padding-left: 4px;
+    }
+    @at-root #{&}Before{
+        width: 16px;
+        height: 16px;
+        display: block;
+        background: #eaeaea;
+        border-radius: 8px;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        margin-right: 20px;
+    }
     @at-root #{&}Content {
         height: 80px;
         width: 440px;
@@ -76,6 +82,7 @@ $PX: 18px;
         height: 80px;
         line-height: normal;
         margin-right: 24px;
+        flex-shrink: 0;
     }
 }
 
@@ -327,12 +334,12 @@ element.style {
 }
 
 .shopTitleTop{
-    height: 38px;
+    height: 50px;
     width: 100vw;
     background: #fff;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     @at-root #{&}-img{
         width: 30px;
         height: 26px;
@@ -344,9 +351,9 @@ element.style {
     }
     @at-root #{&}-text{
         font-size: 26px;
-        height: 26px;
+        height: 44px;
         color: #666;
-        line-height: 26px;
+        line-height: inherit;
         width: 200px;
         text-align: center;
         @include toShow;
@@ -464,57 +471,5 @@ element.style {
         outline: none;
         color: #2fb9c3;
         background: transparent;
-    }
-}
-
-.upload{
-    @at-root #{&}Page{
-        width: 100vw;
-        height: 100vh;
-        background: #fff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        top: 0;
-    }
-    @at-root #{&}_img{
-        width: 358px;
-        height: 250px;
-        margin-top: -100px;
-    }
-     @at-root #{&}_title{
-        width: 270px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    @at-root #{&}_text{
-        font-size: 26px;
-        color: #adadad;
-    }
-    @at-root #{&}_span{
-        display: flex;
-    }
-     @at-root #{&}_item{
-        width: 6px;
-        height: 6px;
-        background: #adadad;
-        margin-left: 10px;
-        animation: slidesDown 1.4s ease infinite;
-        &:nth-child(1) {
-            animation-delay: 0.1s; 
-        }
-        &:nth-child(2) {
-            animation-delay: 0.4s; 
-        }
-        &:nth-child(3) {
-            animation-delay: 0.7s; 
-        }
-        &:nth-child(4) {
-            animation-delay: 1s; 
-        }
     }
 }
