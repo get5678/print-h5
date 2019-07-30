@@ -3,10 +3,10 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Button, Image, Input, Text } from '@tarojs/components'
 import { AtTabs, AtTabsPane } from 'taro-ui'
 import { Toast } from '../../components/toast/toast'
-import { sendAuthCode, toBindPhone, toLogin } from '../../utils/api'
+import { changePsw, toLogin, sendAuthCode } from '../../utils/api'
 import return2Png from '../../assets/backArrow.png';
 
-import './bindPhone.scss'
+import './forget.scss'
 
 type LoginInfo = {
   phoneNum: string;
@@ -40,13 +40,13 @@ type PageState = {
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
-interface BindPhone {
+interface Forget {
   props: IProps;
 }
 
-class BindPhone extends Component<{}, PageState> {
+class Forget extends Component<{}, PageState> {
   config: Config = {
-    navigationBarTitleText: '登录'
+    navigationBarTitleText: '绑定手机'
   }
 
   constructor () {
@@ -69,23 +69,10 @@ class BindPhone extends Component<{}, PageState> {
   }
 
   /**
-   * @description 切换选项卡
-   * @param {number} value
-   * @memberof BindPhone
-   */
-  handleClick (value: number) {
-    this.setState({
-      current: value,
-      showWarn: false,
-      warnText: '',
-    })
-  }
-
-  /**
    * @description 处理电话号码输入和验证码输入
    * @param {number} type 事件类型：1是电话号码，2是验证码，3是验证密码，4是确认密码
    * @param {object} e 获得事件
-   * @memberof BindPhone
+   * @memberof Forget
    */
   handlePhoneInput(type: number, e: { detail: { value: string } }) {
     if (type === 1) {
@@ -190,54 +177,8 @@ class BindPhone extends Component<{}, PageState> {
   }
 
   /**
-   * @description 点击发送验证码
-   * @memberof BindPhone
-   */
-  async sendVerificationCode() {
-    const phone = this.state.phone;
-    const password = this.state.password
-    const passwordConfirm = this.state.passwordConfirm
-    if (!isPhoneNumber(phone)) {
-      this.setState({
-        showWarn: true,
-        warnText: '请输入正确的电话号码'
-      })
-    } else if (!isSafePassword(password) && !isSafePassword(passwordConfirm)){
-      this.setState({
-        showWarn: true,
-        warnText: '密码至少是6位并且包含大小写字母'
-      })
-    } else if (password !== passwordConfirm) {
-      this.setState({
-        showWarn: true,
-        warnText: '两次输入的密码不同'
-      })
-    } else {
-      await sendAuthCode({
-        phoneNum: phone,
-        flag: 1
-      }, null, true).then(res => {
-        if (res.code === 1) {
-          Taro.showToast({
-            title: res.msg,
-            icon: 'success',
-            mask: true
-          })
-          this.countDown(60)
-        } else {
-          Taro.showToast({
-            title: res.msg,
-            icon: 'none',
-            mask: true
-          })
-        }
-      })
-    }
-  }
-
-  /**
-   * @description 注册
-   * @memberof BindPhone
+   * @description 修改密码
+   * @memberof Forget
    */
   async submitBindPhone() {
     const phone = this.state.phone
@@ -276,7 +217,7 @@ class BindPhone extends Component<{}, PageState> {
         title: '提交中···',
         mask: true
       })
-      await toBindPhone({
+      await changePsw({
         phoneNum: phone,
         authCode: code,
         psw: password
@@ -344,68 +285,49 @@ class BindPhone extends Component<{}, PageState> {
   }
 
   /**
-   * @description 登录
+   * @description 点击发送验证码
    * @memberof BindPhone
    */
-  async submitLogin () {
+  async sendVerificationCode() {
+    const phone = this.state.phone;
     const password = this.state.password
-    const phone = this.state.phone
+    const passwordConfirm = this.state.passwordConfirm
     if (!isPhoneNumber(phone)) {
       this.setState({
         showWarn: true,
         warnText: '请输入正确的电话号码'
       })
-    } else {
-      // 成功输入逻辑
-      Taro.showLoading({
-        title: '提交中···',
-        mask: true
+    } else if (!isSafePassword(password) && !isSafePassword(passwordConfirm)){
+      this.setState({
+        showWarn: true,
+        warnText: '密码至少是6位并且包含大小写字母'
       })
-      // 清除token
-      Taro.clearStorageSync()
-      const res = await toLogin({
+    } else if (password !== passwordConfirm) {
+      this.setState({
+        showWarn: true,
+        warnText: '两次输入的密码不同'
+      })
+    } else {
+      await sendAuthCode({
         phoneNum: phone,
-        psw: password
-      }, null, true)
-      // 存入storage
-      Taro.hideLoading()
-      if (res.code === 1) {
-        Taro.setStorageSync('token', res.data.token)
-        delete res.data.token
-        Taro.setStorageSync('userInfo', res.data)
-        this.setState({
-          toastText: '登录成功',
-          showToast: true
-        })
-        const that = this
-        // 3s回首页
-        setTimeout(() => {
-          that.clearAll()
-          Taro.redirectTo({
-            url: '../index/index'
+        flag: 0
+      }, null, true).then(res => {
+        if (res.code === 1) {
+          Taro.showToast({
+            title: res.msg,
+            icon: 'success',
+            mask: true
           })
-        }, 3000)
-      } else {
-        Taro.showToast({
-          title: res.msg,
-          icon: 'none',
-          mask: true
-        })
-      }
+          this.countDown(60)
+        } else {
+          Taro.showToast({
+            title: res.msg,
+            icon: 'none',
+            mask: true
+          })
+        }
+      })
     }
-  }
-
-  /**
-   * @description 关闭toast
-   * @memberof Toast
-   */
-  closeToast() {
-    this.setState({
-      showToast: false
-    })
-    Taro.redirectTo({
-      url: '../index/index'
-    })
   }
 
   /**
@@ -436,20 +358,36 @@ class BindPhone extends Component<{}, PageState> {
     }, 1000)
   }
 
-  // 回退
-  back() {
-    Taro.navigateBack({
-      delta: 1
+  /**
+   * @description 关闭toast
+   * @memberof Toast
+   */
+  closeToast() {
+    this.setState({
+      showToast: false
+    })
+    Taro.redirectTo({
+      url: '../index/index'
     })
   }
 
   /**
-   * @description 跳转到忘记密码页
-   * @memberof BindPhone
+   * @description 切换选项卡
+   * @param {number} value
+   * @memberof Forget
    */
-  navToForget() {
-    Taro.navigateTo({
-      url: '/pages/forget/forget'
+  handleClick (value: number) {
+    this.setState({
+      current: value,
+      showWarn: false,
+      warnText: '',
+    })
+  }
+
+  // 回退
+  back() {
+    Taro.navigateBack({
+      delta: 1
     })
   }
 
@@ -466,58 +404,40 @@ class BindPhone extends Component<{}, PageState> {
   componentDidHide() { }
 
   render() {
-    const { codeButtonText, buttonDisabled, showToast, toastText, warnText, showWarn, current } = this.state;
+    const { codeButtonText, buttonDisabled, showToast, toastText, warnText, showWarn } = this.state;
 
 
     const topBar = (
-      <View className='bind-top'>
-        <View className="bind-top-wrapper" onClick={this.back.bind(this)}>
-          <Image className='bind-top-return' src={return2Png}></Image>
+      <View className='forget-top'>
+        <View className="forget-top-wrapper" onClick={this.back.bind(this)}>
+          <Image className='forget-top-return' src={return2Png}></Image>
         </View>
-        <View className='bind-top-title'>{current === 0 ? '登录' : '注册'}</View>
+        <View className='forget-top-title'>修改密码</View>
       </View>
     )
 
-    const tabList = [{ title: '登录' }, { title: '注册' }]
-
-    const register = (
-      <View className='bind-box'>
-        <View className='bind-box-row'>
-          <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-          <Input name='phone' className='bind-input' placeholder='请输入手机号' placeholderClass="bind-inputPL" type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
-        </View>
-        <View className='bind-box-row'>
-          <Image className='bind-icon bind-icon-password' src={require('../../assets/images/bindPhone/password.png')}></Image>
-          <Input name='password' className='bind-input' placeholder='请输入密码' placeholderClass="bind-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
-        </View>
-        <View className='bind-box-row'>
-          <View className='bind-icon bind-icon-password'></View>
-          <Input name='password-confirm' className='bind-input' placeholder='请确认密码' placeholderClass='bind-inputPL' password maxLength={16} onInput={this.handlePhoneInput.bind(this, 4)}></Input>
-        </View>
-        <View className='bind-box-row'>
-          <Image className='bind-icon bind-icon-code' src={require('../../assets/images/bindPhone/bind-verify.png')}></Image>
-          <Input name='code' className='bind-input' placeholder='请输入验证码' placeholderClass="bind-inputPL" type='number' maxLength={6} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
-          <Button className={buttonDisabled ? 'bind-code bind-codeDisabled' : 'bind-code'} disabled={buttonDisabled ? true : false} onClick={this.sendVerificationCode.bind(this)}>{codeButtonText}</Button>
-        </View>
-        {showWarn ? <View className='bind-warn'>
-          <Text>{warnText}</Text>
-        </View> :
-        ''}
-      </View>
-    )
+    const tabList = [{ title: '修改密码' }]
 
     const login = (
-      <View className='bind-box'>
-        <View className='bind-box-row'>
-          <Image className='bind-icon bind-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
-          <Input name='phone' className='bind-input' placeholder='请输入手机号' placeholderClass="bind-inputPL" type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
+      <View className='forget-box'>
+        <View className='forget-box-row'>
+          <Image className='forget-icon forget-icon-phone' src={require('../../assets/images/bindPhone/bind-phone.png')}></Image>
+          <Input name='phone' className='forget-input' placeholder='请输入手机号' placeholderClass="forget-inputPL" type='number' maxLength={11} onInput={this.handlePhoneInput.bind(this, 1)}></Input>
         </View>
-        <View className='bind-box-row'>
-          <Image className='bind-icon bind-icon-password' src={require('../../assets/images/bindPhone/password.png')}></Image>
-          <Input name='password' className='bind-input' placeholder='请输入密码' placeholderClass="bind-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
+        <View className='forget-box-row'>
+          <Image className='forget-icon forget-icon-password' src={require('../../assets/images/bindPhone/password.png')}></Image>
+          <Input name='password' className='forget-input' placeholder='请输入新密码' placeholderClass="forget-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 3)}></Input>
         </View>
-        <Text className='bind-forget' onClick={this.navToForget.bind(this)}>忘记密码</Text>
-        {showWarn ? <View className='bind-warn'>
+        <View className='forget-box-row'>
+          <View className='forget-icon forget-icon-password'></View>
+          <Input name='password' className='forget-input' placeholder='请再次输入新密码' placeholderClass="forget-inputPL" maxLength={16} password onInput={this.handlePhoneInput.bind(this, 4)}></Input>
+        </View>
+        <View className='forget-box-row'>
+          <Image className='forget-icon forget-icon-code' src={require('../../assets/images/bindPhone/bind-verify.png')}></Image>
+          <Input name='code' className='forget-input' placeholder='请输入验证码' placeholderClass="forget-inputPL" type='number' maxLength={6} onInput={this.handlePhoneInput.bind(this, 2)}></Input>
+          <Button className={buttonDisabled ? 'forget-code forget-codeDisabled' : 'forget-code'} disabled={buttonDisabled ? true : false} onClick={this.sendVerificationCode.bind(this)}>{codeButtonText}>{codeButtonText}</Button>
+        </View>
+        {showWarn ? <View className='forget-warn'>
           <Text>{warnText}</Text>
         </View> :
         ''}
@@ -525,23 +445,16 @@ class BindPhone extends Component<{}, PageState> {
     )
 
     return (
-      <View className='bind'>
+      <View className='forget'>
         {topBar}
-        <View className='bind-card'>
-          <Image className='bind-portrait' src='https://static.runoob.com/images/demo/demo1.jpg'></Image>
-          <AtTabs className='bind-tabs' swipeable={false} current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
+        <View className='forget-card'>
+          <Image className='forget-portrait' src='https://static.runoob.com/images/demo/demo1.jpg'></Image>
+          <AtTabs className='forget-tabs' swipeable={false} current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
           <AtTabsPane current={this.state.current} index={0} >
             {login}
           </AtTabsPane>
-          <AtTabsPane current={this.state.current} index={1}>
-            {register}
-          </AtTabsPane>
         </AtTabs>
-        {
-          current === 0 ? 
-          <Button className='bind-button' onClick={this.submitLogin.bind(this)}>登录</Button> :
-          <Button className='bind-button' onClick={this.submitBindPhone.bind(this)}>注册</Button>
-        }
+        <Button className='forget-button' onClick={this.submitBindPhone.bind(this)}>提交修改</Button>
         </View>
         {(!showToast) ? '' :
             <Toast
@@ -556,7 +469,7 @@ class BindPhone extends Component<{}, PageState> {
   }
 }
 
-export default BindPhone as ComponentClass<PageOwnProps, PageState>
+export default Forget as ComponentClass<PageOwnProps, PageState>
 
 /**
  * @description 判断是否是电话号码
